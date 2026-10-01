@@ -1,0 +1,9 @@
+packages: []
+
+allowBuilds:
+  esbuild: true
+  lightningcss: true
+  unrs-resolver: true
+  msw: false
+  '@carbon/icon-helpers': false
+  '@carbon/icons-react': false

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Open Graph image</title>
+    <!-- Les couleurs viennent de src/styles.css : le navigateur ignore @import et @theme, et applique :root. -->
+    <link rel="stylesheet" href="../src/styles.css" />
+    <style>
+      @font-face {
+        font-family: 'Instrument Sans';
+        font-weight: 600;
+        src: url('../node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-600-normal.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Instrument Sans';
+        font-weight: 400;
+        src: url('../node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-400-normal.woff2') format('woff2');
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        box-sizing: border-box;
+        width: 1200px;
+        height: 630px;
+        padding: 0 96px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 28px;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: 'Instrument Sans', sans-serif;
+      }
+      h1 {
+        margin: 0;
+        font-size: 128px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        line-height: 0.95;
+      }
+      p {
+        margin: 0;
+        font-size: 40px;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+        color: var(--foreground-secondary);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Romain Caillé</h1>
+    <p>Fullstack developer, ready for the agentic era.</p>
+  </body>
+</html>

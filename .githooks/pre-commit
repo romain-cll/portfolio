@@ -1,0 +1,3 @@
+#!/bin/sh
+# CA18 : refuse le commit si le dépôt viole une règle de lint (CA12 à CA17).
+exec pnpm lint
