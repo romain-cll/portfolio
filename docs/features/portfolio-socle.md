@@ -94,6 +94,20 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
 - Rayons : `0` partout. Seuls les pastilles et l'avatar final sont ronds.
 - Tailles de texte fluides (ex. h1 de `min(8.5vw, 32px)` à 150 px selon la fenêtre) : à exprimer en tokens, pas en valeurs arbitraires.
 
+## Anomalies après livraison
+*MR !1 mergée le 2026-10-01. Correctifs sur la branche `fix/portfolio-socle-deploy`.*
+
+- **B1 — Le déploiement Railpack échoue (CA21).**
+  - Environnement : Railpack 0.15.4 dans Dokploy, mode « vite static site », Node 24.21.0 et pnpm 11.22.0 via Corepack, build lancé dans `/app` par `pnpm run build`.
+  - Le prérendu affiche `Crawling: /`, puis `Prerendered 0 pages`. Le sitemap est écrit (`sitemap.xml`, `pages.json`), puis le processus plante avec `TypeError: fetch failed`, cause `connect ECONNREFUSED 127.0.0.1:43061`, code de sortie 1.
+  - Le même `pnpm build` réussit en local et dans le job `build` de la CI GitLab (image Playwright).
+  - Attendu : `pnpm build` réussit sous Railpack, et `dist/client/index.html` contient la page prérendue.
+- **B2 — Le job `lighthouse` de la CI ne se termine pas (CA20).**
+  - Pipeline de la MR !1, job `16869816761` : `lhci autorun` lance son serveur sur `http://localhost:<port>/index.html`, le run 1 et le run 2 se terminent en 12 s environ chacun, puis le run 3 reste bloqué. Romain a annulé le job au bout de 34 minutes.
+  - Aucun délai maximal n'est configuré sur le job.
+  - En local, `pnpm lhci` se termine normalement.
+  - Attendu : le job se termine en un temps borné, et échoue franchement s'il bloque, au lieu de tourner sans fin.
+
 ## Plan technique
 
 ### Changements depuis la v1
