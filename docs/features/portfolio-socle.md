@@ -64,7 +64,7 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 - Petits écrans : le design réduit ses tailles et marges sous un certain seuil de largeur (ex. h1 à `min(8.5vw, 32px)` au minimum, marge latérale du hero à 16 px au minimum). Ces réductions sont à reproduire.
 - Le design fait foi pour les couleurs, la typo et les espacements, reportés en tokens dans `styles.css`. Les composants shadcn restent en style Lyra.
 - Hébergement : VPS OVH, déploiement Dokploy, build Railpack. Dans Dokploy, Romain sélectionne Railpack et le déploiement se fait seul : `RAILPACK_SPA_OUTPUT_DIR=dist/client` est posé, « Pipelines must succeed » est activé sur GitLab. Le projet fournit des scripts pnpm prêts pour le build, sans serveur ni configuration d'hébergement à écrire ou maintenir. Le `Staticfile` de Railpack est accepté dans le dépôt pour renvoyer de vraies 404 ; aucune autre config d'hébergement.
-- Dépôt et CI : GitLab.
+- Dépôt et CI : GitLab, sur le free tier. Le quota de minutes de CI est limité : aucun pipeline ne doit être relancé ou déclenché sans nécessité, et aucun agent ne lance de pipeline.
 - Domaine : `romain-caille.fr`.
 - Langue : anglais uniquement.
 
