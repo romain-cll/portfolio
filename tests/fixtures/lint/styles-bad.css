@@ -1,0 +1,14 @@
+:root {
+  --hex: #fff;
+  --rgb: rgb(0 0 0);
+  --rgba: rgba(0, 0, 0, 0.5);
+  --hsl: hsl(0 0% 0%);
+  --hsla: hsla(0, 0%, 0%, 0.5);
+  --hwb: hwb(0 0% 0%);
+  --lab: lab(50% 0 0);
+  --lch: lch(50% 0 0);
+  --oklab: oklab(0.5 0 0);
+  --fn-color: color(srgb 1 0 0);
+  --named: red;
+  --named-white: white;
+}
