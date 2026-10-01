@@ -9,7 +9,7 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 - [ ] CA1 — Étant donné le build de production, quand je requête `/` avec JavaScript désactivé, alors le HTML reçu contient le contenu de la page et la balise `<html lang="en">`.
 - [ ] CA2 — Étant donné une route du site, quand j'inspecte son `<head>`, alors il contient un `<title>`, une `meta name="description"` et un `link rel="canonical"` propres à la route, la canonical étant une URL absolue en `https://romain-caille.fr/…`. Pour `/` : title « Romain Caillé · Fullstack developer », description « Fullstack developer, ready for the agentic era. Open to work, full-time or freelance, remote or relocation from Nantes, France. ».
 - [ ] CA3 — Étant donné une route du site, quand j'inspecte son `<head>`, alors il contient `og:title`, `og:description`, `og:url` et `og:image` ; l'URL de `og:image` est absolue et répond 200 avec une image de 1200 × 630, sur le fond du design, qui affiche « Romain Caillé » et « Fullstack developer, ready for the agentic era. ».
-- [ ] CA4 — Étant donné le site déployé, quand je requête `/sitemap.xml`, alors il répond 200, déclare l'espace de noms du protocole `http://www.sitemaps.org/schemas/sitemap/0.9` et liste toutes les routes publiques en URL absolues `https://romain-caille.fr/…`.
+- [ ] CA4 — Étant donné le site déployé, quand je requête `/sitemap.xml`, alors il répond 200 et liste toutes les routes publiques en URL absolues `https://romain-caille.fr/…`.
 - [ ] CA5 — Étant donné le site déployé, quand je requête `/robots.txt`, alors il répond 200, autorise l'indexation et référence `https://romain-caille.fr/sitemap.xml`.
 - [ ] CA6 — Étant donné la page d'accueil, quand je passe son HTML au validateur schema.org, alors il détecte un objet `Person` sans erreur avec : `name` « Romain Caillé », `url` « https://romain-caille.fr », `jobTitle` « Fullstack developer », `sameAs` [« https://gitlab.com/romain.caille », « https://www.linkedin.com/in/romain-caill%C3%A9/ »].
 
@@ -380,5 +380,5 @@ Racine : `/Users/romain/projects/portfolio`. Le dépôt est vierge, tous les fic
 - 2026-10-01 — Couleurs nommées et `color()` bloquées dans `styles.css`, sauf `transparent` et `currentColor` ; ambiguïté CA13 du plan tranchée selon la proposition de l'architect (validée par Romain)
 - 2026-10-01 — Plan technique v2 validé (validée par Romain)
 - 2026-10-01 — Lighthouse CI : réécriture `/index.html` → `/` dans le routeur, plutôt qu'une liste d'URL à maintenir dans `lighthouserc.json` (validée par Romain)
-- 2026-10-01 — Sitemap : espace de noms en `http://www.sitemaps.org/schemas/sitemap/0.9`, comme l'exige le protocole, au lieu du `https` généré par TanStack. CA4 complété, nouveau test rouge, l'architect choisit la façon de corriger (validée par Romain)
+- 2026-10-01 — Sitemap : correctif de l'espace de noms annulé. On garde le `xmlns` en `https` tel que généré par TanStack ; CA4 et ses tests reviennent à leur version d'origine. Le point est signalé dans la MR (validée par Romain)
 - 2026-10-01 — `src/components/ui/button.tsx`, généré par le template, est gardé pour `portfolio-pages` (validée par Romain)
