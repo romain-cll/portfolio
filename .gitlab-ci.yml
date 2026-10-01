@@ -1,0 +1,58 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# Image alignée sur la version de @playwright/test (1.63.0) : à mettre à jour avec elle.
+image: mcr.microsoft.com/playwright:v1.63.0-noble
+
+cache:
+  key:
+    files:
+      - pnpm-lock.yaml
+  paths:
+    - .pnpm-store
+
+before_script:
+  - corepack enable
+  - pnpm config set store-dir .pnpm-store
+  - pnpm install --frozen-lockfile
+
+stages:
+  - check
+  - build
+  - verify
+
+lint:
+  stage: check
+  script:
+    - pnpm lint
+
+unit:
+  stage: check
+  script:
+    - pnpm test
+
+build:
+  stage: build
+  script:
+    - pnpm build
+  artifacts:
+    paths:
+      - dist/
+
+e2e:
+  stage: verify
+  needs: [build]
+  script:
+    - pnpm test:e2e
+
+lighthouse:
+  stage: verify
+  needs: [build]
+  script:
+    - CHROME_PATH=$(node -e "console.log(require('@playwright/test').chromium.executablePath())") pnpm lhci
+  artifacts:
+    when: always
+    paths:
+      - .lighthouseci/
