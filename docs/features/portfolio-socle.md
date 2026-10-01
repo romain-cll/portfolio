@@ -108,7 +108,16 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
   - En local, `pnpm lhci` se termine normalement.
   - Attendu : le job se termine en un temps borné, et échoue franchement s'il bloque, au lieu de tourner sans fin.
 
+### Correctifs
+- **B1** — `9843150` : `preview.host = "127.0.0.1"` dans `vite.config.ts`. Sous Railpack, `localhost` résout d'abord en `::1` : le serveur de prérendu écoutait en IPv6 alors que le `fetch` visait `127.0.0.1`. Échec reproduit puis corrigé dans un conteneur `node:24` en local ; à confirmer au premier déploiement Dokploy.
+- **B2** — rouge `3cc6e1e`, correctif `a0ddbb6`. Le job `lighthouse` est limité à `timeout: 10 minutes` et ne tourne que sur `main` (`rules: if $CI_COMMIT_BRANCH == "main"`). `chromeFlags` reçoit en plus `--disable-dev-shm-usage --disable-gpu`. La cause probable, un `/dev/shm` de 64 Mo dans le conteneur, n'est pas prouvée ; à confirmer au premier pipeline de `main`.
+
 ## Plan technique
+
+> **Amendements post-livraison** (ils priment sur le texte de l'architect ci-dessous) :
+> - tâche 8, prérendu : `vite.config.ts` fixe `preview.host = "127.0.0.1"` (B1) ;
+> - tâche 11, Lighthouse CI : `chromeFlags` vaut `--no-sandbox --headless=new --disable-dev-shm-usage --disable-gpu` (B2) ;
+> - tâche 12, CI GitLab : le job `lighthouse` a `timeout: 10 minutes` et ne tourne que sur les pipelines de `main` (CA20 modifié, B2).
 
 ### Changements depuis la v1
 - **Couleurs (CA13)** : tous les tokens sont en `oklch()`, valeurs converties ci-dessous. `check-src` refuse désormais dans `src/styles.css` toute couleur dans un autre format. Les voiles sont écrits en oklch avec une transparence. Le test CA9 lit les valeurs oklch.
