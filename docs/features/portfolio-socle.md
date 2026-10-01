@@ -96,7 +96,7 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
 - Tailles de texte fluides (ex. h1 de `min(8.5vw, 32px)` à 150 px selon la fenêtre) : à exprimer en tokens, pas en valeurs arbitraires.
 
 ## Anomalies après livraison
-*MR !1 mergée le 2026-10-01. Correctifs sur la branche `fix/portfolio-socle-deploy`.*
+*MR !1 mergée le 2026-10-01. B1 et B2 ont été corrigés sur `fix/portfolio-socle-deploy` (MR !2), B3 et B4 sur `fix/portfolio-socle-404`.*
 
 - **B1 — Le déploiement Railpack échoue (CA21).**
   - Environnement : Railpack 0.15.4 dans Dokploy, mode « vite static site », Node 24.21.0 et pnpm 11.22.0 via Corepack, build lancé dans `/app` par `pnpm run build`.
@@ -125,6 +125,8 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
 
 ### Correctifs
 - **B1** — `9843150` : `preview.host = "127.0.0.1"` dans `vite.config.ts`. Sous Railpack, `localhost` résout d'abord en `::1` : le serveur de prérendu écoutait en IPv6 alors que le `fetch` visait `127.0.0.1`. Échec reproduit puis corrigé dans un conteneur `node:24` en local ; à confirmer au premier déploiement Dokploy.
+- **B3** — rouge `57f45f5`, correctif `1400946`. Le script `start` (`srvx --prod -s ../client dist/server/server.js`) fait lancer le serveur Node par Railpack 0.15.4 au lieu de Caddy, et le `Staticfile` est supprimé. Les URL sans page ni fichier répondent 404 avec la page 404 de TanStack. À confirmer après le merge, une fois les changements Dokploy faits (tâche 5 de la révision B3).
+- **B4** — rouge `102d59a`, correctif `eae02f2`. `srvx` passe en 1.0.5 : brotli en qualité 4 (environ 5 ms au lieu de 340 ms sur le bundle), sans recompression des images ni des polices, avec `ETag`, `Last-Modified` et `Vary`. Comme srvx est une dépendance directe, le serveur de rendu TanStack (`dist/server/server.js`, h3) utilise aussi la 1.0.5, au runtime comme pendant le prérendu. Toute montée de srvx touche donc aussi le rendu.
 - **B2** — rouge `3cc6e1e`, correctif `a0ddbb6`. Le job `lighthouse` est limité à `timeout: 10 minutes` et ne tourne que sur `main` (`rules: if $CI_COMMIT_BRANCH == "main"`). `chromeFlags` reçoit en plus `--disable-dev-shm-usage --disable-gpu`. La cause probable, un `/dev/shm` de 64 Mo dans le conteneur, n'est pas prouvée ; à confirmer au premier pipeline de `main`.
 
 ## Plan technique
