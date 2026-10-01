@@ -129,6 +129,29 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
 
 ## Plan technique
 
+### Révision B4 : compression du serveur (architect, 2026-10-02)
+*Le rapport de l'architect a été signalé par le filtre de sécurité de Claude Code, sans raison donnée. Aucun fichier n'avait été modifié. Romain a décidé de conditionner l'option A à une vérification préalable (voir « Décisions »).*
+
+- **Constat** : srvx 0.11.22 ne propose aucun réglage du statique. Son CLI n'appelle que `serveStatic({ dir })` (`srvx/dist/cli.mjs`, l. 52), et les middlewares exportés passent après le statique.
+- **Option A, recommandée** : passer `srvx` à 1.0.5, en version exacte. D'après l'architect, cette version réécrit le statique : brotli en qualité 4, uniquement sur les types texte de 1 Kio à 10 Mio, plus `ETag`, `Last-Modified` et `Range`. Le CLI, le script `start`, Railpack et Dokploy ne changent pas. Le lockfile garde `srvx@0.11.22` pour `@tanstack/start-plugin-core` et `h3`, qui servent au prérendu.
+- **Option C, repli** : `serve` 14.2.6 (Vercel, comme clockinsnap), avec `"start": "serve dist/client --no-port-switching"`. Il compresse en brotli de qualité 4 et envoie un `ETag`. Sa 404 a son propre gabarit, sans `h1` : il faut ajouter un `404.html` pour que le test CA22 passe. Le build serveur de TanStack devient inutile. Une dizaine de dépendances directes s'ajoutent.
+- Options écartées :
+  - B, `server.mjs` maison plus un script de précompression, environ 55 lignes ;
+  - D, plugin Vite de précompression, sans effet seul ;
+  - E, Nitro, disproportionné.
+- **Tâches** :
+  1. Tester : deux tests B4 dans `server.spec.ts`.
+     - « Le bundle principal part en brotli en moins de 100 ms » : 5 GET en `accept-encoding: br`, médiane sous 100 ms, `content-encoding: br`, corps décodé identique au fichier.
+     - « png, webp et woff2 ne sont pas recompressés » : pas de `content-encoding` sur `/og.png`, `/portrait.webp` et le plus gros `.woff2`.
+     - Les chemins hachés se calculent dans le test.
+  2. Dev : appliquer l'option retenue.
+  3. Vérifications locales, sans pipeline : `pnpm lint && pnpm test && pnpm build && pnpm test:e2e && pnpm lhci`, puis la mesure `curl` de B4 en `br`, en `gzip` et sans encodage (en-têtes `etag`, `last-modified` et `vary`), et `/cv.pdf` et `/page-inconnue` en 404.
+  4. Après déploiement, Romain : même mesure sur `https://romain-caille.fr`, puis PageSpeed Insights en mobile.
+- **Risques** :
+  - srvx 1.0.5 n'est pas testé par TanStack avec h3 2.0.1-rc.20. `server.spec.ts` sert de filet.
+  - Fraîcheur heuristique : avec `Last-Modified` et sans `Cache-Control`, un visiteur peut revoir l'ancienne page pendant au plus 10 % du temps écoulé depuis le build précédent.
+  - La mesure de temps peut être instable en CI. Ne pas relancer un pipeline sans avoir reproduit l'échec en local.
+
 ### Révision B3 : passage en mode serveur (architect, 2026-10-01)
 *Cette section prime sur le plan v2 pour l'hébergement, le `Staticfile` et les e2e du serveur.*
 
@@ -495,6 +518,7 @@ Racine : `/Users/romain/projects/portfolio`. Le dépôt est vierge, tous les fic
 - 2026-10-01 — Sitemap : correctif de l'espace de noms annulé. On garde le `xmlns` en `https` tel que généré par TanStack ; CA4 et ses tests reviennent à leur version d'origine. Le point est signalé dans la MR (validée par Romain)
 - 2026-10-01 — `src/components/ui/button.tsx`, généré par le template, est gardé pour `portfolio-pages` (validée par Romain)
 - 2026-10-01 — Passage du prérendu statique servi par Caddy au mode serveur Node détecté par Railpack, le setup habituel de Romain, pour obtenir de vraies 404 (CA22). Railpack reste en 0.15.4, la variable `RAILPACK_SPA_OUTPUT_DIR` est retirée de Dokploy, et le `Staticfile` est retiré du dépôt. Remplace la décision « prérendu statique » (décision 1 du plan) et la décision « `Staticfile` accepté » (validée par Romain)
+- 2026-10-02 — Correctif de B4 : option A, srvx 1.0.5, à condition qu'une vérification la valide d'abord. Il faut que la version existe sur le registre npm, qu'elle soit publiée par les mainteneurs habituels et qu'aucune CVE ni advisory ne la vise. Sinon, repli sur `serve` (option C) avec un `404.html`. Pas de `Cache-Control`. Seuil du test de temps à 100 ms. Romain ne demande pas de validation supplémentaire pour la suite de ce correctif (validée par Romain)
 - 2026-10-01 — B4 (brotli à la volée) corrigé avant le merge de la bascule serveur. L'architect propose le correctif le plus simple, et Romain le valide (validée par Romain)
 - 2026-10-01 — Révision B3 validée : script `start` avec srvx 0.11.22 en dépendance directe, préféré à `serve` utilisé dans clockinsnap, parce que c'est le serveur que TanStack documente. Lighthouse CI inchangé (il audite `dist/client`). Les e2e existants sont inchangés, avec un nouveau `server.spec.ts` sur le serveur lancé. Ligne « Hébergement » reformulée. Changements Dokploy après le merge seulement (validée par Romain)
 - 2026-10-01 — B1 (build Railpack) corrigé directement par le dev, sans test de reproduction préalable (validée par Romain)
