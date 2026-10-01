@@ -44,6 +44,9 @@ importers:
       shadcn:
         specifier: ^4.21.0
         version: 4.21.0(supports-color@5.5.0)(typescript@6.0.3)
+      srvx:
+        specifier: 0.11.22
+        version: 0.11.22
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
