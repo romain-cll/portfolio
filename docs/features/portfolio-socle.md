@@ -42,6 +42,7 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 
 ### Déploiement
 - [ ] CA21 — Étant donné un merge sur `main`, quand le déploiement Dokploy se termine, alors `https://romain-caille.fr` sert la version mergée en HTTPS.
+- [ ] CA22 — Étant donné le site déployé, quand je requête une URL qui ne correspond à aucune page ni à aucun fichier (ex. `/page-inconnue`, ou `/cv.pdf` tant que le fichier manque), alors la réponse a le code HTTP 404.
 
 ## Hors scope
 - Toutes les sections du design autres que le hero : barre pipeline, terminal `events.log`, overview, projets, contact (spec `portfolio-pages`).
@@ -63,7 +64,7 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 - Portrait du hero : `uploads/53820114-DBAD-413B-8432-5934679BE470.PNG` (1,6 Mo). Le cadrage du design est un zoom sur le visage (`background-size: 250%`, `background-position: 47.3% 22.5%`).
 - Petits écrans : le design réduit ses tailles et marges sous un certain seuil de largeur (ex. h1 à `min(8.5vw, 32px)` au minimum, marge latérale du hero à 16 px au minimum). Ces réductions sont à reproduire.
 - Le design fait foi pour les couleurs, la typo et les espacements, reportés en tokens dans `styles.css`. Les composants shadcn restent en style Lyra.
-- Hébergement : VPS OVH, déploiement Dokploy, build Railpack. Dans Dokploy, Romain sélectionne Railpack et le déploiement se fait seul : `RAILPACK_SPA_OUTPUT_DIR=dist/client` est posé, « Pipelines must succeed » est activé sur GitLab. Le projet fournit des scripts pnpm prêts pour le build, sans serveur ni configuration d'hébergement à écrire ou maintenir. Le `Staticfile` de Railpack est accepté dans le dépôt pour renvoyer de vraies 404 ; aucune autre config d'hébergement.
+- Hébergement : VPS OVH, déploiement Dokploy, build Railpack, dans le setup habituel de Romain. Railpack détecte TanStack Start et lance le serveur Node de l'application : c'est le mode serveur. La variable `RAILPACK_SPA_OUTPUT_DIR` sera retirée de Dokploy, et la version de Railpack (0.15.4, imposée par Dokploy) ne peut pas être changée. Le projet fournit des scripts pnpm prêts pour le build et le démarrage, sans configuration d'hébergement à écrire ou maintenir (ni `Staticfile` ni `Caddyfile`). « Pipelines must succeed » est activé sur GitLab.
 - Dépôt et CI : GitLab, sur le free tier. Le quota de minutes de CI est limité : aucun pipeline ne doit être relancé ou déclenché sans nécessité, et aucun agent ne lance de pipeline.
 - Domaine : `romain-caille.fr`.
 - Langue : anglais uniquement.
@@ -107,6 +108,12 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
   - Aucun délai maximal n'est configuré sur le job.
   - En local, `pnpm lhci` se termine normalement.
   - Attendu : le job se termine en un temps borné, et échoue franchement s'il bloque, au lieu de tourner sans fin.
+
+- **B3 — Aucune vraie 404 en production (CA10, CA22).**
+  - Constat du 2026-10-01 par `curl` : `/cv.pdf` et `/page-inconnue` répondent 200 avec le contenu de la page d'accueil.
+  - Cause, d'après l'architect : en mode « vite static site », Railpack 0.15.4 génère un Caddy qui renvoie `/index.html` pour toute URL inconnue. Il ignore `index_fallback` du `Staticfile`, une option lue seulement à partir de la 0.29.0. Romain ne peut pas changer la version de Railpack dans Dokploy.
+  - Décision : passage au mode serveur Node (voir « Décisions »).
+  - Vérifications du même jour, toutes OK : `/`, `/sitemap.xml`, `/robots.txt` et `/og.png` répondent 200 ; schema.org valide la page avec 0 erreur ; le hash du JS servi est identique au build de `main`.
 
 ### Correctifs
 - **B1** — `9843150` : `preview.host = "127.0.0.1"` dans `vite.config.ts`. Sous Railpack, `localhost` résout d'abord en `::1` : le serveur de prérendu écoutait en IPv6 alors que le `fetch` visait `127.0.0.1`. Échec reproduit puis corrigé dans un conteneur `node:24` en local ; à confirmer au premier déploiement Dokploy.
@@ -405,6 +412,7 @@ Racine : `/Users/romain/projects/portfolio`. Le dépôt est vierge, tous les fic
 - 2026-10-01 — Lighthouse CI : réécriture `/index.html` → `/` dans le routeur, plutôt qu'une liste d'URL à maintenir dans `lighthouserc.json` (validée par Romain)
 - 2026-10-01 — Sitemap : correctif de l'espace de noms annulé. On garde le `xmlns` en `https` tel que généré par TanStack ; CA4 et ses tests reviennent à leur version d'origine. Le point est signalé dans la MR (validée par Romain)
 - 2026-10-01 — `src/components/ui/button.tsx`, généré par le template, est gardé pour `portfolio-pages` (validée par Romain)
+- 2026-10-01 — Passage du prérendu statique servi par Caddy au mode serveur Node détecté par Railpack, le setup habituel de Romain, pour obtenir de vraies 404 (CA22). Railpack reste en 0.15.4, la variable `RAILPACK_SPA_OUTPUT_DIR` est retirée de Dokploy, et le `Staticfile` est retiré du dépôt. Remplace la décision « prérendu statique » (décision 1 du plan) et la décision « `Staticfile` accepté » (validée par Romain)
 - 2026-10-01 — B1 (build Railpack) corrigé directement par le dev, sans test de reproduction préalable (validée par Romain)
 - 2026-10-01 — Lighthouse CI uniquement sur les pipelines de `main`, plus sur les MR, pour préserver le quota du free tier. Une baisse de score n'empêche plus le merge et sera détectée après coup (validée par Romain)
 - 2026-10-01 — Livraison : CA1 à CA18 vérifiés (tests, et CA18 en local sur une branche jetable). CA19 et CA20 restent à vérifier sur le premier pipeline de la MR, CA21 après le merge, ainsi que les vérifications post-déploiement de CA3 à CA6 et CA10. Review OK au 2e passage.
