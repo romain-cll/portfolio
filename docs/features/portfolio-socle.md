@@ -35,14 +35,14 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 - [x] CA16 — Étant donné un fichier `.css` autre que `styles.css` dans `src/`, quand je lance la commande de lint, alors elle échoue.
 - [x] CA17 — Étant donné un import depuis un module externe dont le nom contient `icon` ou `lucide`, autre que `@carbon/icons-react` (ex. `lucide-react`, `@tabler/icons-react`, `react-icons`), quand je lance la commande de lint, alors elle échoue ; et aucun de ces modules n'est présent dans `package.json`.
 - [x] CA18 — Étant donné un fichier du dépôt qui viole une règle de CA12 à CA17, quand je lance `git commit`, alors le commit est refusé.
-- [ ] CA19 — Étant donné une MR qui contient une violation d'une règle de CA12 à CA17, quand la CI GitLab s'exécute, alors le pipeline échoue.
+- [x] CA19 — Étant donné une MR qui contient une violation d'une règle de CA12 à CA17, quand la CI GitLab s'exécute, alors le pipeline échoue.
 
 ### Performance
-- [ ] CA20 — Étant donné un pipeline sur `main`, quand la CI GitLab s'exécute, alors Lighthouse (profil mobile) tourne sur chaque route du build, et le pipeline échoue si l'un des scores Performance, Accessibilité, Bonnes pratiques ou SEO est inférieur à 95. Les pipelines de MR ne lancent pas Lighthouse.
+- [x] CA20 — Étant donné un pipeline sur `main`, quand la CI GitLab s'exécute, alors Lighthouse (profil mobile) tourne sur chaque route du build, et le pipeline échoue si l'un des scores Performance, Accessibilité, Bonnes pratiques ou SEO est inférieur à 95. Les pipelines de MR ne lancent pas Lighthouse.
 
 ### Déploiement
-- [ ] CA21 — Étant donné un merge sur `main`, quand le déploiement Dokploy se termine, alors `https://romain-caille.fr` sert la version mergée en HTTPS.
-- [ ] CA22 — Étant donné le site déployé, quand je requête une URL qui ne correspond à aucune page ni à aucun fichier (ex. `/page-inconnue`, ou `/cv.pdf` tant que le fichier manque), alors la réponse a le code HTTP 404.
+- [x] CA21 — Étant donné un merge sur `main`, quand le déploiement Dokploy se termine, alors `https://romain-caille.fr` sert la version mergée en HTTPS.
+- [x] CA22 — Étant donné le site déployé, quand je requête une URL qui ne correspond à aucune page ni à aucun fichier (ex. `/page-inconnue`, ou `/cv.pdf` tant que le fichier manque), alors la réponse a le code HTTP 404.
 
 ## Hors scope
 - Toutes les sections du design autres que le hero : barre pipeline, terminal `events.log`, overview, projets, contact (spec `portfolio-pages`).
@@ -520,6 +520,7 @@ Racine : `/Users/romain/projects/portfolio`. Le dépôt est vierge, tous les fic
 - 2026-10-01 — Sitemap : correctif de l'espace de noms annulé. On garde le `xmlns` en `https` tel que généré par TanStack ; CA4 et ses tests reviennent à leur version d'origine. Le point est signalé dans la MR (validée par Romain)
 - 2026-10-01 — `src/components/ui/button.tsx`, généré par le template, est gardé pour `portfolio-pages` (validée par Romain)
 - 2026-10-01 — Passage du prérendu statique servi par Caddy au mode serveur Node détecté par Railpack, le setup habituel de Romain, pour obtenir de vraies 404 (CA22). Railpack reste en 0.15.4, la variable `RAILPACK_SPA_OUTPUT_DIR` est retirée de Dokploy, et le `Staticfile` est retiré du dépôt. Remplace la décision « prérendu statique » (décision 1 du plan) et la décision « `Staticfile` accepté » (validée par Romain)
+- 2026-10-02 — Clôture : MR !3 mergée, Dokploy passé en mode serveur (variable `RAILPACK_SPA_OUTPUT_DIR` retirée, port 3000). Romain confirme le site en ligne, Lighthouse à 100 / 100 / 96 / 100 et des 404 fonctionnelles. CA1 à CA22 sont cochés. CA19 est vérifié par la config CI (`tests/unit/ci.test.ts` : le lint tourne sur les MR) et par les tests du lint, sans MR jetable, pour préserver le quota. B1 à B4 sont résolus (validée par Romain)
 - 2026-10-02 — Vérification de srvx 1.0.5 : GO.
   - Version `latest` sur npm, publiée le 2026-09-14 par `pi0`, comme toutes les versions depuis 0.11.20. Dépôt `h3js/srvx`, aucune dépendance, aucun script d'installation. L'intégrité du tarball correspond au registre.
   - OSV, GitHub Advisory Database et `npm audit` : 0 vulnérabilité. Le seul advisory connu (GHSA-p36q-q72m-gchr) vise les versions antérieures à 0.11.13.
