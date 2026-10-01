@@ -396,5 +396,6 @@ Racine : `/Users/romain/projects/portfolio`. Le dépôt est vierge, tous les fic
 - 2026-10-01 — Lighthouse CI : réécriture `/index.html` → `/` dans le routeur, plutôt qu'une liste d'URL à maintenir dans `lighthouserc.json` (validée par Romain)
 - 2026-10-01 — Sitemap : correctif de l'espace de noms annulé. On garde le `xmlns` en `https` tel que généré par TanStack ; CA4 et ses tests reviennent à leur version d'origine. Le point est signalé dans la MR (validée par Romain)
 - 2026-10-01 — `src/components/ui/button.tsx`, généré par le template, est gardé pour `portfolio-pages` (validée par Romain)
+- 2026-10-01 — B1 (build Railpack) corrigé directement par le dev, sans test de reproduction préalable (validée par Romain)
 - 2026-10-01 — Lighthouse CI uniquement sur les pipelines de `main`, plus sur les MR, pour préserver le quota du free tier. Une baisse de score n'empêche plus le merge et sera détectée après coup (validée par Romain)
 - 2026-10-01 — Livraison : CA1 à CA18 vérifiés (tests, et CA18 en local sur une branche jetable). CA19 et CA20 restent à vérifier sur le premier pipeline de la MR, CA21 après le merge, ainsi que les vérifications post-déploiement de CA3 à CA6 et CA10. Review OK au 2e passage.
