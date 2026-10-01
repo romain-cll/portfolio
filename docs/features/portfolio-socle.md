@@ -109,6 +109,14 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
   - En local, `pnpm lhci` se termine normalement.
   - Attendu : le job se termine en un temps borné, et échoue franchement s'il bloque, au lieu de tourner sans fin.
 
+- **B4 — srvx recompresse le JS en brotli à chaque requête (CA20, risque « performance » de la révision B3).**
+  - Mesure en local sur `pnpm start`, bundle `index-*.js` de 341 502 octets, 5 requêtes par encodage :
+    - `br` : ~0,34 s pour 94 028 o ;
+    - `gzip` : ~0,006 s pour 108 543 o ;
+    - identity : ~0,0006 s.
+  - srvx appelle `createBrotliCompress()` avec la qualité par défaut, 11, à chaque requête et sans cache (`node_modules/srvx/dist/static.mjs`, lignes 61 et 66). Aucun `Cache-Control` sur le bundle ni sur `/`.
+  - Le seuil de ~200 ms fixé par le plan est dépassé. Lighthouse CI ne le voit pas, puisqu'il audite `dist/client` avec son propre serveur.
+  - Décision : corriger avant le merge (voir « Décisions »).
 - **B3 — Aucune vraie 404 en production (CA10, CA22).**
   - Constat du 2026-10-01 par `curl` : `/cv.pdf` et `/page-inconnue` répondent 200 avec le contenu de la page d'accueil.
   - Cause, d'après l'architect : en mode « vite static site », Railpack 0.15.4 génère un Caddy qui renvoie `/index.html` pour toute URL inconnue. Il ignore `index_fallback` du `Staticfile`, une option lue seulement à partir de la 0.29.0. Romain ne peut pas changer la version de Railpack dans Dokploy.
@@ -487,6 +495,7 @@ Racine : `/Users/romain/projects/portfolio`. Le dépôt est vierge, tous les fic
 - 2026-10-01 — Sitemap : correctif de l'espace de noms annulé. On garde le `xmlns` en `https` tel que généré par TanStack ; CA4 et ses tests reviennent à leur version d'origine. Le point est signalé dans la MR (validée par Romain)
 - 2026-10-01 — `src/components/ui/button.tsx`, généré par le template, est gardé pour `portfolio-pages` (validée par Romain)
 - 2026-10-01 — Passage du prérendu statique servi par Caddy au mode serveur Node détecté par Railpack, le setup habituel de Romain, pour obtenir de vraies 404 (CA22). Railpack reste en 0.15.4, la variable `RAILPACK_SPA_OUTPUT_DIR` est retirée de Dokploy, et le `Staticfile` est retiré du dépôt. Remplace la décision « prérendu statique » (décision 1 du plan) et la décision « `Staticfile` accepté » (validée par Romain)
+- 2026-10-01 — B4 (brotli à la volée) corrigé avant le merge de la bascule serveur. L'architect propose le correctif le plus simple, et Romain le valide (validée par Romain)
 - 2026-10-01 — Révision B3 validée : script `start` avec srvx 0.11.22 en dépendance directe, préféré à `serve` utilisé dans clockinsnap, parce que c'est le serveur que TanStack documente. Lighthouse CI inchangé (il audite `dist/client`). Les e2e existants sont inchangés, avec un nouveau `server.spec.ts` sur le serveur lancé. Ligne « Hébergement » reformulée. Changements Dokploy après le merge seulement (validée par Romain)
 - 2026-10-01 — B1 (build Railpack) corrigé directement par le dev, sans test de reproduction préalable (validée par Romain)
 - 2026-10-01 — Lighthouse CI uniquement sur les pipelines de `main`, plus sur les MR, pour préserver le quota du free tier. Une baisse de score n'empêche plus le merge et sera détectée après coup (validée par Romain)
