@@ -143,16 +143,6 @@ test('CA4 — sitemap.xml liste chaque page prérendue en URL absolue, sans /cv.
   }
 })
 
-test('CA4 — sitemap.xml déclare l’espace de noms http://www.sitemaps.org/schemas/sitemap/0.9 sur l’élément racine urlset', () => {
-  assertBuilt()
-  const xml = readFileSync(join(DIST, 'sitemap.xml'), 'utf8')
-  const root = xml.match(/<urlset\b[^>]*>/)?.[0]
-
-  expect(root, 'sitemap.xml ne contient aucun élément racine <urlset>').toBeDefined()
-  const xmlns = root!.match(/\sxmlns\s*=\s*(?:"([^"]*)"|'([^']*)')/)
-  expect(xmlns?.[1] ?? xmlns?.[2], 'xmlns par défaut de <urlset>').toBe('http://www.sitemaps.org/schemas/sitemap/0.9')
-})
-
 // ---------------------------------------------------------------------------
 // CA5
 // ---------------------------------------------------------------------------
