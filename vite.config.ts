@@ -5,6 +5,10 @@ import tailwindcss from "@tailwindcss/vite"
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
+  // Le prérendu lance un serveur de preview puis l'appelle avec fetch. Sans hôte explicite,
+  // le serveur écoute sur `localhost`, que certains conteneurs résolvent en ::1 alors que
+  // fetch se connecte en 127.0.0.1 : ECONNREFUSED. On fixe l'IPv4 des deux côtés.
+  preview: { host: "127.0.0.1" },
   plugins: [
     tailwindcss(),
     tanstackStart({

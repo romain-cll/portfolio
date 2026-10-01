@@ -38,7 +38,7 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 - [ ] CA19 — Étant donné une MR qui contient une violation d'une règle de CA12 à CA17, quand la CI GitLab s'exécute, alors le pipeline échoue.
 
 ### Performance
-- [ ] CA20 — Étant donné une MR, quand la CI GitLab s'exécute, alors Lighthouse (profil mobile) tourne sur chaque route du build, et le pipeline échoue si l'un des scores Performance, Accessibilité, Bonnes pratiques ou SEO est inférieur à 95.
+- [ ] CA20 — Étant donné un pipeline sur `main`, quand la CI GitLab s'exécute, alors Lighthouse (profil mobile) tourne sur chaque route du build, et le pipeline échoue si l'un des scores Performance, Accessibilité, Bonnes pratiques ou SEO est inférieur à 95. Les pipelines de MR ne lancent pas Lighthouse.
 
 ### Déploiement
 - [ ] CA21 — Étant donné un merge sur `main`, quand le déploiement Dokploy se termine, alors `https://romain-caille.fr` sert la version mergée en HTTPS.
@@ -64,7 +64,7 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 - Petits écrans : le design réduit ses tailles et marges sous un certain seuil de largeur (ex. h1 à `min(8.5vw, 32px)` au minimum, marge latérale du hero à 16 px au minimum). Ces réductions sont à reproduire.
 - Le design fait foi pour les couleurs, la typo et les espacements, reportés en tokens dans `styles.css`. Les composants shadcn restent en style Lyra.
 - Hébergement : VPS OVH, déploiement Dokploy, build Railpack. Dans Dokploy, Romain sélectionne Railpack et le déploiement se fait seul : `RAILPACK_SPA_OUTPUT_DIR=dist/client` est posé, « Pipelines must succeed » est activé sur GitLab. Le projet fournit des scripts pnpm prêts pour le build, sans serveur ni configuration d'hébergement à écrire ou maintenir. Le `Staticfile` de Railpack est accepté dans le dépôt pour renvoyer de vraies 404 ; aucune autre config d'hébergement.
-- Dépôt et CI : GitLab.
+- Dépôt et CI : GitLab, sur le free tier. Le quota de minutes de CI est limité : aucun pipeline ne doit être relancé ou déclenché sans nécessité, et aucun agent ne lance de pipeline.
 - Domaine : `romain-caille.fr`.
 - Langue : anglais uniquement.
 
@@ -94,7 +94,30 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
 - Rayons : `0` partout. Seuls les pastilles et l'avatar final sont ronds.
 - Tailles de texte fluides (ex. h1 de `min(8.5vw, 32px)` à 150 px selon la fenêtre) : à exprimer en tokens, pas en valeurs arbitraires.
 
+## Anomalies après livraison
+*MR !1 mergée le 2026-10-01. Correctifs sur la branche `fix/portfolio-socle-deploy`.*
+
+- **B1 — Le déploiement Railpack échoue (CA21).**
+  - Environnement : Railpack 0.15.4 dans Dokploy, mode « vite static site », Node 24.21.0 et pnpm 11.22.0 via Corepack, build lancé dans `/app` par `pnpm run build`.
+  - Le prérendu affiche `Crawling: /`, puis `Prerendered 0 pages`. Le sitemap est écrit (`sitemap.xml`, `pages.json`), puis le processus plante avec `TypeError: fetch failed`, cause `connect ECONNREFUSED 127.0.0.1:43061`, code de sortie 1.
+  - Le même `pnpm build` réussit en local et dans le job `build` de la CI GitLab (image Playwright).
+  - Attendu : `pnpm build` réussit sous Railpack, et `dist/client/index.html` contient la page prérendue.
+- **B2 — Le job `lighthouse` de la CI ne se termine pas (CA20).**
+  - Pipeline de la MR !1, job `16869816761` : `lhci autorun` lance son serveur sur `http://localhost:<port>/index.html`, le run 1 et le run 2 se terminent en 12 s environ chacun, puis le run 3 reste bloqué. Romain a annulé le job au bout de 34 minutes.
+  - Aucun délai maximal n'est configuré sur le job.
+  - En local, `pnpm lhci` se termine normalement.
+  - Attendu : le job se termine en un temps borné, et échoue franchement s'il bloque, au lieu de tourner sans fin.
+
+### Correctifs
+- **B1** — `9843150` : `preview.host = "127.0.0.1"` dans `vite.config.ts`. Sous Railpack, `localhost` résout d'abord en `::1` : le serveur de prérendu écoutait en IPv6 alors que le `fetch` visait `127.0.0.1`. Échec reproduit puis corrigé dans un conteneur `node:24` en local ; à confirmer au premier déploiement Dokploy.
+- **B2** — rouge `3cc6e1e`, correctif `a0ddbb6`. Le job `lighthouse` est limité à `timeout: 10 minutes` et ne tourne que sur `main` (`rules: if $CI_COMMIT_BRANCH == "main"`). `chromeFlags` reçoit en plus `--disable-dev-shm-usage --disable-gpu`. La cause probable, un `/dev/shm` de 64 Mo dans le conteneur, n'est pas prouvée ; à confirmer au premier pipeline de `main`.
+
 ## Plan technique
+
+> **Amendements post-livraison** (ils priment sur le texte de l'architect ci-dessous) :
+> - tâche 8, prérendu : `vite.config.ts` fixe `preview.host = "127.0.0.1"` (B1) ;
+> - tâche 11, Lighthouse CI : `chromeFlags` vaut `--no-sandbox --headless=new --disable-dev-shm-usage --disable-gpu` (B2) ;
+> - tâche 12, CI GitLab : le job `lighthouse` a `timeout: 10 minutes` et ne tourne que sur les pipelines de `main` (CA20 modifié, B2).
 
 ### Changements depuis la v1
 - **Couleurs (CA13)** : tous les tokens sont en `oklch()`, valeurs converties ci-dessous. `check-src` refuse désormais dans `src/styles.css` toute couleur dans un autre format. Les voiles sont écrits en oklch avec une transparence. Le test CA9 lit les valeurs oklch.
@@ -382,4 +405,6 @@ Racine : `/Users/romain/projects/portfolio`. Le dépôt est vierge, tous les fic
 - 2026-10-01 — Lighthouse CI : réécriture `/index.html` → `/` dans le routeur, plutôt qu'une liste d'URL à maintenir dans `lighthouserc.json` (validée par Romain)
 - 2026-10-01 — Sitemap : correctif de l'espace de noms annulé. On garde le `xmlns` en `https` tel que généré par TanStack ; CA4 et ses tests reviennent à leur version d'origine. Le point est signalé dans la MR (validée par Romain)
 - 2026-10-01 — `src/components/ui/button.tsx`, généré par le template, est gardé pour `portfolio-pages` (validée par Romain)
+- 2026-10-01 — B1 (build Railpack) corrigé directement par le dev, sans test de reproduction préalable (validée par Romain)
+- 2026-10-01 — Lighthouse CI uniquement sur les pipelines de `main`, plus sur les MR, pour préserver le quota du free tier. Une baisse de score n'empêche plus le merge et sera détectée après coup (validée par Romain)
 - 2026-10-01 — Livraison : CA1 à CA18 vérifiés (tests, et CA18 en local sur une branche jetable). CA19 et CA20 restent à vérifier sur le premier pipeline de la MR, CA21 après le merge, ainsi que les vérifications post-déploiement de CA3 à CA6 et CA10. Review OK au 2e passage.
