@@ -42,6 +42,7 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 
 ### Déploiement
 - [ ] CA21 — Étant donné un merge sur `main`, quand le déploiement Dokploy se termine, alors `https://romain-caille.fr` sert la version mergée en HTTPS.
+- [ ] CA22 — Étant donné le site déployé, quand je requête une URL qui ne correspond à aucune page ni à aucun fichier (ex. `/page-inconnue`, ou `/cv.pdf` tant que le fichier manque), alors la réponse a le code HTTP 404.
 
 ## Hors scope
 - Toutes les sections du design autres que le hero : barre pipeline, terminal `events.log`, overview, projets, contact (spec `portfolio-pages`).
@@ -63,7 +64,7 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 - Portrait du hero : `uploads/53820114-DBAD-413B-8432-5934679BE470.PNG` (1,6 Mo). Le cadrage du design est un zoom sur le visage (`background-size: 250%`, `background-position: 47.3% 22.5%`).
 - Petits écrans : le design réduit ses tailles et marges sous un certain seuil de largeur (ex. h1 à `min(8.5vw, 32px)` au minimum, marge latérale du hero à 16 px au minimum). Ces réductions sont à reproduire.
 - Le design fait foi pour les couleurs, la typo et les espacements, reportés en tokens dans `styles.css`. Les composants shadcn restent en style Lyra.
-- Hébergement : VPS OVH, déploiement Dokploy, build Railpack. Dans Dokploy, Romain sélectionne Railpack et le déploiement se fait seul : `RAILPACK_SPA_OUTPUT_DIR=dist/client` est posé, « Pipelines must succeed » est activé sur GitLab. Le projet fournit des scripts pnpm prêts pour le build, sans serveur ni configuration d'hébergement à écrire ou maintenir. Le `Staticfile` de Railpack est accepté dans le dépôt pour renvoyer de vraies 404 ; aucune autre config d'hébergement.
+- Hébergement : VPS OVH, déploiement Dokploy, build Railpack, dans le setup habituel de Romain (comme `clockinsnap/frontend-web`, qui a un script `start`). Railpack 0.15.4 lance le script `start` du projet (`pnpm run start`), qui démarre le serveur Node (srvx). Sans ce script, il retombe en site statique servi par Caddy. La variable `RAILPACK_SPA_OUTPUT_DIR` sera retirée de Dokploy après le merge, et la version de Railpack (0.15.4, imposée par Dokploy) ne peut pas être changée. Le projet fournit des scripts pnpm prêts pour le build et le démarrage, sans configuration d'hébergement à écrire ou maintenir (ni `Staticfile` ni `Caddyfile`). « Pipelines must succeed » est activé sur GitLab.
 - Dépôt et CI : GitLab, sur le free tier. Le quota de minutes de CI est limité : aucun pipeline ne doit être relancé ou déclenché sans nécessité, et aucun agent ne lance de pipeline.
 - Domaine : `romain-caille.fr`.
 - Langue : anglais uniquement.
@@ -95,7 +96,7 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
 - Tailles de texte fluides (ex. h1 de `min(8.5vw, 32px)` à 150 px selon la fenêtre) : à exprimer en tokens, pas en valeurs arbitraires.
 
 ## Anomalies après livraison
-*MR !1 mergée le 2026-10-01. Correctifs sur la branche `fix/portfolio-socle-deploy`.*
+*MR !1 mergée le 2026-10-01. B1 et B2 ont été corrigés sur `fix/portfolio-socle-deploy` (MR !2), B3 et B4 sur `fix/portfolio-socle-404`.*
 
 - **B1 — Le déploiement Railpack échoue (CA21).**
   - Environnement : Railpack 0.15.4 dans Dokploy, mode « vite static site », Node 24.21.0 et pnpm 11.22.0 via Corepack, build lancé dans `/app` par `pnpm run build`.
@@ -108,11 +109,124 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
   - En local, `pnpm lhci` se termine normalement.
   - Attendu : le job se termine en un temps borné, et échoue franchement s'il bloque, au lieu de tourner sans fin.
 
+- **B4 — srvx recompresse le JS en brotli à chaque requête (CA20, risque « performance » de la révision B3).**
+  - Mesure en local sur `pnpm start`, bundle `index-*.js` de 341 502 octets, 5 requêtes par encodage :
+    - `br` : ~0,34 s pour 94 028 o ;
+    - `gzip` : ~0,006 s pour 108 543 o ;
+    - identity : ~0,0006 s.
+  - srvx appelle `createBrotliCompress()` avec la qualité par défaut, 11, à chaque requête et sans cache (`node_modules/srvx/dist/static.mjs`, lignes 61 et 66). Aucun `Cache-Control` sur le bundle ni sur `/`.
+  - Le seuil de ~200 ms fixé par le plan est dépassé. Lighthouse CI ne le voit pas, puisqu'il audite `dist/client` avec son propre serveur.
+  - Décision : corriger avant le merge (voir « Décisions »).
+- **B3 — Aucune vraie 404 en production (CA10, CA22).**
+  - Constat du 2026-10-01 par `curl` : `/cv.pdf` et `/page-inconnue` répondent 200 avec le contenu de la page d'accueil.
+  - Cause, d'après l'architect : en mode « vite static site », Railpack 0.15.4 génère un Caddy qui renvoie `/index.html` pour toute URL inconnue. Il ignore `index_fallback` du `Staticfile`, une option lue seulement à partir de la 0.29.0. Romain ne peut pas changer la version de Railpack dans Dokploy.
+  - Décision : passage au mode serveur Node (voir « Décisions »).
+  - Vérifications du même jour, toutes OK : `/`, `/sitemap.xml`, `/robots.txt` et `/og.png` répondent 200 ; schema.org valide la page avec 0 erreur ; le hash du JS servi est identique au build de `main`.
+
 ### Correctifs
 - **B1** — `9843150` : `preview.host = "127.0.0.1"` dans `vite.config.ts`. Sous Railpack, `localhost` résout d'abord en `::1` : le serveur de prérendu écoutait en IPv6 alors que le `fetch` visait `127.0.0.1`. Échec reproduit puis corrigé dans un conteneur `node:24` en local ; à confirmer au premier déploiement Dokploy.
+- **B3** — rouge `57f45f5`, correctif `1400946`. Le script `start` (`srvx --prod -s ../client dist/server/server.js`) fait lancer le serveur Node par Railpack 0.15.4 au lieu de Caddy, et le `Staticfile` est supprimé. Les URL sans page ni fichier répondent 404 avec la page 404 de TanStack. À confirmer après le merge, une fois les changements Dokploy faits (tâche 5 de la révision B3).
+- **B4** — rouge `102d59a`, correctif `eae02f2`. `srvx` passe en 1.0.5 : brotli en qualité 4 (environ 5 ms au lieu de 340 ms sur le bundle), sans recompression des images ni des polices, avec `ETag`, `Last-Modified` et `Vary`. Comme srvx est une dépendance directe, le serveur de rendu TanStack (`dist/server/server.js`, h3) utilise aussi la 1.0.5, au runtime comme pendant le prérendu. Toute montée de srvx touche donc aussi le rendu.
 - **B2** — rouge `3cc6e1e`, correctif `a0ddbb6`. Le job `lighthouse` est limité à `timeout: 10 minutes` et ne tourne que sur `main` (`rules: if $CI_COMMIT_BRANCH == "main"`). `chromeFlags` reçoit en plus `--disable-dev-shm-usage --disable-gpu`. La cause probable, un `/dev/shm` de 64 Mo dans le conteneur, n'est pas prouvée ; à confirmer au premier pipeline de `main`.
 
 ## Plan technique
+
+### Révision B4 : compression du serveur (architect, 2026-10-02)
+*Le rapport de l'architect a été signalé par le filtre de sécurité de Claude Code, sans raison donnée. Aucun fichier n'avait été modifié. Romain a décidé de conditionner l'option A à une vérification préalable (voir « Décisions »).*
+
+- **Constat** : srvx 0.11.22 ne propose aucun réglage du statique. Son CLI n'appelle que `serveStatic({ dir })` (`srvx/dist/cli.mjs`, l. 52), et les middlewares exportés passent après le statique.
+- **Option A, recommandée** : passer `srvx` à 1.0.5, en version exacte. D'après l'architect, cette version réécrit le statique : brotli en qualité 4, uniquement sur les types texte de 1 Kio à 10 Mio, plus `ETag`, `Last-Modified` et `Range`. Le CLI, le script `start`, Railpack et Dokploy ne changent pas. Le lockfile garde `srvx@0.11.22` pour `@tanstack/start-plugin-core` et `h3`, qui servent au prérendu.
+- **Option C, repli** : `serve` 14.2.6 (Vercel, comme clockinsnap), avec `"start": "serve dist/client --no-port-switching"`. Il compresse en brotli de qualité 4 et envoie un `ETag`. Sa 404 a son propre gabarit, sans `h1` : il faut ajouter un `404.html` pour que le test CA22 passe. Le build serveur de TanStack devient inutile. Une dizaine de dépendances directes s'ajoutent.
+- Options écartées :
+  - B, `server.mjs` maison plus un script de précompression, environ 55 lignes ;
+  - D, plugin Vite de précompression, sans effet seul ;
+  - E, Nitro, disproportionné.
+- **Tâches** :
+  1. Tester : deux tests B4 dans `server.spec.ts`.
+     - « Le bundle principal part en brotli en moins de 100 ms » : 5 GET en `accept-encoding: br`, médiane sous 100 ms, `content-encoding: br`, corps décodé identique au fichier.
+     - « png, webp et woff2 ne sont pas recompressés » : pas de `content-encoding` sur `/og.png`, `/portrait.webp` et le plus gros `.woff2`.
+     - Les chemins hachés se calculent dans le test.
+  2. Dev : appliquer l'option retenue.
+  3. Vérifications locales, sans pipeline : `pnpm lint && pnpm test && pnpm build && pnpm test:e2e && pnpm lhci`, puis la mesure `curl` de B4 en `br`, en `gzip` et sans encodage (en-têtes `etag`, `last-modified` et `vary`), et `/cv.pdf` et `/page-inconnue` en 404.
+  4. Après déploiement, Romain : même mesure sur `https://romain-caille.fr`, puis PageSpeed Insights en mobile.
+- **Risques** :
+  - srvx 1.0.5 n'est pas testé par TanStack avec h3 2.0.1-rc.20. `server.spec.ts` sert de filet.
+  - Fraîcheur heuristique : avec `Last-Modified` et sans `Cache-Control`, un visiteur peut revoir l'ancienne page pendant au plus 10 % du temps écoulé depuis le build précédent.
+  - La mesure de temps peut être instable en CI. Ne pas relancer un pipeline sans avoir reproduit l'échec en local.
+
+### Révision B3 : passage en mode serveur (architect, 2026-10-01)
+*Cette section prime sur le plan v2 pour l'hébergement, le `Staticfile` et les e2e du serveur.*
+
+#### Approche
+- Railpack 0.15.4 ne gère pas TanStack Start : il pose seulement l'étiquette `nodeRuntime: tanstack-start`. C'est le script `start` du projet qui le fait sortir du mode « vite static site », et ce script devient la commande de démarrage (`pnpm run start`). Railpack n'impose aucun port. Le build TanStack exporte seulement un handler `fetch` (`dist/server/server.js`). `srvx`, déjà présent dans les dépendances en 0.11.22, le sert sur `PORT` (3000 par défaut), sur toutes les interfaces.
+- On garde le prérendu. srvx sert d'abord les fichiers de `dist/client` : `/` renvoie le `index.html` prérendu tel quel, ce qui préserve CA1 et CA20. Tout le reste passe au handler TanStack. Une URL sans fichier ni route (`/page-inconnue`, `/cv.pdf`) aboutit au `notFoundComponent` racine, rendu avec le statut 404 (CA22). Le rendu à la requête ne sert qu'à ces 404.
+- B1 reste utile : sous Railpack, le build prérend toujours via le serveur de preview Vite. Lighthouse CI continue d'auditer `dist/client`. Les e2e existants gardent leur simulation. Un nouveau spec teste CA22 sur le serveur buildé, que Playwright lance.
+
+#### Fichiers
+- modifié : `package.json` — script `"start": "srvx --prod -s ../client dist/server/server.js"` ; `"srvx": "0.11.22"` en `dependencies`, en version exacte (même règle que `@shadcn/lint`, avant la 1.0).
+- modifié : `pnpm-lock.yaml` — srvx passe de dépendance transitive à directe, dans la même version 0.11.22. Aucun nouveau paquet n'est téléchargé.
+- supprimé : `Staticfile` — sans effet en 0.15.4 (B3) et sans objet hors du mode statique.
+- modifié : `playwright.config.ts` — `webServer` qui lance `pnpm start` sur le port 3100, `use.baseURL`, commentaire d'en-tête.
+- créé : `tests/e2e/server.spec.ts` — CA22, et vérifie que le serveur sert bien le build (CA1, CA3 à CA5).
+- modifié : `tests/e2e/support.ts` — commentaire de `serveBuild` : il simule la partie statique du serveur et ne cite plus le `Staticfile`.
+- inchangés, vérifiés : `vite.config.ts` (B1) ; `lighthouserc.json` ; `src/router.tsx` (la réécriture `/index.html` sert toujours à LHCI) ; `src/routes/__root.tsx` (le `notFoundComponent` existe déjà) ; `.gitlab-ci.yml` et `tests/unit/ci.test.ts`.
+
+#### Tâches (ordonnées)
+1. **Test rouge de CA22** — couvre CA22, CA1, CA3, CA4, CA5
+   - `playwright.config.ts` : `use: { baseURL: 'http://127.0.0.1:3100' }`, `webServer: { command: 'pnpm start', env: { PORT: '3100' }, url: 'http://127.0.0.1:3100/', reuseExistingServer: false }`. Port dédié, pour ne pas viser `pnpm dev` sur 3000. Avec `reuseExistingServer: false`, le test porte toujours sur le build qui vient d'être fait. Les specs existants utilisent des URL absolues en `https://romain-caille.fr` et ne sont donc pas touchés par `baseURL`.
+   - `tests/e2e/server.spec.ts`, JavaScript activé :
+     - CA22 : `page.goto('/page-inconnue')` donne le statut 404 et un `h1` « 404 » ; `request.get('/cv.pdf')` donne 404 ;
+     - CA1 : `request.get('/')` répond 200 avec un corps strictement égal à `dist/client/index.html` ;
+     - CA3 à CA5 : `/og.png`, `/portrait.webp`, `/sitemap.xml` et `/robots.txt` répondent 200.
+   - `pnpm build && pnpm test:e2e tests/e2e/server.spec.ts` doit échouer : il n'y a pas encore de script `start`.
+2. **Serveur Node** — couvre CA22, CA21
+   - `pnpm add -E srvx@0.11.22`, puis le script `start` ci-dessus. Le test de la tâche 1 passe.
+   - Pourquoi ce script suffit, d'après le tag v0.15.4 de Railpack :
+     - `core/providers/node/spa.go`, `isSPA` : `RAILPACK_SPA_OUTPUT_DIR` force le mode statique ; sinon `if p.hasCustomStartCommand(ctx) { return false }`, où `hasCustomStartCommand` lit `p.packageJson.Scripts["start"]` ; sinon `return (isVite || …) && p.getOutputDirectory(ctx) != ""`. Le projet est détecté comme Vite : sans script `start`, Railpack reste sur Caddy et sert `dist` une fois la variable retirée (`DefaultViteOutputDirectory = "dist"`).
+     - `core/providers/node/node.go`, `GetStartCommand` : `if start := p.getScripts(p.packageJson, "start"); start != "" { return p.packageManager.RunCmd("start") }`. Aucune commande par défaut pour TanStack Start.
+     - `isTanstackStart()` ne sert qu'à la métadonnée `nodeRuntime`.
+     - `GetNodeEnvVars` pose `NODE_ENV=production`, `CI=true` et des `NPM_CONFIG_*`, mais aucun `PORT`. Le Caddy actuel écoutait sur `:{$PORT:80}`.
+     - **Correction de la v1** : `tanstack.go` n'existe pas au tag v0.15.4. Il est arrivé avec la PR #672 (2 août 2026) et définit `DefaultTanstackSrvxStartCommand = "srvx --prod -s ../client dist/server/server.js"`, utilisé seulement sans script `start`. Notre script reprend la même commande : une future montée de version de Railpack ne changera rien.
+   - Pourquoi srvx : `dist/server/server.js` exporte un objet `{ fetch }` qui n'écoute aucun port. srvx 0.11.22 résout `-s` depuis le dossier de l'entrée (`dist/client`), lit `PORT` (3000 sinon) et `HOST` (toutes les interfaces sinon). Son `serveStatic` essaie le fichier, puis `<chemin>.html`, puis `<chemin>/index.html`, puis passe au handler TanStack, qui renvoie 404 quand la route racine est marquée `_notFound`.
+3. **Nettoyage** — couvre CA22
+   - `git rm Staticfile`.
+   - Commentaires de `support.ts` (`serveBuild` simule la partie statique de srvx ; une URL sans fichier y répond 404 en texte brut, alors que le vrai serveur rend la page 404 de TanStack, testée dans `server.spec.ts`) et de l'en-tête de `playwright.config.ts`.
+   - Ne pas toucher à `vite.config.ts` : `preview.host` sert au prérendu pendant le build, pas à srvx.
+4. **Vérifications locales, sans pipeline** — couvre CA19, CA20, CA21
+   - `pnpm lint && pnpm test && pnpm build && pnpm test:e2e && pnpm lhci`.
+   - Plan Railpack avec la version de Dokploy (`railpack plan` n'a pas besoin de BuildKit) : installer Railpack 0.15.4 en local, puis `railpack plan . | grep startCommand` (attendu : `"startCommand": "pnpm run start"`) et `railpack plan --env RAILPACK_SPA_OUTPUT_DIR=dist/client . | grep startCommand` (attendu : `caddy run …`, ce qui prouve qu'il faut retirer la variable).
+5. **Romain, dans Dokploy, après le merge** — couvre CA21, CA22
+   - Ne rien changer tant que le merge n'est pas sur `main`. Si le merge déclenche un déploiement alors que la variable est encore là, le site reste servi par Caddy, sans danger.
+   - Supprimer `RAILPACK_SPA_OUTPUT_DIR` ; ne pas ajouter `HOST` ; `PORT` n'est pas nécessaire.
+   - Domaine `romain-caille.fr`, « Container Port » : `3000` (port par défaut de srvx ; avant, 80 pour Caddy). Si l'application a une variable `PORT`, ce champ doit avoir la même valeur.
+   - Si un healthcheck vise `/health`, le pointer sur `/`.
+   - Redéployer, puis vérifier : au build, plus de « Deploying as vite static site » ; au démarrage, `➜ Listening on: http://localhost:3000/ (all interfaces)`. Le site peut répondre en erreur pendant environ une minute.
+6. **Vérifications après déploiement** — couvre CA21, CA22, CA3, CA4, CA5, CA10, CA20.
+
+#### Stratégie de test
+- Commandes : tous les e2e, serveur lancé par `webServer` : `pnpm build && pnpm test:e2e` ; CA22 seul : `pnpm build && pnpm test:e2e tests/e2e/server.spec.ts`.
+- CA22 → intégration, sur le serveur buildé lancé en local par Playwright : `/page-inconnue` en navigation répond 404 avec un `h1` « 404 » ; `/cv.pdf` en requête simple répond 404. Après déploiement : `for u in "" cv.pdf page-inconnue sitemap.xml robots.txt og.png; do curl -s -o /dev/null -w "%{http_code} /$u\n" "https://romain-caille.fr/$u"; done` (attendu : `200 /`, `404 /cv.pdf`, `404 /page-inconnue`, puis trois `200`).
+- CA1 → `GET /` sur le serveur renvoie exactement `dist/client/index.html` ; ce test échoue aussi si srvx ne trouve plus `dist/client`.
+- CA3, CA4, CA5 → `/og.png`, `/portrait.webp`, `/sitemap.xml` et `/robots.txt` répondent 200 sur le serveur.
+- CA2, CA6, CA7 à CA18 → inchangés.
+- CA19 → inchangé ; le job `e2e` démarre en plus srvx via `webServer`.
+- CA20 → inchangé si la décision 2 est A ; après déploiement, un passage PageSpeed Insights mobile, plus la mesure du risque de performance.
+- CA21 → avant le merge, `railpack plan` en 0.15.4 ; après le déploiement, les logs, `curl -sI` en 200 et le hash du JS servi.
+
+#### Décisions à valider
+- **srvx en dépendance directe** — A : `srvx` 0.11.22 en `dependencies` (déjà installé en transitif, commande documentée par TanStack et lancée par les Railpack récents) / B : serveur maison `scripts/serve.mjs` sur `node:http` (~80 lignes) / C : `vite preview` en production (déconseillé par Vite) — recommandation : A.
+- **Lighthouse CI** — A : inchangé, audite `dist/client` (découverte automatique des routes ; la compression de srvx n'est pas mesurée) / B : `startServerCommand: "pnpm start"` (liste d'URL à maintenir, réécriture du routeur retirée, revient sur une décision validée) — recommandation : A.
+- **E2e existants** — A : CA1 à CA11 et CA20 gardent la simulation, seuls CA22 et le service du build passent par le serveur lancé / B : tous les specs sur le serveur lancé — recommandation : A.
+- **Ligne « Hébergement » de la spec** — A : la reformuler (« Railpack 0.15.4 lance le script `start` du projet (`pnpm run start`), qui démarre le serveur Node (srvx). Sans ce script, il retombe en site statique servi par Caddy. ») / B : la garder — recommandation : A.
+
+#### Risques
+- **Ordre des opérations dans Dokploy** : retirer la variable puis déployer un code sans script `start` fait servir `/app/dist` par Caddy, sans `index.html` à la racine : le site tombe. Changer Dokploy après le merge.
+- **Le script `start` est porteur** : s'il est retiré, Railpack retombe sans prévenir en site statique cassé. En CI, `webServer` le protège.
+- **Performance du serveur Node** : srvx compresse chaque fichier statique à la volée en brotli qualité 11, sans cache, sans `Cache-Control` ni `ETag` (Caddy faisait du gzip/zstd, plus rapide). Le bundle principal peut coûter quelques centaines de ms de CPU par requête ; impact surtout sur le chargement du JS, peu sur le LCP. La CI ne le voit pas (décision 2 = A). Mesure après déploiement : `curl` du bundle en `br` contre `gzip`, plus PageSpeed Insights mobile. Au-delà de ~200 ms d'écart ou sous 95 : anomalie dédiée, et LHCI en option B.
+- **srvx en 0.x** : la résolution de `--static` pourrait changer ; version exacte et lockfile, et `server.spec.ts` échoue dans ce cas.
+- **En-tête `Accept`** : le handler TanStack renvoie 406 au lieu de 404 si `Accept` ne contient ni `*/*` ni `text/html`. Navigateurs, `curl` et `fetch` envoient `*/*`.
+- **Healthcheck** : `/health` répond 404 avec srvx ; un healthcheck Dokploy qui le viserait ferait échouer le déploiement.
+- **Page 404** : celle du template (`__root.tsx`), sans title ni style du design. À traiter dans `portfolio-pages` si souhaité.
 
 > **Amendements post-livraison** (ils priment sur le texte de l'architect ci-dessous) :
 > - tâche 8, prérendu : `vite.config.ts` fixe `preview.host = "127.0.0.1"` (B1) ;
@@ -405,6 +519,15 @@ Racine : `/Users/romain/projects/portfolio`. Le dépôt est vierge, tous les fic
 - 2026-10-01 — Lighthouse CI : réécriture `/index.html` → `/` dans le routeur, plutôt qu'une liste d'URL à maintenir dans `lighthouserc.json` (validée par Romain)
 - 2026-10-01 — Sitemap : correctif de l'espace de noms annulé. On garde le `xmlns` en `https` tel que généré par TanStack ; CA4 et ses tests reviennent à leur version d'origine. Le point est signalé dans la MR (validée par Romain)
 - 2026-10-01 — `src/components/ui/button.tsx`, généré par le template, est gardé pour `portfolio-pages` (validée par Romain)
+- 2026-10-01 — Passage du prérendu statique servi par Caddy au mode serveur Node détecté par Railpack, le setup habituel de Romain, pour obtenir de vraies 404 (CA22). Railpack reste en 0.15.4, la variable `RAILPACK_SPA_OUTPUT_DIR` est retirée de Dokploy, et le `Staticfile` est retiré du dépôt. Remplace la décision « prérendu statique » (décision 1 du plan) et la décision « `Staticfile` accepté » (validée par Romain)
+- 2026-10-02 — Vérification de srvx 1.0.5 : GO.
+  - Version `latest` sur npm, publiée le 2026-09-14 par `pi0`, comme toutes les versions depuis 0.11.20. Dépôt `h3js/srvx`, aucune dépendance, aucun script d'installation. L'intégrité du tarball correspond au registre.
+  - OSV, GitHub Advisory Database et `npm audit` : 0 vulnérabilité. Le seul advisory connu (GHSA-p36q-q72m-gchr) vise les versions antérieures à 0.11.13.
+  - Essai local : `br` en 4 à 5 ms, pour 109 555 o au lieu de 94 028 o en qualité 11 ; images non recompressées ; `ETag` et `Vary` présents.
+  - Réserves : pas d'attestation de provenance npm, comme pour 0.11.22 ; version majeure récente, donc version exacte.
+- 2026-10-02 — Correctif de B4 : option A, srvx 1.0.5, à condition qu'une vérification la valide d'abord. Il faut que la version existe sur le registre npm, qu'elle soit publiée par les mainteneurs habituels et qu'aucune CVE ni advisory ne la vise. Sinon, repli sur `serve` (option C) avec un `404.html`. Pas de `Cache-Control`. Seuil du test de temps à 100 ms. Romain ne demande pas de validation supplémentaire pour la suite de ce correctif (validée par Romain)
+- 2026-10-01 — B4 (brotli à la volée) corrigé avant le merge de la bascule serveur. L'architect propose le correctif le plus simple, et Romain le valide (validée par Romain)
+- 2026-10-01 — Révision B3 validée : script `start` avec srvx 0.11.22 en dépendance directe, préféré à `serve` utilisé dans clockinsnap, parce que c'est le serveur que TanStack documente. Lighthouse CI inchangé (il audite `dist/client`). Les e2e existants sont inchangés, avec un nouveau `server.spec.ts` sur le serveur lancé. Ligne « Hébergement » reformulée. Changements Dokploy après le merge seulement (validée par Romain)
 - 2026-10-01 — B1 (build Railpack) corrigé directement par le dev, sans test de reproduction préalable (validée par Romain)
 - 2026-10-01 — Lighthouse CI uniquement sur les pipelines de `main`, plus sur les MR, pour préserver le quota du free tier. Une baisse de score n'empêche plus le merge et sera détectée après coup (validée par Romain)
 - 2026-10-01 — Livraison : CA1 à CA18 vérifiés (tests, et CA18 en local sur une branche jetable). CA19 et CA20 restent à vérifier sur le premier pipeline de la MR, CA21 après le merge, ainsi que les vérifications post-déploiement de CA3 à CA6 et CA10. Review OK au 2e passage.

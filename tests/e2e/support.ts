@@ -34,8 +34,8 @@ export function prerenderedRoutes(): string[] {
 }
 
 /**
- * Sert dist/client sous https://romain-caille.fr, sans serveur ni réseau.
- * Comme avec le `Staticfile` (`index_fallback: false`), une URL sans fichier répond 404.
+ * Simule la partie statique du serveur (srvx) : sert dist/client sous https://romain-caille.fr, sans serveur ni réseau.
+ * Une URL sans fichier y répond 404 en texte brut ; le vrai serveur rend la page 404 de TanStack, testée dans server.spec.ts.
  */
 export async function serveBuild(page: Page) {
   await page.route(
