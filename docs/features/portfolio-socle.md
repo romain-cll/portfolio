@@ -7,7 +7,7 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 
 ### Rendu et SEO
 - [ ] CA1 — Étant donné le build de production, quand je requête `/` avec JavaScript désactivé, alors le HTML reçu contient le contenu de la page et la balise `<html lang="en">`.
-- [ ] CA2 — Étant donné une route du site, quand j'inspecte son `<head>`, alors il contient un `<title>`, une `meta name="description"` et un `link rel="canonical"` propres à la route, la canonical étant une URL absolue en `https://romain-caille.fr/…`.
+- [ ] CA2 — Étant donné une route du site, quand j'inspecte son `<head>`, alors il contient un `<title>`, une `meta name="description"` et un `link rel="canonical"` propres à la route, la canonical étant une URL absolue en `https://romain-caille.fr/…`. Pour `/` : title « Romain Caillé · Fullstack developer », description « Fullstack developer, ready for the agentic era. Open to work, full-time or freelance, remote or relocation from Nantes, France. ».
 - [ ] CA3 — Étant donné une route du site, quand j'inspecte son `<head>`, alors il contient `og:title`, `og:description`, `og:url` et `og:image` ; l'URL de `og:image` est absolue et répond 200 avec une image de 1200 × 630, sur le fond du design, qui affiche « Romain Caillé » et « Fullstack developer, ready for the agentic era. ».
 - [ ] CA4 — Étant donné le site déployé, quand je requête `/sitemap.xml`, alors il répond 200 et liste toutes les routes publiques en URL absolues `https://romain-caille.fr/…`.
 - [ ] CA5 — Étant donné le site déployé, quand je requête `/robots.txt`, alors il répond 200, autorise l'indexation et référence `https://romain-caille.fr/sitemap.xml`.
@@ -24,17 +24,17 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
   - l'accroche « Fullstack developer, ready for the agentic era. » ;
   - la liste status / contract / location / experience / education / english / resume, avec les textes du design (« Open to work · available now » en accent statut précédé d'une pastille, les trois expériences Spotime, Enedis et U Tech avec leurs années, « Master's, IT & Information Systems · EPSI », « C1 ») ;
   - sur la ligne resume, un lien « resume.pdf » vers `/cv.pdf`, suivi de l'icône Carbon flèche en haut à droite. Le fichier n'est pas encore fourni : le lien renvoie une 404 d'ici là, ce qui est accepté.
-- [ ] CA11 — Étant donné une fenêtre de 360 px de large, quand j'ouvre la page d'accueil, alors aucun défilement horizontal n'apparaît et tout le contenu de CA10 est visible.
+- [ ] CA11 — Étant donné une fenêtre de 320 px de large, quand j'ouvre la page d'accueil, alors aucun défilement horizontal n'apparaît et aucun élément de CA10 n'est coupé ni ne déborde sur les côtés. Le défilement vertical est permis.
 
 ### Garde-fous (lint)
 *Périmètre : CA12 à CA16 s'appliquent à tout `src/` sauf le dossier des composants générés par la CLI shadcn. CA17 (icônes) s'applique partout, y compris ce dossier.*
 - [ ] CA12 — Étant donné un composant dont l'attribut `style` définit une propriété CSS (ex. `style={{ color: 'red' }}`, `style={{ left: x }}`), quand je lance la commande de lint, alors elle échoue en indiquant le fichier et la ligne. Un attribut `style` qui ne définit que des variables CSS (ex. `style={{ '--progress': p }}`) passe.
-- [ ] CA13 — Étant donné une couleur littérale (`#hex`, `rgb()`, `hsl()`, `oklch()`) dans un fichier autre que `styles.css`, y compris comme valeur d'une variable CSS, quand je lance la commande de lint, alors elle échoue en indiquant le fichier et la ligne.
-- [ ] CA14 — Étant donné une classe de couleur de la palette Tailwind par défaut (ex. `bg-red-500`, `text-zinc-400`), quand je lance la commande de lint, alors elle échoue ; une classe de token défini dans `styles.css` (ex. `bg-primary`, `text-muted-foreground`) passe. Un token peut lui-même pointer vers une couleur de la palette Tailwind, à l'intérieur de `styles.css`.
-- [ ] CA15 — Étant donné une classe Tailwind à valeur arbitraire (ex. `w-[37px]`, `p-[13px]`, `text-[15px]`, `bg-[#fff]`), quand je lance la commande de lint, alors elle échoue en indiquant le fichier et la ligne.
+- [ ] CA13 — Étant donné une couleur littérale (`#hex`, `rgb()`, `hsl()`, `oklch()`) dans un fichier autre que `styles.css`, y compris comme valeur d'une variable CSS, quand je lance la commande de lint, alors elle échoue en indiquant le fichier et la ligne. Étant donné une couleur littérale dans `styles.css` écrite dans un autre format que `oklch()` (`#hex`, `rgb()`, `rgba()`, `hsl()`, `hsla()`, `hwb()`, `lab()`, `lch()`, `oklab()`, `color()`), quand je lance la commande de lint, alors elle échoue en indiquant la ligne ; `oklch()` et les références `var(--…)` passent. Une couleur nommée (ex. `white`, `red`) en valeur de déclaration dans `styles.css` échoue aussi, sauf `transparent` et `currentColor`.
+- [ ] CA14 — Étant donné une classe de couleur de la palette Tailwind par défaut (ex. `bg-red-500`, `text-zinc-400`), y compris `white` et `black` (ex. `text-white`, `bg-black`), quand je lance la commande de lint, alors elle échoue ; une classe de token défini dans `styles.css` (ex. `bg-primary`, `text-muted-foreground`) passe. Un token peut lui-même pointer vers une couleur de la palette Tailwind (ex. `var(--color-white)`), à l'intérieur de `styles.css`.
+- [ ] CA15 — Étant donné une classe Tailwind à valeur arbitraire (ex. `w-[37px]`, `p-[13px]`, `text-[15px]`, `bg-[#fff]`), quand je lance la commande de lint, alors elle échoue en indiquant le fichier et la ligne. La lecture d'une variable CSS sans valeur en dur (ex. `w-(--progress)`) n'est pas visée et passe.
 - [ ] CA16 — Étant donné un fichier `.css` autre que `styles.css` dans `src/`, quand je lance la commande de lint, alors elle échoue.
-- [ ] CA17 — Étant donné un import d'icône depuis une autre librairie que `@carbon/icons-react` (ex. `lucide-react`), quand je lance la commande de lint, alors elle échoue ; et `lucide-react` est absent de `package.json`.
-- [ ] CA18 — Étant donné un fichier indexé qui viole une règle de CA12 à CA17, quand je lance `git commit`, alors le commit est refusé.
+- [ ] CA17 — Étant donné un import depuis un module externe dont le nom contient `icon` ou `lucide`, autre que `@carbon/icons-react` (ex. `lucide-react`, `@tabler/icons-react`, `react-icons`), quand je lance la commande de lint, alors elle échoue ; et aucun de ces modules n'est présent dans `package.json`.
+- [ ] CA18 — Étant donné un fichier du dépôt qui viole une règle de CA12 à CA17, quand je lance `git commit`, alors le commit est refusé.
 - [ ] CA19 — Étant donné une MR qui contient une violation d'une règle de CA12 à CA17, quand la CI GitLab s'exécute, alors le pipeline échoue.
 
 ### Performance
@@ -47,6 +47,7 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 - Toutes les sections du design autres que le hero : barre pipeline, terminal `events.log`, overview, projets, contact (spec `portfolio-pages`).
 - Toutes les animations, y compris celles du hero (indication « scroll ↓ to emit romain.init », lignes qui défilent, pastille pulsante).
 - Le fichier `cv.pdf` lui-même : Romain l'ajoutera plus tard.
+- Favicon : Romain le fournira plus tard. Son absence ne doit pas faire échouer CA20.
 - Mode clair et bascule de thème : le design est uniquement sombre.
 - Multilingue : site en anglais uniquement.
 - Analytics, tracking, bannière cookies.
@@ -62,13 +63,13 @@ En tant que Romain, développeur du portfolio, je veux un socle TanStack Start +
 - Portrait du hero : `uploads/53820114-DBAD-413B-8432-5934679BE470.PNG` (1,6 Mo). Le cadrage du design est un zoom sur le visage (`background-size: 250%`, `background-position: 47.3% 22.5%`).
 - Petits écrans : le design réduit ses tailles et marges sous un certain seuil de largeur (ex. h1 à `min(8.5vw, 32px)` au minimum, marge latérale du hero à 16 px au minimum). Ces réductions sont à reproduire.
 - Le design fait foi pour les couleurs, la typo et les espacements, reportés en tokens dans `styles.css`. Les composants shadcn restent en style Lyra.
-- Hébergement : VPS OVH, déploiement Dokploy, build Railpack.
+- Hébergement : VPS OVH, déploiement Dokploy, build Railpack. Dans Dokploy, Romain sélectionne Railpack et le déploiement se fait seul : `RAILPACK_SPA_OUTPUT_DIR=dist/client` est posé, « Pipelines must succeed » est activé sur GitLab. Le projet fournit des scripts pnpm prêts pour le build, sans serveur ni configuration d'hébergement à écrire ou maintenir. Le `Staticfile` de Railpack est accepté dans le dépôt pour renvoyer de vraies 404 ; aucune autre config d'hébergement.
 - Dépôt et CI : GitLab.
 - Domaine : `romain-caille.fr`.
 - Langue : anglais uniquement.
 
 ### Tokens du design
-Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final revient à l'architect.
+Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final revient à l'architect. Dans `styles.css`, toutes les valeurs sont écrites en `oklch()` (CA13) : les valeurs hex ci-dessous sont converties.
 
 | Rôle | Valeur |
 |---|---|
@@ -94,7 +95,261 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
 - Tailles de texte fluides (ex. h1 de `min(8.5vw, 32px)` à 150 px selon la fenêtre) : à exprimer en tokens, pas en valeurs arbitraires.
 
 ## Plan technique
-*(À remplir par l'architect.)*
+
+### Changements depuis la v1
+- **Couleurs (CA13)** : tous les tokens sont en `oklch()`, valeurs converties ci-dessous. `check-src` refuse désormais dans `src/styles.css` toute couleur dans un autre format. Les voiles sont écrits en oklch avec une transparence. Le test CA9 lit les valeurs oklch.
+- **Blanc et noir (CA14)** : une règle ajoutée bloque `text-white`, `bg-black`, etc. en dehors du dossier ui. Un token de `styles.css` peut pointer vers `var(--color-…)`.
+- **Petits écrans (CA11)** : la largeur cible passe à 320 px. La marge a été vérifiée, et le test contrôle que le texte n'est ni coupé ni hors de la fenêtre.
+- **Favicon** : il n'y en a pas. La balise `<link rel="icon" href="data:,">` empêche le navigateur de demander `/favicon.ico`, ce qui évite une 404 en console et la perte de points en « Bonnes pratiques » (CA20).
+- **Hébergement** : le dépôt ne contient qu'un fichier propre à Railpack, le `Staticfile` avec `index_fallback: false`. Il sert à renvoyer de vraies 404, y compris pour `/cv.pdf` (CA10). La liste des réglages Dokploy et les risques qui en dépendaient sont retirés, car Romain les a déjà en place. `.node-version` est retiré : `engines.node` suffit.
+- **Pre-commit** : comparaison faite avec husky seul et avec husky + lint-staged. Je confirme l'option A (hook natif).
+- **Décisions de la v1 appliquées** :
+  - prérendu statique, `radix-lyra`, Fontsource, Playwright ;
+  - Lighthouse CI en dépendance de dev avec la médiane de 3 runs ;
+  - portrait converti une seule fois ;
+  - title et description de CA2 ;
+  - hero d'un écran (`min-h-dvh`) ;
+  - CA15 et CA17 sont désormais explicites dans la spec, plus de question ouverte à leur sujet.
+
+### Approche
+- **Stack** : TanStack Start 1.168 (React 19.2, Vite 8, TypeScript 6), généré par `shadcn init -t start` en `radix-lyra`. Tailwind CSS 4.3, `@carbon/icons-react` 11.89, `@shadcn/lint` 0.2.0 sur ESLint 10, Node 24 LTS, pnpm 10.
+- **Rendu** : toutes les routes sont prérendues en HTML statique au build, avec le sitemap natif. Le HTML est complet sans JavaScript (CA1), et Lighthouse CI audite ces mêmes fichiers de `dist/client` (CA20).
+- **Hébergement** : Railpack construit avec `pnpm build` et sert `dist/client` en statique (la variable est déjà posée dans Dokploy). Un `Staticfile` désactive le repli sur `index.html` pour que les URL inconnues, dont `/cv.pdf`, répondent en vraie 404 (CA10).
+
+### Fichiers
+Racine : `/Users/romain/projects/portfolio`. Le dépôt est vierge, tous les fichiers sont créés.
+- créé : `package.json` — scripts `dev`, `build`, `preview`, `lint`, `test`, `test:e2e`, `lhci`, `og`, `prepare` ; `packageManager` pnpm ; `engines.node: "24.x"`, que Railpack lit.
+- créé : `pnpm-lock.yaml`.
+- créé : fichiers du template start-app gardés tels quels : `tsconfig.json` (exclut `tests/fixtures`), `tsr.config.json`, `.prettierrc`, `.prettierignore`, `.npmrc`, `pnpm-workspace.yaml`, `src/router.tsx`, `src/routeTree.gen.ts` (généré), `src/lib/utils.ts`.
+- créé : `.gitignore` — `dist`, `.output`, `.lighthouseci`, `test-results`, `playwright-report`.
+- créé : `vite.config.ts` — `tanstackStart({ prerender: { enabled: true, crawlLinks: false }, sitemap: { enabled: true, host: 'https://romain-caille.fr' } })`, `tailwindcss()`, `viteReact()`, sans devtools.
+- créé : `components.json` — `"style": "radix-lyra"`, `tailwind.css: "src/styles.css"`, `cssVariables: true`, `iconLibrary: "lucide"` (voir tâche 4), alias `ui` vers `@/components/ui`.
+- créé : `eslint.config.js` — config du template, plus `@shadcn/lint` et ses règles, plus les règles de complément pour CA13, CA14 et CA17.
+- créé : `src/styles.css` — seul fichier CSS : tokens en oklch, thème shadcn, tailles fluides, `@utility`, polices, couche `base`.
+- créé : `src/routes/__root.tsx` — `<html lang="en" className="dark">`, charset, viewport, préchargement de la police du h1, `<link rel="icon" href="data:,">`, `HeadContent`/`Scripts`.
+- créé : `src/routes/index.tsx` — `head()` (title, description, canonical, Open Graph, JSON-LD Person) et rendu de `<Hero />`.
+- créé : `src/components/hero.tsx` — section hero statique.
+- créé : `public/portrait.webp`, `public/og.png`, `public/robots.txt`.
+- créé : `Staticfile` — `index_fallback: false`, pour que les URL inconnues et `/cv.pdf` répondent en vraie 404 (CA10).
+- créé : `scripts/check-src.mjs` — ce que l'outil ne couvre pas : CA16 ; CA13 dans les fichiers de `src/` qui ne sont pas du JS/TS, et dans `styles.css` pour les formats autres qu'oklch ; CA17 dans `package.json`. Sortie au format `fichier:ligne`, code 1 en cas d'échec.
+- créé : `scripts/og.html`, `scripts/og.mjs` — composition et capture de l'image Open Graph.
+- créé : `.githooks/pre-commit` (exécutable) — lance `pnpm lint`.
+- créé : `lighthouserc.json`, `.gitlab-ci.yml`, `playwright.config.ts`.
+- créé : `tests/unit/tokens.test.ts` (CA7 à CA9), `tests/unit/lint.test.ts` (CA12 à CA17), `tests/fixtures/lint/*.tsx` et `*.css`, `tests/e2e/seo.spec.ts` (CA1 à CA6), `tests/e2e/hero.spec.ts` (CA10, CA11, absence d'erreur console).
+
+### Tâches (ordonnées)
+1. **Mise en place du projet** — couvre CA7, CA17
+   - Lancer `pnpm dlx shadcn@latest init -t start` avec la base Radix, le style Lyra et les variables CSS, puis ramener les fichiers à la racine du dépôt (`docs/` reste en place).
+   - Retirer du template :
+     - les devtools (`@tanstack/react-devtools`, `@tanstack/react-router-devtools`, `@tanstack/devtools-vite`), pour alléger le JS (CA20) ;
+     - `src/logo.svg`, `public/manifest.json`, les logos et `public/favicon.ico`.
+   - `pnpm remove lucide-react`.
+2. **Tokens et thème dans `src/styles.css`** — couvre CA8, CA9, CA10
+   - Le thème est unique et sombre. Les valeurs vont dans `:root` et le bloc `.dark` généré est supprimé. `class="dark"` sur `<html>` active les variantes `dark:` des composants Lyra. On ajoute `color-scheme: dark`.
+   - Correspondance entre les tokens du design et les variables. Les valeurs sont en oklch ; l'hex d'origine du design est entre parenthèses.
+     - Fond de page → `--background` : `oklch(0.1904 0.0069 258.4)` (#121417).
+     - Surface → `--card`, `--popover`, `--secondary`, `--muted`, `--accent` : `oklch(0.2298 0.0107 260.7)` (#1a1d22).
+     - Surface profonde → `--surface-deep` : `oklch(0.1676 0.0071 258.4)` (#0d0f12).
+     - Bordure → `--border`, `--input` : `oklch(0.3036 0.0161 259.8)` (#2a2f37).
+     - Texte principal → `--foreground`, `--card-foreground`, `--popover-foreground`, `--secondary-foreground`, `--accent-foreground`, `--primary` : `oklch(0.9303 0.0046 258.3)` (#e6e8eb). `--primary-foreground` vaut `var(--background)`.
+     - Texte au survol → `--foreground-strong` : `oklch(1 0 0)` (#ffffff).
+     - Texte secondaire → `--foreground-secondary` : `oklch(0.8052 0.0191 258.4)` (#b8c0cc).
+     - Texte atténué → `--muted-foreground`, `--ring` : `oklch(0.6635 0.0219 257.5)` (#8b94a1).
+     - Texte discret → `--foreground-faint` : **`oklch(0.5927 0.0199 253.4)`** (#767f8a).
+     - Accent statut → `--status` : `oklch(0.8004 0.1414 157.71)` (#62d99a).
+     - Accents projets → `--spotime` : `oklch(0.72 0.07 210.53)` ; `--fraud-engine` : `oklch(0.7769 0.1276 62.53)` (#f0a35a) ; `--event-hub` : `oklch(0.7225 0.1534 301.57)` (#b78cf5).
+     - Fond des captures → `--screenshot` : `oklch(0.985 0.001 0)`.
+     - Voiles → `--veil-92`, `--veil-70`, `--veil-50` : `oklch(0.1904 0.0069 258.4 / 0.92 | 0.7 | 0.5)`.
+     - Les tokens Lyra sans équivalent dans le design (`--destructive`, `--chart-*`, `--sidebar-*`) sont générés en oklch et gardés. Tout autre format est converti.
+   - Comment les valeurs ont été obtenues : matrices OKLab de Björn Ottosson, avec L et C arrondis à 4 décimales et la teinte à 0,1° pour les gris, 0,01° pour les accents. Le test CA8 vérifie que chaque valeur redonne exactement l'hex du design en 8 bits.
+   - Texte discret : `#767f8a` a la même teinte que `#525b66`, qui vaut `oklch(0.4674 0.0212 253.5)`. Seule la clarté monte, la chroma reste quasi identique.
+     - Contraste recalculé depuis la valeur oklch arrondie : 4,55:1 sur le fond de page et 4,73:1 sur la surface profonde. Les fonds en oklch redonnent exactement #121417 et #0d0f12.
+     - L'arrondi déplace la luminance de moins de 0,1 %. Le cran sRGB juste en dessous (#757e89) tombe à 4,48:1.
+   - Dans `@theme inline`, chaque nouveau token reçoit `--color-<nom>: var(--<nom>)`. Classes obtenues : `bg-surface-deep`, `text-foreground-secondary`, `text-foreground-faint`, `hover:text-foreground-strong`, `text-status`, `bg-veil-92`, etc.
+   - Autres tokens : `--radius: 0`, `--font-sans` (Instrument Sans), `--font-mono` (IBM Plex Mono), `--tracking-label: 0.08em`, `--tracking-title: -0.03em`, `--tracking-heading: -0.02em`.
+   - Tailles fluides dans `@theme`, valeurs reprises du design. Elles deviennent des classes nommées, sans valeur arbitraire :
+     - `--text-display: clamp(min(8.5vw, 32px), min(9vw, 11vh), 150px)`, avec interligne 0.95, interlettrage -0.03em, graisse 600 → h1.
+     - `--text-lead: clamp(min(4.8vw, 18px), min(2.6vw, 4.6vh), 34px)`, interligne 1.25, interlettrage -0.01em → accroche.
+     - `--text-meta: clamp(min(3.9vw, 14px), min(1.5vw, 2.6vh), 17px)`, interligne 1.45 → `dd`.
+     - `--text-label: clamp(min(3.2vw, 12px), min(1.1vw, 2vh), 14px)`, interlettrage 0.08em → `dt`.
+     - `--text-annotation: 13px` → ligne `// state…`.
+     - Espacements : `--spacing-gutter: clamp(16px, 6vw, 96px)`, `--spacing-hero-y: clamp(12px, 3vh, 48px)`, `--spacing-hero-gap: clamp(12px, 2.6vh, 40px)`, `--spacing-hero-stack: clamp(6px, 1.6vh, 18px)`, `--spacing-hero-inline: clamp(14px, 2vw, 24px)`, `--spacing-portrait: clamp(min(6.5vw, 24px), min(6.5vw, 8vh), 108px)`, `--spacing-meta-col: clamp(20px, 4vw, 40px)`, `--spacing-meta-row: clamp(4px, 1.2vh, 12px)`.
+     - Largeur : `--container-meta: 720px`.
+     - Les planchers en `min()` reproduisent la réduction du design sur petits écrans, sans breakpoint.
+   - Deux `@utility` couvrent ce que l'échelle Tailwind n'a pas :
+     - `grid-cols-meta` : `max-content minmax(0, 1fr)` ;
+     - `icon-inline` : 0.9em, marge de début 0.35em, `vertical-align: -0.1em`.
+   - Couche `base` : `body` en `bg-background text-foreground font-sans antialiased` ; `a` en `var(--foreground)`, `a:hover` en `var(--foreground-strong)`.
+   - Polices Fontsource importées dans `styles.css`. Le woff2 latin d'Instrument Sans est préchargé dans `__root.tsx` via un import `?url`.
+3. **Lint** — couvre CA12, CA13, CA14, CA15, CA16, CA17
+   - **Installation selon SETUP.md.**
+     - Le projet utilise pnpm, la config plate ESLint du template, et un `components.json` qui pointe vers `src/components/ui` et `src/styles.css`.
+     - `pnpm add -D -E @shadcn/lint @typescript-eslint/parser`, puis enregistrement de `plugins: { shadcn }` sans toucher aux règles existantes.
+     - `pnpm lint` doit charger la config.
+     - Activer les règles est une deuxième étape, rendue nécessaire par les CA.
+   - **Ce que couvre `@shadcn/lint`**, dans le bloc `files: ["src/**/*.{ts,tsx}"]`, `ignores: ["src/components/ui/**"]` :
+     - CA12 → `shadcn/no-inline-styles` : **couvert**. Chaque propriété CSS d'un `style` est signalée, ainsi que les éléments `<style>`. Les variables à valeur dynamique passent.
+     - CA13 → **partiel**. Sont couverts :
+       - une couleur en dur comme valeur de variable dans `style` ;
+       - un littéral dans `fill`/`stroke` SVG ;
+       - `bg-[#fff]`.
+       Ne sont pas couverts : les chaînes JS/TS, le texte JSX, les autres fichiers de `src/`, et `styles.css` (l'outil ne lint pas le CSS).
+     - CA14 → `shadcn/no-raw-colors` : palette et tokens non déclarés **couverts**. **`white` et `black` ne sont pas couverts** : la règle les accepte.
+     - CA15 → `shadcn/no-arbitrary-values`, sans `allow` : **couvert**. `w-(--progress)` n'est pas signalé, ce qui correspond à CA15.
+     - CA16 et CA17 → **non couverts**.
+   - **Compléments dans le même bloc.** Une seule entrée `no-restricted-syntax` regroupe tous les sélecteurs, sinon le second bloc remplacerait le premier.
+     - CA13 : ``#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch)\(`` appliqué à `Literal`, `TemplateElement` et `JSXText`.
+     - CA14 : ``(?:^|[\s:])[a-z][\w-]*-(?:white|black)\b`` appliqué à `Literal` et `TemplateElement`. Cela couvre `text-white`, `hover:bg-black`, `bg-white/50`, `fill-white`.
+   - **Compléments pour CA17** (bloc `files: ["**/*.{js,jsx,ts,tsx,mjs}"]`, dossier ui compris) : `no-restricted-imports` avec `patterns: [{ regex: "^(?![./]|@/|@carbon/icons-react$).*(icon|lucide)", caseSensitive: false }]`.
+   - **`scripts/check-src.mjs`**, qui parcourt `src/` sans le dossier ui :
+     - échoue sur tout `.css` autre que `src/styles.css` (CA16) ;
+     - applique la regex CA13 aux autres fichiers texte qui ne sont pas du JS/TS ;
+     - applique à `src/styles.css` ``#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab)\(`` et sort `src/styles.css:<ligne>`. Le `\b` laisse passer `oklch(` sans laisser passer `lch(` ni `lab(`, et `var(--…)` passe (CA13) ;
+     - échoue si `package.json` contient une dépendance qui correspond à la regex icônes, hors `@carbon/icons-react` (CA17).
+   - Ignorés globalement : `dist`, `.output`, `.lighthouseci`, `src/routeTree.gen.ts`, `tests/fixtures`.
+   - Script : `"lint": "eslint . && node scripts/check-src.mjs"`.
+   - **Variables posées via `style`** : elles se lisent avec la syntaxe variable de Tailwind, par exemple `w-(--progress)` avec `style={{ '--progress': `${p}%` }}`. Le hero n'en a pas besoin.
+4. **Icônes Carbon** — couvre CA17
+   - La CLI shadcn ne connaît pas Carbon. Elle accepte `lucide`, `tabler`, `hugeicons`, `phosphor`, `remixicon` et `radix`. Avec une valeur inconnue, elle laisse les `IconPlaceholder` sans les transformer et l'import est cassé. On garde donc `iconLibrary: "lucide"`.
+   - Le socle n'ajoute aucun composant shadcn.
+   - Procédure pour chaque `shadcn add` :
+     - la CLI réinstalle `lucide-react` et écrit des imports lucide dans `src/components/ui/`, ce qui fait échouer `pnpm lint` ;
+     - remplacer chaque icône par son équivalent Carbon (`ChevronDownIcon` → `ChevronDown`, `XIcon` → `Close`, `CheckIcon` → `Checkmark`, `ChevronRightIcon` → `ChevronRight`), garder les classes de taille ;
+     - lancer `pnpm remove lucide-react`.
+   - Dans le hero : `import { ArrowUpRight } from '@carbon/icons-react'`, même tracé que le SVG du design. Le paquet déclare `sideEffects: false`.
+5. **Pre-commit** — couvre CA18
+   - `.githooks/pre-commit` lance `pnpm lint` sur tout le dépôt, ce qui correspond à CA18 (« un fichier du dépôt »).
+   - `"prepare": "git config core.hooksPath .githooks || true"`. Le `|| true` est obligatoire, car il n'y a pas de `.git` pendant le build Railpack ni dans certains jobs.
+6. **Portrait** — couvre CA10
+   - Format WebP : un gain AVIF serait négligeable à cette taille, et WebP satisfait l'audit « formats modernes ».
+   - Recadrage : pour une source de w × h pixels, carré de côté `0,4·w`, origine x = `0,2838·w`, y = `0,225·(h − 0,4·w)`. C'est l'équivalent de `background-size: 250%` avec `background-position: 47.3% 22.5%`.
+   - Niveaux de gris, puis `contrast(0.95) brightness(0.9)` intégrés au fichier sous forme d'une transformation linéaire a = 0,855, b = 5,74 (sur 0 à 255).
+   - 216 × 216, WebP qualité 80 environ, moins de 10 Ko, écrit dans `public/portrait.webp`.
+   - Conversion faite une seule fois avec `pnpm dlx sharp-cli`, commande notée dans le message de commit. Seul le WebP est versionné.
+   - Balise `<img>` avec `alt`, `width`/`height` 108 et `size-portrait`. Pas de `background-image`, qui exigerait un `style` ou une classe arbitraire.
+7. **Hero** — couvre CA10, CA11
+   - Structure : `main.overflow-x-clip`, puis une `section` en `min-h-dvh flex flex-col justify-center-safe gap-hero-gap px-gutter py-hero-y`. Pas d'indication « scroll ↓ ».
+   - Contenu, dans l'ordre :
+     - la ligne `// state…` en `font-mono text-annotation text-muted-foreground` ;
+     - le portrait, puis `h1.text-display.whitespace-nowrap` avec `<span class="text-muted-foreground">CAILLE</span>` ;
+     - l'accroche en `text-lead text-pretty` ;
+     - `dl.grid.grid-cols-meta.gap-x-meta-col.gap-y-meta-row.font-mono.text-meta.max-w-meta`, avec les `dt` en `text-label uppercase text-muted-foreground self-baseline` et les `dd` en `text-foreground-secondary`, années en `text-muted-foreground whitespace-nowrap`.
+   - Pastille du statut : `span[aria-hidden]` en `absolute -left-3.75 top-1/2 -translate-y-1/2 size-1.75 rounded-full bg-status ring-3 ring-status/15`.
+   - Lien `a[href="/cv.pdf"]` « resume.pdf » en `border-b border-border pb-px no-underline hover:border-muted-foreground`, suivi de `<ArrowUpRight className="icon-inline" />`. Ni animation ni transition.
+   - Marge à 320 px :
+     - le h1 fait 28,8 px, le portrait 20,8 px et la marge latérale 19,2 px, soit environ 260 px occupés sur 320 ;
+     - `// state…` tient sur 281 px pour 281,6 px disponibles, et passe à la ligne sinon ;
+     - dans la liste, la colonne des libellés fait environ 70 px et celle des valeurs environ 190 px. Le plus long segment qui ne peut pas passer à la ligne, « · 2023–2025 », fait environ 82 px.
+     - Aucune adaptation au-delà des tokens n'est nécessaire.
+8. **SEO et `<head>`** — couvre CA1, CA2, CA3, CA4, CA5, CA6, CA20
+   - Prérendu avec `crawlLinks: false`. Le crawler suit `/cv.pdf`, et la 404 ferait échouer le build. Les routes statiques restent trouvées par `autoStaticPathsDiscovery`.
+   - `head()` de `/` :
+     - title « Romain Caillé · Fullstack developer » ;
+     - description « Fullstack developer, ready for the agentic era. Open to work, full-time or freelance, remote or relocation from Nantes, France. » ;
+     - canonical vers `https://romain-caille.fr/` ;
+     - `og:type`, `og:title`, `og:description`, `og:url`, et `og:image` vers `https://romain-caille.fr/og.png`, avec `og:image:width` et `og:image:height` ;
+     - JSON-LD Person avec exactement les champs de CA6.
+   - `__root.tsx` déclare `links: [{ rel: 'icon', href: 'data:,' }]`. Le navigateur ne demande alors pas `/favicon.ico` : pas de 404 en console, et l'audit `errors-in-console` de « Bonnes pratiques » reste vert sans aucune image. Il suffira de remplacer cette valeur quand Romain fournira le favicon.
+   - `public/robots.txt` contient `User-agent: *`, `Allow: /` et `Sitemap: https://romain-caille.fr/sitemap.xml`.
+9. **Image Open Graph** — couvre CA3
+   - `scripts/og.html` fait 1200 × 630 : fond `var(--background)`, « Romain Caillé » en Instrument Sans 600, « Fullstack developer, ready for the agentic era. » en dessous.
+   - Les couleurs viennent d'un lien vers `../src/styles.css` : le navigateur ignore `@import` et `@theme` et applique `:root`, où l'oklch est bien rendu. Les polices sont chargées par `@font-face` depuis `node_modules`.
+   - `scripts/og.mjs` (commande `pnpm og`) ouvre le fichier dans le Chromium de Playwright, attend `document.fonts.ready`, puis écrit la capture dans `public/og.png`. L'image est versionnée.
+10. **Tests** — couvre tous les CA
+    - Fixtures de lint lintées avec l'API ESLint `lintText` sous des chemins virtuels `src/components/…` et `src/components/ui/…`.
+    - `check-src.mjs` est lancé dans un répertoire temporaire.
+    - Lecture des valeurs oklch dans `tokens.test.ts`, sans dépendance :
+      - regex `--<nom>:\s*oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)` ;
+      - conversion : a = C·cos h, b = C·sin h, puis LMS = (L + …)³, puis sRGB linéaire avec les matrices inverses d'Ottosson ;
+      - luminance WCAG calculée directement sur le sRGB linéaire (0,2126 R + 0,7152 G + 0,0722 B, valeurs bornées à [0, 1]) ;
+      - pour CA8, la valeur est en plus réencodée en sRGB 8 bits et comparée à l'hex du design.
+11. **Lighthouse CI** — couvre CA20
+    - `lighthouserc.json` :
+      - collecte : `staticDistDir: "dist/client"`, `maxAutodiscoverUrls: 0`, `numberOfRuns: 3`, `chromeFlags: "--no-sandbox --headless=new"`, sans `preset`, donc le profil mobile ;
+      - assertions : les 4 catégories en `["error", { "minScore": 0.95, "aggregationMethod": "median-run" }]` ;
+      - envoi : `filesystem` vers `.lighthouseci`.
+12. **CI GitLab** — couvre CA19, CA20
+    - `workflow:rules` : pipelines de MR et branche `main`.
+    - Image `mcr.microsoft.com/playwright:v<version de @playwright/test>-noble`. Le `before_script` lance `corepack enable && pnpm install --frozen-lockfile`. Le store pnpm est mis en cache avec `pnpm-lock.yaml` comme clé.
+    - Jobs :
+      - `check` : `lint` (`pnpm lint`) et `unit` (`pnpm test`) ;
+      - `build` : `pnpm build`, avec `dist/` en artefact ;
+      - `verify` : `e2e` (`pnpm test:e2e`) et `lighthouse` (`CHROME_PATH=$(node -e "console.log(require('@playwright/test').chromium.executablePath())") pnpm lhci`, avec `.lighthouseci/` en artefact `when: always`).
+13. **Déploiement** — couvre CA4, CA5, CA10, CA21
+    - Le `Staticfile` à la racine contient `index_fallback: false`. Sans lui, Railpack renvoie `index.html` en 200 pour toute URL inconnue. Avec lui, `/cv.pdf` et les URL inconnues répondent 404 (CA10).
+    - Rien d'autre côté dépôt. Railpack détecte pnpm (`packageManager`) et Node (`engines.node`), lance `pnpm build` et sert `dist/client`.
+
+### Stratégie de test
+- Commandes pour le dev et le tester :
+  - `pnpm lint` ;
+  - `pnpm test` (`node --test "tests/unit/**/*.test.ts"`) ;
+  - `pnpm build && pnpm test:e2e` ;
+  - `pnpm build && pnpm lhci`.
+- CA1 → e2e — `dist/client/index.html` est chargé par `page.setContent` avec JavaScript désactivé : `html[lang="en"]`, le h1 et la liste sont présents. Après déploiement : `curl -s https://romain-caille.fr | grep "Open to work"`.
+- CA2 → e2e — pour chaque HTML de `dist/client` : un seul `title`, une description, une canonical absolue. Pour `/`, title et description sont exactement ceux de CA2.
+- CA3 → e2e — les balises `og:*` sont présentes, `og:image` est absolue et pointe vers un fichier de `dist/client`, le PNG fait 1200 × 630 (en-tête IHDR). Vérification visuelle manuelle de `og.png`. Après déploiement : `curl -sI https://romain-caille.fr/og.png` répond 200.
+- CA4 → e2e, puis vérification manuelle après déploiement — `sitemap.xml` liste chaque page prérendue en URL absolue, sans `/cv.pdf`. Après déploiement : `curl -s -w '%{http_code}' https://romain-caille.fr/sitemap.xml`.
+- CA5 → e2e, puis vérification manuelle après déploiement — `robots.txt` contient `Allow: /` et la ligne Sitemap. Après déploiement : `curl -s -w '%{http_code}' https://romain-caille.fr/robots.txt`.
+- CA6 → e2e, puis vérification manuelle — le JSON-LD est comparé champ par champ, puis l'URL déployée passe dans validator.schema.org.
+- CA7 → unitaire — `components.json` a bien `style === "radix-lyra"`.
+- CA8 → unitaire — chaque token est déclaré en oklch et redonne l'hex du design en 8 bits ; `@theme inline` expose le `--color-*` correspondant.
+- CA9 → unitaire — contraste de `--foreground-faint` contre `--background` et `--surface-deep`, valeurs oklch converties : au moins 4,5 dans les deux cas.
+- CA10 → e2e en 1440 × 900, puis vérification manuelle après déploiement :
+  - textes, image `alt` en niveaux de gris (R = G = B sur un canvas), couleur atténuée de « CAILLE », lien `/cv.pdf` avec un `svg`, pastille, `document.getAnimations().length === 0` ;
+  - après déploiement : `for u in cv.pdf page-inconnue; do curl -s -o /dev/null -w "%{http_code} $u\n" https://romain-caille.fr/$u; done` doit afficher `404` deux fois.
+- CA11 → e2e en 320 × 568 — `documentElement.scrollWidth ≤ 320`. Pour chaque élément de CA10, la boîte de son texte (`Range.getBoundingClientRect`) est comprise entre 0 et 320, et `scrollWidth ≤ clientWidth`.
+- CA12 → test du lint sur fixtures — `style={{ color: 'red' }}` et `style={{ left: x }}` échouent avec la ligne. `style={{ '--progress': p }}` passe. Le dossier ui est exempté.
+- CA13 → test du lint sur fixtures :
+  - un littéral hex, `rgb()`, `hsl()` ou `oklch()` échoue dans une chaîne TS, dans `style`, dans `fill` et dans un `.svg` de `src/` ;
+  - un `styles.css` de fixture qui contient `#fff`, `rgb()`, `rgba()`, `hsl()`, `hsla()`, `hwb()`, `lab()`, `lch()` et `oklab()` sort une erreur par ligne ;
+  - `oklch()` et `var(--x)` passent.
+- CA14 → test du lint sur fixtures — `bg-red-500`, `text-zinc-400`, `text-white`, `hover:bg-black` et `bg-white/50` échouent dans `src/` et passent dans `src/components/ui/` ; `bg-primary` passe partout.
+- CA15 → test du lint sur fixtures — `w-[37px]`, `p-[13px]`, `text-[15px]` et `bg-[#fff]` échouent avec la ligne ; `w-(--progress)` passe.
+- CA16 → test du lint sur fixtures — avec `src/extra.css`, code différent de 0 et chemin affiché ; avec `src/styles.css` seul, code 0.
+- CA17 → test du lint sur fixtures — `lucide-react`, `@tabler/icons-react`, `react-icons` et quatre autres bibliothèques échouent dans `src/` comme dans le dossier ui ; `@carbon/icons-react` passe. `check-src` échoue sur un `package.json` qui contient `lucide-react`.
+- CA18 → manuel, sur une branche jetable `git switch -c tmp/ca18` :
+  1. `printf "export const X = () => <div style={{ color: 'red' }} />\n" > src/ca18.tsx && git add src/ca18.tsx && git commit -m ca18` : commit refusé, `src/ca18.tsx:1` affiché.
+  2. `git commit --no-verify -m ca18 && git commit --allow-empty -m ca18-bis` : le second commit est refusé, car le fichier est désormais dans le dépôt.
+  3. Nettoyage : `git switch - && git branch -D tmp/ca18`.
+- CA19 → manuel — MR jetable qui ajoute `bg-red-500` dans `src/`, commitée avec `--no-verify`. Attendu : job `lint` en échec, pipeline en échec.
+- CA20 → Lighthouse CI, plus e2e :
+  - le job `lighthouse` tourne sur chaque MR ;
+  - une MR jetable qui retire la description le fait échouer ;
+  - en e2e, le chargement de `/` ne déclenche aucune requête `/favicon.ico` ni aucune erreur console.
+- CA21 → manuel après déploiement — `curl -sI https://romain-caille.fr` répond 200 en HTTPS, et le hash du JS principal servi est identique à celui de l'artefact `dist/` du pipeline `main`.
+
+### Décisions à valider
+- **Pre-commit : hook natif, husky seul, ou husky + lint-staged ?**
+  - A, hook natif :
+    - aucune dépendance ;
+    - lint de tout le dépôt à chaque commit, donc conforme à CA18 (« un fichier du dépôt ») ;
+    - à maintenir : un fichier shell et une ligne `prepare`, sur un mécanisme Git stable (`core.hooksPath`).
+  - Husky seul :
+    - une dépendance de dev ;
+    - même comportement que A (`.husky/pre-commit` lance `pnpm lint`), donc conforme ;
+    - apporte l'installation par `prepare: "husky"` et la désactivation par `HUSKY=0` ;
+    - à maintenir : les montées de version, le format de configuration ayant déjà changé en v9.
+  - Husky + lint-staged :
+    - deux dépendances, dont une dizaine tirées par lint-staged ;
+    - ne lint que les fichiers indexés : un fichier en violation déjà dans le dépôt ne bloque pas le commit, donc **non conforme à CA18 tel qu'il est écrit** ;
+    - `check-src` (CA16, `package.json`) doit de toute façon parcourir tout le dépôt, et le gain de vitesse est nul sur un dépôt de cette taille.
+  - Recommandation : **A confirmée**. Husky seul fait la même chose avec une dépendance en plus, et lint-staged contredit CA18. Effet de bord commun à A et à husky seul : un fichier non suivi en violation dans `src/` bloque aussi le commit.
+
+### Risques
+- `@shadcn/lint` est en 0.2.0, avant la 1.0, et son comportement peut changer. On épingle la version exacte, et les fixtures de CA12 à CA17 servent de filet.
+- Performance mobile au moins à 95 sur des runners partagés : la simulation Lantern dépend du CPU, et l'hydratation React plus Router (environ 100 Ko gzip) pèse sur le TBT. Parades : médiane de 3 runs et devtools retirés ; runner dédié sur le VPS si les faux négatifs se répètent.
+- Décalage de mise en page au chargement des polices, sur un h1 qui monte à 150 px. La police du h1 est préchargée ; à surveiller dans les rapports Lighthouse.
+- Le sitemap natif est documenté avec `crawlLinks: true`. S'il sort vide, le test CA4 échoue : il faudra déclarer `pages: [{ path: '/' }]`.
+- Les regex de CA13 et CA14 peuvent donner des faux positifs, par exemple `#add`, `#123` ou « pitch-black » dans une chaîne. Réponse : un `eslint-disable-next-line` justifié.
+- Les valeurs oklch ont été calculées à la main. Si un canal ne retombe pas sur l'hex du design, le test CA8 échoue : recalculer avec un convertisseur et garder 4 décimales.
+- La CLI shadcn ne génère pas d'icônes Carbon : chaque `shadcn add` impose un remplacement à la main, bloqué par le lint tant qu'il n'est pas fait.
+- L'image Docker Playwright de la CI doit rester alignée sur la version de `@playwright/test`.
+
+### Ambiguïtés de la spec
+- **CA13, dans `styles.css`** : les mots-clés de couleur (`red`, `white`, `transparent`, `currentColor`) et la fonction `color()` ne figurent pas dans la liste.
+  - Lue au pied de la lettre, la liste laisse passer `color: red`, ce qui contredit la décision « couleurs uniquement en `oklch()` ».
+  - Proposition : interdire aussi `color()` et les noms de couleur CSS, par une liste de 148 noms dans `check-src`. Garder `transparent`, `currentColor` et `inherit`, qui ne sont pas des couleurs du design.
+  - Le plan n'utilise aucun de ces mots-clés.
 
 ## Décisions
 - 2026-10-01 — Le design fait foi pour les couleurs, la typo et les espacements, posés sur une base shadcn Lyra (validée par Romain)
@@ -113,3 +368,14 @@ Relevés dans le HTML du design. Les noms sont indicatifs ; le nommage final rev
 - 2026-10-01 — Ligne « resume » gardée dans le hero ; le lien vers `cv.pdf` renvoie une 404 tant que le fichier n'est pas fourni (validée par Romain)
 - 2026-10-01 — Image de partage fabriquée par l'équipe à partir du design (validée par Romain)
 - 2026-10-01 — Le design reste hors du dépôt ; les médias sont copiés au besoin, puis convertis dans un format léger (validée par Romain)
+- 2026-10-01 — Couleurs écrites uniquement en `oklch()`, y compris dans `styles.css` (validée par Romain)
+- 2026-10-01 — `text-white`, `bg-black`, etc. bloqués hors composants shadcn ; un token de `styles.css` peut pointer vers une variable Tailwind (validée par Romain)
+- 2026-10-01 — Pas de favicon dans le socle, Romain le fournira plus tard (validée par Romain)
+- 2026-10-01 — Largeur minimale prise en charge : 320 px, sans débordement horizontal ; défilement vertical permis (validée par Romain)
+- 2026-10-01 — Title et description de `/` proposés par l'architect (validée par Romain)
+- 2026-10-01 — Hero statique d'un écran (`min-h-dvh`), sans le défilement sur 130vh du design (validée par Romain)
+- 2026-10-01 — Prérendu statique, `radix-lyra`, polices Fontsource, Playwright, Lighthouse CI en dépendance de dev avec médiane de 3 runs, portrait converti une fois en WebP (validée par Romain)
+- 2026-10-01 — `Staticfile` de Railpack accepté dans le dépôt pour renvoyer de vraies 404 (validée par Romain)
+- 2026-10-01 — Pre-commit : hook natif (option A), après comparaison avec husky et husky + lint-staged (validée par Romain)
+- 2026-10-01 — Couleurs nommées et `color()` bloquées dans `styles.css`, sauf `transparent` et `currentColor` ; ambiguïté CA13 du plan tranchée selon la proposition de l'architect (validée par Romain)
+- 2026-10-01 — Plan technique v2 validé (validée par Romain)
