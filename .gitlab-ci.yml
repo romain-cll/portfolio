@@ -50,6 +50,11 @@ e2e:
 lighthouse:
   stage: verify
   needs: [build]
+  # Un run normal dure environ une minute : un run bloqué doit échouer, pas tourner sans fin (B2).
+  timeout: 10 minutes
+  # Lighthouse seulement sur main : quota de minutes du free tier (CA20).
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
   script:
     - CHROME_PATH=$(node -e "console.log(require('@playwright/test').chromium.executablePath())") pnpm lhci
   artifacts:
