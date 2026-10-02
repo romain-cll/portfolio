@@ -46,6 +46,11 @@ Elles sont vérifiées par `pnpm lint`, au pre-commit et en CI. Elles s'applique
 - **Ne jamais déclencher, relancer ni annuler un pipeline.** Les reproductions se font en local.
 - Pipelines : sur MR, `lint`, `unit`, `build` et `e2e` ; sur `main`, la même chose plus `lighthouse`, avec un timeout de 10 min et un seuil de 95 sur les 4 catégories en mobile.
 - Un seul push par MR, une fois le travail relu.
+- Avant tout push qui déclenche un pipeline, les e2e passent aussi dans l'image de la CI, limitée à 1 CPU. Le runner de la CI est environ 6 fois plus lent qu'un Mac : un test sensible au temps peut passer en local et échouer en CI. Il faut Docker, et l'image doit rester celle de `.gitlab-ci.yml` :
+  ```sh
+  git archive HEAD | docker run -i --rm --cpus=1 mcr.microsoft.com/playwright:v1.63.0-noble \
+    bash -c 'mkdir /work && cd /work && tar -xf - && corepack enable && CI=true pnpm install --frozen-lockfile && pnpm build && CI=true pnpm test:e2e'
+  ```
 - Commits qui ne touchent que la doc : `[skip ci]` dans le message.
 
 ## Git
@@ -57,6 +62,7 @@ Elles sont vérifiées par `pnpm lint`, au pre-commit et en CI. Elles s'applique
 ## Definition of Done
 - Tous les critères d'acceptation de la spec sont cochés, ou leur vérification manuelle restante est notée.
 - `pnpm lint`, `pnpm typecheck`, `pnpm test` et `pnpm build && pnpm test:e2e` passent.
+- Avant le push, les e2e passent aussi dans l'image de la CI limitée à 1 CPU (voir « CI GitLab »).
 - `pnpm lhci` passe en local dès qu'un changement touche le rendu.
 - Les tests n'ont pas été modifiés depuis leur commit rouge.
 - Toute décision prise en route est datée dans la section « Décisions » de la spec.
