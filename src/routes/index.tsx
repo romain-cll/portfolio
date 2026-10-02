@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 
-import { Hero } from "@/components/hero"
+import { Home } from "@/components/home"
 
 const ORIGIN = "https://romain-caille.fr"
 const TITLE = "Romain Caillé · Fullstack developer"
@@ -37,5 +37,5 @@ export const Route = createFileRoute("/")({
       { type: "application/ld+json", children: JSON.stringify(PERSON) },
     ],
   }),
-  component: Hero,
+  component: Home,
 })

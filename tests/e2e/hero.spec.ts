@@ -181,11 +181,6 @@ test.describe('CA10 — section hero', () => {
     })
     expect(order.iconLeft, 'l’icône suit le texte').toBeGreaterThanOrEqual(order.textRight - 0.5)
   })
-
-  test('CA10 — aucune animation', async ({ page }) => {
-    await openHome(page)
-    expect(await page.evaluate(() => document.getAnimations().length)).toBe(0)
-  })
 })
 
 // ---------------------------------------------------------------------------
@@ -213,7 +208,7 @@ test.describe('CA11 — fenêtre de 320 px', () => {
       ['portrait', page.locator(`img[alt="${PORTRAIT_ALT}"]`)],
       ['h1', page.locator('h1')],
       ['accroche', page.getByText(LEAD, { exact: true })],
-      ['lien resume.pdf', page.getByRole('link', { name: /resume\.pdf/ })],
+      ['lien resume.pdf', valueOf(page, 'resume').getByRole('link', { name: /resume\.pdf/ })],
     ]
     for (const [kind, selector] of [
       ['dt', 'dl dt'],

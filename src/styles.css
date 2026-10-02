@@ -8,6 +8,8 @@
 @import "@fontsource/ibm-plex-mono/latin-500.css";
 
 @custom-variant dark (&:is(.dark *));
+/* Hauteur de fenêtre d'au moins 640 px : indication de défilement du hero (sans calcul JS, donc sans décalage). */
+@custom-variant tall (@media (min-height: 40rem));
 
 @theme inline {
   --font-heading: var(--font-sans);
@@ -50,6 +52,7 @@
   --color-spotime: var(--spotime);
   --color-fraud-engine: var(--fraud-engine);
   --color-event-hub: var(--event-hub);
+  --color-tone: var(--tone);
   --color-screenshot: var(--screenshot);
   --color-veil-92: var(--veil-92);
   --color-veil-70: var(--veil-70);
@@ -91,6 +94,8 @@
   --spotime: oklch(0.72 0.07 210.53);
   --fraud-engine: oklch(0.7769 0.1276 62.53);
   --event-hub: oklch(0.7225 0.1534 301.57);
+  /* Couleur de la section en cours : texte secondaire par défaut, remplacée par les utilitaires tone-*. */
+  --tone: var(--foreground-secondary);
   --screenshot: oklch(0.985 0.001 0);
   --veil-92: oklch(0.1904 0.0069 258.4 / 0.92);
   --veil-70: oklch(0.1904 0.0069 258.4 / 0.7);
@@ -144,6 +149,134 @@
   --spacing-meta-row: clamp(4px, 1.2vh, 12px);
 
   --container-meta: 720px;
+
+  /* Rupture du pipeline : rail avec libellés à partir de 700 px, bandeau à partir de 900 px. */
+  --breakpoint-labels: 43.75rem;
+  --breakpoint-bar: 56.25rem;
+
+  --text-micro: 10px;
+  --text-small: 11px;
+  --text-detail: 15px;
+  --text-detail--line-height: 1.55;
+  --text-prose: 17px;
+  --text-prose--line-height: 1.5;
+  --text-title-overview: clamp(28px, 4vw, 52px);
+  --text-title-overview--line-height: 1.05;
+  --text-title-overview--letter-spacing: -0.02em;
+  --text-title-overview--font-weight: 600;
+  --text-title-project: clamp(34px, 4.5vw, 64px);
+  --text-title-project--line-height: 1;
+  --text-title-project--letter-spacing: -0.03em;
+  --text-title-project--font-weight: 600;
+  --text-title-contact: clamp(32px, 5vw, 72px);
+  --text-title-contact--line-height: 1;
+  --text-title-contact--letter-spacing: -0.03em;
+  --text-title-contact--font-weight: 600;
+
+  --spacing-section-short: 130vh;
+  --spacing-section-long: 160vh;
+  --spacing-spacer: 100vh;
+  --spacing-anchor: 50vh;
+  --spacing-bar: 112px;
+  --spacing-rail: 56px;
+  --spacing-rail-wide: 200px;
+  --spacing-terminal: 36px;
+  --spacing-ch: 0.6ch;
+  --spacing-avatar: clamp(64px, 8vw, 96px);
+  --spacing-log-panel: calc(60dvh - 36px);
+  --spacing-project-gap: clamp(24px, 4vw, 64px);
+  --spacing-project-y: clamp(24px, 5vh, 64px);
+  --spacing-contact: clamp(20px, 4vh, 48px);
+  --spacing-contact-gap: clamp(20px, 4vh, 36px);
+  --spacing-contact-inline: clamp(20px, 3vw, 40px);
+  --spacing-contact-bottom: calc(var(--spacing-terminal) + clamp(20px, 4vh, 48px));
+
+  --container-narrow: 16ch;
+  --container-title: 22ch;
+  --container-copy: 52ch;
+  --container-card: 520px;
+  --container-annotations: 960px;
+
+  --aspect-shot: 3024 / 1724;
+
+  --shadow-card: 0 30px 60px oklch(0 0 0 / 0.4);
+
+  /* Keyframes du design. Le délai par lettre des libellés qui roulent passe par --i. */
+  --animate-blink: blink 1s steps(1) infinite;
+  --animate-packet-pulse: packet-pulse 1.2s ease-out infinite;
+  --animate-roll-in: roll-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) backwards;
+  --animate-roll-out: roll-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) forwards;
+  --animate-roll-in-down: roll-in-down 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) backwards;
+  --animate-roll-out-down: roll-out-down 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) forwards;
+  --animate-roll-hold: roll-hold 0.5s linear both;
+
+  @keyframes blink {
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes packet-pulse {
+    0% {
+      box-shadow: 0 0 0 0 currentColor;
+    }
+    100% {
+      box-shadow: 0 0 0 14px transparent;
+    }
+  }
+  @keyframes roll-in {
+    from {
+      transform: translateY(110%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes roll-out {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-110%);
+    }
+  }
+  @keyframes roll-in-down {
+    from {
+      transform: translateY(-110%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes roll-out-down {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(110%);
+    }
+  }
+  @keyframes roll-hold {
+    0%,
+    99% {
+      visibility: visible;
+    }
+    100% {
+      visibility: hidden;
+    }
+  }
+}
+
+/* Écart au design : sous 700 px, le rail de 56 px laisse 191 px au titre du hero à 320 px de large, pour 198 px de texte.
+   Le coefficient passe de 9 vw à 8,6 vw, sans effet au-delà. */
+@media (width < 43.75rem) {
+  :root {
+    --text-display: clamp(min(8.5vw, 32px), min(8.6vw, 11vh), 150px);
+  }
 }
 
 @utility grid-cols-meta {
@@ -158,9 +291,164 @@
   vertical-align: -0.1em;
 }
 
+/* Couleur de section : text-tone, bg-tone et border-tone la lisent. */
+@utility tone-spotime {
+  --tone: var(--spotime);
+}
+@utility tone-fraud-engine {
+  --tone: var(--fraud-engine);
+}
+@utility tone-event-hub {
+  --tone: var(--event-hub);
+}
+@utility tone-contact {
+  --tone: var(--foreground);
+}
+
+@utility grid-cols-bar {
+  grid-template-columns: 170px minmax(0, 1fr) max-content;
+}
+@utility grid-cols-project {
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+}
+@utility grid-cols-annotations {
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+}
+
+@utility h-stage {
+  height: calc(100dvh - var(--spacing-terminal));
+  @variant bar {
+    height: calc(100dvh - var(--spacing-bar) - var(--spacing-terminal));
+  }
+}
+@utility min-h-stage {
+  min-height: calc(100dvh - var(--spacing-terminal));
+  @variant bar {
+    min-height: calc(100dvh - var(--spacing-bar) - var(--spacing-terminal));
+  }
+}
+
+/* Révélation pilotée par le défilement : --p (progression de la section) entre --from et --to. Sans --p, l'état final. */
+@utility reveal {
+  --t: clamp(
+    0,
+    calc((var(--p, 1) - var(--from, 0)) / (var(--to, 1) - var(--from, 0))),
+    1
+  );
+  opacity: var(--t);
+  translate: 0 calc((1 - var(--t)) * var(--dy, 18) * 1px);
+  transition:
+    opacity 0.2s,
+    translate 0.2s;
+  /* Un contrôle qui a le focus n'est jamais à opacité nulle. */
+  &:focus-within {
+    opacity: 1;
+    translate: none;
+    scale: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    translate: none;
+    scale: none;
+  }
+}
+@utility reveal-scale {
+  scale: calc(0.96 + 0.04 * var(--t));
+  transition:
+    opacity 0.25s,
+    translate 0.25s,
+    scale 0.25s;
+  &:focus-within {
+    scale: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    scale: none;
+  }
+}
+
+/* Pipeline : valeurs écrites par le contrôleur de défilement, au repos par défaut. */
+@utility pipeline-state {
+  --packet: 0%;
+  --trail: 0;
+  --packet-op: 0;
+}
+@utility stage-frame {
+  --ent: 0;
+  --fill: 0;
+  --ext: 0;
+}
+@utility writing-vertical {
+  writing-mode: vertical-rl;
+  @variant bar {
+    writing-mode: horizontal-tb;
+  }
+}
+
+/* Contact : points qui convergent et portrait qui atterrit. Sans valeurs écrites, l'état final. */
+@utility dot-spread {
+  translate: calc(var(--dx) * 120px * (1 - var(--converge, 1))) 0;
+  opacity: var(--dots-op, 0);
+  transition: translate 0.2s;
+}
+@utility portrait-fly {
+  translate: var(--tv-x, 0px) var(--tv-y, 0px);
+  scale: var(--tv-scale, 1);
+  opacity: var(--tv-op, 1);
+  transition: scale 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@utility transition-height {
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Barre de progression de la vidéo : piste de 2 px remplie jusqu'à --seek (en %), curseur carré de 10 px. */
+@utility seek {
+  appearance: none;
+  height: 24px;
+  background: transparent;
+  cursor: pointer;
+  &::-webkit-slider-runnable-track {
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      var(--tone) calc(var(--seek, 0) * 1%),
+      var(--border) 0
+    );
+  }
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    margin-top: -4px;
+    background: var(--tone);
+    border: 0;
+    border-radius: 0;
+  }
+  &::-moz-range-track {
+    height: 2px;
+    background: var(--border);
+  }
+  &::-moz-range-progress {
+    height: 2px;
+    background: var(--tone);
+  }
+  &::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    background: var(--tone);
+    border: 0;
+    border-radius: 0;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  html {
+    @media (prefers-reduced-motion: no-preference) {
+      scroll-behavior: smooth;
+    }
   }
   body {
     @apply bg-background font-sans text-foreground antialiased;
@@ -170,5 +458,33 @@
   }
   a:hover {
     color: var(--foreground-strong);
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-foreground;
+  }
+  /* Un contrôle focalisé ne reste ni sous le terminal ni, à partir de 900 px, sous le bandeau. */
+  a,
+  button,
+  summary,
+  input {
+    scroll-margin-bottom: var(--spacing-terminal);
+    @variant bar {
+      scroll-margin-top: var(--spacing-bar);
+    }
+  }
+  summary {
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  /* Mouvement réduit : ni animation ni transition. Couvre aussi le transition-all du Button shadcn. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 }
