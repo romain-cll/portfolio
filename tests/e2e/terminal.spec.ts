@@ -16,12 +16,14 @@ import {
   COLOR_TOLERANCE,
   cssRgb,
   logLinePattern,
+  nextFrames,
   normalize,
   openHome,
   panelSnapshot,
   progressY,
   scrollToProgress,
   scrollToY,
+  settleAnimations,
   terminalSnapshot,
   type TerminalSnapshot,
 } from './support.ts'
@@ -242,6 +244,35 @@ test.describe('CA14 — panneau d’historique (1440 × 600)', () => {
     const scrolled = (await panelSnapshot(page))!
     expect(scrolled.scrollHeight, 'le panneau déborde : il faut défiler pour tout voir').toBeGreaterThan(scrolled.clientHeight)
     expect(scrolled.scrollTop).toBeGreaterThan(0)
+  })
+
+  test('CA14 — le panneau s’ouvre progressivement : sa hauteur grandit sur plusieurs images', async ({ page }) => {
+    await openHome(page)
+    await scrollToProgress(page, 'contact', 1)
+    await expect.poll(async () => (await terminal(page)).n).toBe(DESIGN_LOG.length)
+    await page.evaluate(() => {
+      const store = window as unknown as { __panelHeights: number[]; __panelRaf: number }
+      store.__panelHeights = []
+      const tick = () => {
+        store.__panelHeights.push(window.__probe.panel()?.clientHeight ?? 0)
+        store.__panelRaf = requestAnimationFrame(tick)
+      }
+      tick()
+    })
+    await button(page, 'open event log').click()
+    await expectOpen(page, true)
+    await settleAnimations(page)
+    await nextFrames(page, 2)
+    const heights = await page.evaluate(() => {
+      const store = window as unknown as { __panelHeights: number[]; __panelRaf: number }
+      cancelAnimationFrame(store.__panelRaf)
+      return store.__panelHeights
+    })
+    const final = heights.at(-1)!
+    expect(final, 'panneau ouvert').toBeGreaterThan(150)
+    const between = heights.filter((h) => h > 10 && h < final - 10)
+    expect(between.length, `hauteurs relevées image par image : ${heights.map(Math.round).join(', ')}`).toBeGreaterThanOrEqual(3)
+    for (let i = 1; i < heights.length; i++) expect(heights[i]!, `la hauteur ne décroît pas (image ${i})`).toBeGreaterThanOrEqual(heights[i - 1]! - 0.5)
   })
 
   test('CA14 — l’historique ne contient que les lignes émises jusqu’ici', async ({ page }) => {

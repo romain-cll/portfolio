@@ -641,6 +641,36 @@ test.describe('CA23 — contact : trois points et portrait (1440 × 900)', () =>
     await expect.poll(() => opacityOf(portrait(page))).toBeGreaterThanOrEqual(0.99)
   })
 
+  test('CA23 — à l’atterrissage, le point grandit progressivement jusqu’à la taille du portrait, sans saut', async ({ page }) => {
+    await openHome(page)
+    await scrollToProgress(page, 'contact', 0.7)
+    await expect.poll(async () => within((await rectOf(portrait(page))).width, 14, 1.5), { message: 'point de 14 px avant l’atterrissage' }).toBe(true)
+    const y = await progressY(page, 'contact', 1)
+    const widths = await page.evaluate(
+      async ({ top, name }) => {
+        const el = document.querySelector(`[data-section="contact"] [role="img"][aria-label="${name}"]`)!
+        const samples: number[] = []
+        window.scrollTo({ top, left: 0, behavior: 'instant' })
+        const end = performance.now() + 1200
+        await new Promise<void>((done) => {
+          const tick = () => {
+            samples.push(el.getBoundingClientRect().width)
+            if (performance.now() >= end) done()
+            else requestAnimationFrame(tick)
+          }
+          tick()
+        })
+        return samples
+      },
+      { top: y, name: PORTRAIT_ALT },
+    )
+    const final = widths.at(-1)!
+    expect(within(final, 96, 2), `taille finale : ${final}`).toBe(true)
+    const between = widths.filter((w) => w > 14 + 8 && w < final - 8)
+    expect(between.length, `largeurs relevées image par image : ${widths.map((w) => Math.round(w)).join(', ')}`).toBeGreaterThanOrEqual(3)
+    for (let i = 1; i < widths.length; i++) expect(widths[i]!, `la largeur ne décroît pas (image ${i})`).toBeGreaterThanOrEqual(widths[i - 1]! - 0.5)
+  })
+
   test('CA23 — la taille de l’emplacement suit 8 vw entre 64 et 96 px', async ({ page }) => {
     await page.setViewportSize({ width: 1000, height: 800 })
     await openHome(page)
@@ -879,8 +909,10 @@ test.describe('CA17 — plage de défilement des projets (1440 × 900)', () => {
       const y0 = await progressY(page, project.section, 0)
       const y1 = await progressY(page, project.section, 1)
       expect(y1 - y0, project.name).toBeGreaterThan(700)
-      await scrollToY(page, y0)
+      // Le titre se révèle de 0 à 0,1 (montée de 18 px, CA17) : on le mesure une fois la révélation finie.
       const title = sectionLocator(page, project.section).locator('h2')
+      await scrollToProgress(page, project.section, 0.2)
+      await expect.poll(async () => within((await offsetOf(title)).y, 0, 0.5), { message: `${project.name} : titre révélé à 0,2` }).toBe(true)
       const top0 = (await rectOf(title)).top
       await scrollToY(page, y1)
       expect(Math.abs((await rectOf(title)).top - top0), `${project.name} : contenu fixé sur toute la plage`).toBeLessThanOrEqual(1)

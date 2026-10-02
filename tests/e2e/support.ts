@@ -409,18 +409,50 @@ export function htmlToText(html: string): string {
   )
 }
 
-/** Relit `read` frame après frame jusqu'à deux valeurs identiques de suite (transitions CSS comprises), puis la renvoie. */
-export async function stable<T>(page: Page, read: () => Promise<T>, maxFrames = 60): Promise<T> {
-  let previous = JSON.stringify(await read())
-  let value = await read()
-  for (let i = 0; i < maxFrames; i++) {
-    const current = JSON.stringify(value)
-    if (current === previous) return value
-    previous = current
-    await nextFrames(page, 2)
-    value = await read()
+/**
+ * Attend la fin des transitions et animations finies en cours dans la page (les animations infinies, comme un curseur
+ * clignotant, sont ignorées). Boucle tant que de nouvelles apparaissent, bornée à `maxMs`.
+ */
+export async function settleAnimations(page: Page, maxMs = 3000) {
+  if (scriptless.has(page)) {
+    await page.waitForTimeout(20)
+    return
   }
-  return value
+  await page.evaluate(async (limit) => {
+    const deadline = performance.now() + limit
+    const nextFrame = () => new Promise<void>((done) => requestAnimationFrame(() => done()))
+    for (;;) {
+      await nextFrame()
+      const running = document.getAnimations().filter((animation) => {
+        if (animation.playState !== 'running') return false
+        const timing = animation.effect?.getComputedTiming()
+        return timing !== undefined && Number.isFinite(timing.endTime)
+      })
+      if (running.length === 0 || performance.now() >= deadline) return
+      await Promise.race([
+        Promise.allSettled(running.map((animation) => animation.finished)),
+        new Promise((done) => setTimeout(done, Math.max(0, deadline - performance.now()))),
+      ])
+    }
+  }, maxMs)
+}
+
+/**
+ * Relit `read` jusqu'à deux valeurs identiques de suite, séparées par des frames, une fois les transitions et animations
+ * finies : l'état rendu est celui du repos, pas celui d'une transition en cours. Puis renvoie la valeur.
+ */
+export async function stable<T>(page: Page, read: () => Promise<T>, maxFrames = 60): Promise<T> {
+  await nextFrames(page, 2)
+  await settleAnimations(page)
+  let previous = JSON.stringify(await read())
+  for (let i = 0; i < maxFrames; i++) {
+    await nextFrames(page, 2)
+    await settleAnimations(page)
+    const value = await read()
+    if (JSON.stringify(value) === previous) return value
+    previous = JSON.stringify(value)
+  }
+  return read()
 }
 
 /** Enregistre `window.scrollY` à chaque frame, jusqu'à `stopScrollSampler`. */

@@ -522,3 +522,8 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux parcourir a
   - CA29 : au clavier, les liens s'activent avec Entrée, les boutons et le dépliage avec Entrée ou Espace, la barre de progression vidéo avec les flèches. Un `<a>` ne réagit pas à Espace, qui fait défiler la page ;
   - CA7 : le sens du roulement se vérifie par l'animation qui joue (`roll-in`/`roll-out` en descendant, variantes `-down` en remontant), pas par la trajectoire des lettres ;
   - le Chromium de Playwright lit le H.264, donc pas de fixture WebM : les e2e de CA21 et CA22 utilisent la vraie vidéo.
+- 2026-10-02 — Blocages remontés par le dev à l'étape verte (validée par Romain) :
+  - deux défauts de test sont corrigés par le tester, avec un nouveau commit rouge. Le test de CA17 sur la plage de défilement comparait la position du titre pendant son apparition. L'outil d'attente `stable()` rendait la main en pleine transition ;
+  - le dev remet les transitions du design qu'il avait retirées pour contourner ces tests : fondu du paquet, glissement des trois points du contact, ouverture du panneau du terminal, et portrait qui grandit en atterrissant (CA23) ;
+  - écart au design : sous 700 px, la taille du titre du hero passe de 9vw à 8,6vw, pour que « Romain CAILLE » tienne à 320 px à côté du rail de 56 px (CA11 du socle, CA28) ;
+  - écart au design : sous 700 px, l'espace entre les contrôles vidéo passe de 12 à 8 px, pour que la barre de progression reste utilisable à 320 px (CA28).
