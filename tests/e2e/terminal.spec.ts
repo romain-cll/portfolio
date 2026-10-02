@@ -208,6 +208,8 @@ test.describe('CA14 — panneau d’historique (1440 × 600)', () => {
     await expect
       .poll(async () => ((await panelSnapshot(page))?.clientHeight ?? -1) > 100, { message: open ? 'panneau ouvert' : 'panneau fermé' })
       .toBe(open)
+    // Le panneau s'ouvre et se ferme par une transition de hauteur : on mesure une fois l'état de repos atteint.
+    await settleAnimations(page)
   }
 
   test('CA14 — fermé au départ : bouton « open event log », aria-expanded=false, panneau sans hauteur', async ({ page }) => {

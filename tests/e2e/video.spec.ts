@@ -11,6 +11,7 @@ import {
   scrollToProgress,
   scrollToY,
   sectionLocator,
+  settleAnimations,
 } from './support.ts'
 
 // CA21 et CA22 — lecteur vidéo de la carte Fraud Engine.
@@ -76,9 +77,12 @@ const visibleFraction = (locator: Locator) =>
  */
 async function scrollToFraction(page: Page, fraction: number) {
   await scrollToY(page, 0)
+  // La carte revient à son état initial par une transition (échelle, montée) : on la mesure au repos.
+  await settleAnimations(page)
   const box = await rectOf(video(page))
   const y = Math.round(box.top - (900 - fraction * box.height))
   await scrollToY(page, y)
+  await settleAnimations(page)
   const actual = await visibleFraction(video(page))
   expect(Math.abs(actual - fraction), `part visible du lecteur : ${actual.toFixed(2)} pour ${fraction}`).toBeLessThan(0.05)
 }
@@ -238,6 +242,8 @@ test.describe('CA22 — contrôles du lecteur', () => {
     await scrollToProgress(page, 'fraud-engine', 0.8)
     const duration = await waitForMetadata(page)
     await expect.poll(() => isPlaying(page)).toBe(true)
+    // Les mesures des contrôles (clics à x relatif, glissé à x absolu) supposent la carte révélée : transition finie.
+    await settleAnimations(page)
     return duration
   }
 

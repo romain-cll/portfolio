@@ -12,6 +12,7 @@ import {
   scrollToProgress,
   scrollToY,
   sectionLocator,
+  settleAnimations,
   terminalSnapshot,
 } from './support.ts'
 
@@ -135,6 +136,7 @@ test.describe('CA28 — fenêtre de 320 × 568', () => {
     await openHome(page)
     for (const project of PROJECTS) {
       await scrollToProgress(page, project.section, 0.8)
+      await settleAnimations(page)
       const url = sectionLocator(page, project.section).getByText(project.url, { exact: true })
       await expect(url).toBeVisible()
       const card = await url.locator("xpath=ancestor::*[contains(., 'deploy ✓')][1]").evaluate((el) => {
@@ -150,6 +152,7 @@ test.describe('CA28 — fenêtre de 320 × 568', () => {
   test('CA28 — le lecteur vidéo et ses contrôles tiennent dans la fenêtre', async ({ page }) => {
     await openHome(page)
     await scrollToProgress(page, 'fraud-engine', 0.8)
+    await settleAnimations(page)
     const section = sectionLocator(page, 'fraud-engine')
     const controls = [
       section.getByRole('button', { name: 'play / pause', exact: true }),

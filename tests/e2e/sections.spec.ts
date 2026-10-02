@@ -35,6 +35,7 @@ import {
   scrollToProgress,
   scrollToY,
   sectionLocator,
+  settleAnimations,
   stable,
   type Rect,
   type Rgb,
@@ -364,6 +365,8 @@ test.describe('CA19 — fenêtre de déploiement (1440 × 900)', () => {
       test('CA19 — barre de navigateur : trois pastilles et l’URL du design', async ({ page }) => {
         await openHome(page)
         await scrollToProgress(page, project.section, 0.8)
+        // La carte se révèle par une transition (opacité, montée, échelle) : on mesure une fois la révélation finie.
+        await settleAnimations(page)
         const card = cardOf(page, project)
         await expect(card).toHaveCount(1)
         const url = sectionLocator(page, project.section).getByText(project.url, { exact: true })
@@ -386,6 +389,8 @@ test.describe('CA19 — fenêtre de déploiement (1440 × 900)', () => {
       test('CA19 — le média, puis « deploy ✓ » à l’accent du projet, le result et les liens, dans cet ordre', async ({ page }) => {
         await openHome(page)
         await scrollToProgress(page, project.section, 0.8)
+        // La carte se révèle par une transition (opacité, montée, échelle) : on mesure une fois la révélation finie.
+        await settleAnimations(page)
         const card = cardOf(page, project)
         const media = project.video ? card.locator('video') : card.locator(`img[alt="${project.name} — screenshot"]`).first()
         await expect(media).toHaveCount(1)
@@ -595,6 +600,8 @@ test.describe('CA23 — contact : trois points et portrait (1440 × 900)', () =>
     const found = await settledDots(page)
     for (const d of found) expect(d!.opacity, 'les trois points ont fusionné').toBeLessThanOrEqual(0.02)
     await expect.poll(() => opacityOf(portrait(page))).toBeGreaterThanOrEqual(0.99)
+    // Le point porte une transition d'échelle (0,45 s) : on le mesure au repos.
+    await settleAnimations(page)
     const box = await rectOf(portrait(page))
     expect(within(box.width, 14, 1.5) && within(box.height, 14, 1.5), `taille du point : ${box.width} × ${box.height}`).toBe(true)
     const middle = found[1]!
