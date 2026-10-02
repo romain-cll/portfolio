@@ -84,7 +84,7 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux parcourir a
 
 ### Responsive et accessibilité
 - [ ] CA28 — Étant donné une fenêtre de 320 px de large, quand je fais défiler toute la page, alors aucun défilement horizontal n'apparaît, aucun contenu n'est coupé ni ne déborde sur les côtés, et rien n'est masqué en permanence par le rail ou par le terminal. Ce CA étend CA11 du socle à toute la page.
-- [ ] CA29 — Étant donné le clavier seul, quand je parcours la page avec Tab, alors chaque contrôle reçoit le focus avec un indicateur visible et s'active avec Entrée ou Espace, sauf la barre de progression vidéo, qui se règle aux flèches. Cela vaut pour les liens de navigation, le bouton du terminal, les boutons des trade-offs, les flèches des carrousels, les contrôles vidéo, le bouton e-mail et les liens. Un contrôle qui a le focus est toujours visible à l'écran, jamais à opacité nulle.
+- [ ] CA29 — Étant donné le clavier seul, quand je parcours la page avec Tab, alors chaque contrôle reçoit le focus avec un indicateur visible et s'active au clavier : les liens avec Entrée, les boutons et le dépliage avec Entrée ou Espace, la barre de progression vidéo avec les flèches. Cela vaut pour les liens de navigation, le bouton du terminal, les boutons des trade-offs, les flèches des carrousels, les contrôles vidéo, le bouton e-mail et les liens. Un contrôle qui a le focus est toujours visible à l'écran, jamais à opacité nulle.
 
 ### Performance et médias
 - [ ] CA30 — Étant donné le build de production, quand je lance `pnpm lhci` en local, alors les scores Performance, Accessibilité, Bonnes pratiques et SEO restent tous d'au moins 95, comme l'exige CA20 du socle.
@@ -518,3 +518,7 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux parcourir a
   - CA29 : la barre de progression vidéo se règle aux flèches ;
   - CA31 : 3 Mo s'entend comme 3 000 000 octets ;
   - les flèches `‹` et `›` du carrousel restent en texte, comme dans le design.
+- 2026-10-02 — Retours du tester, mini gate 1 (validée par Romain) :
+  - CA29 : au clavier, les liens s'activent avec Entrée, les boutons et le dépliage avec Entrée ou Espace, la barre de progression vidéo avec les flèches. Un `<a>` ne réagit pas à Espace, qui fait défiler la page ;
+  - CA7 : le sens du roulement se vérifie par l'animation qui joue (`roll-in`/`roll-out` en descendant, variantes `-down` en remontant), pas par la trajectoire des lettres ;
+  - le Chromium de Playwright lit le H.264, donc pas de fixture WebM : les e2e de CA21 et CA22 utilisent la vraie vidéo.
