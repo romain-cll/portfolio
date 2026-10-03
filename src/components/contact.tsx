@@ -139,7 +139,7 @@ export function Contact({
               linkedin
               <ArrowUpRight className="icon-inline" aria-hidden />
             </a>
-            <a href="/cv.pdf" className={LINK}>
+            <a href="/resume-romain-caille.pdf" download className={LINK}>
               resume.pdf
               <ArrowUpRight className="icon-inline" aria-hidden />
             </a>

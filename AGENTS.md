@@ -21,6 +21,7 @@ Instructions pour tout agent de code (Claude Code, Codex, Cursor…) qui travail
 | Tests e2e | `pnpm build && pnpm test:e2e` (Playwright lance `pnpm start` sur le port 3100) |
 | Lighthouse | `pnpm build && pnpm lhci` |
 | Image Open Graph | `pnpm og` (régénère `public/og.png`) |
+| CV en PDF | `pnpm cv [dossier]` (régénère `public/resume-romain-caille.pdf` et `public/cv-romain-caille.pdf` depuis le dossier de design, `~/Downloads/Portfolio Event-Driven` par défaut ; réseau requis) |
 
 ## Design system : règles bloquantes
 Elles sont vérifiées par `pnpm lint`, au pre-commit et en CI. Elles s'appliquent à tout `src/`, sauf `src/components/ui/` (code généré par shadcn), qui n'est soumis qu'à la règle des icônes.
@@ -69,6 +70,6 @@ Elles sont vérifiées par `pnpm lint`, au pre-commit et en CI. Elles s'applique
 - Aucun pipeline déclenché, hors celui de la MR.
 
 ## Points connus
-- `/cv.pdf` n'existe pas encore : il répond 404.
-- Pas de favicon pour l'instant : `__root.tsx` déclare `<link rel="icon" href="data:,">` pour éviter une 404.
+- CV : `/resume-romain-caille.pdf` (anglais) est téléchargé par les liens `resume.pdf`. `/cv-romain-caille.pdf` (français) est en ligne, mais aucun lien n'y mène encore. `/cv.pdf` n'existe pas et répond 404.
+- Favicon : `public/favicon.svg`, `favicon.ico` et `apple-touch-icon.png` sont produits une fois par `node scripts/favicon.mjs <source.svg>`, puis versionnés.
 - Le sitemap généré par TanStack déclare `xmlns` en `https://` au lieu de `http://`. Gardé tel quel par décision.
