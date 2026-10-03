@@ -25,6 +25,7 @@ export function Carousel({
           alt={`${name} — screenshot`}
           loading="lazy"
           decoding="async"
+          aria-hidden={i === index ? undefined : true}
           className={cn(
             "absolute inset-0 block size-full object-contain object-center transition-opacity duration-300",
             i === index ? "opacity-100" : "opacity-0"

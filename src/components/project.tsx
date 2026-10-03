@@ -86,7 +86,7 @@ export function Project({
                   from={0.42 + k * 0.05}
                   to={0.5 + k * 0.05}
                   dy={8}
-                  className="border border-border px-2.5 py-1.25 font-mono text-xs whitespace-nowrap text-foreground-secondary"
+                  className="border border-border px-2.5 py-1.25 font-mono text-xs whitespace-nowrap text-foreground-secondary duration-150"
                 >
                   {tag}
                 </Reveal>

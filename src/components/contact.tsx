@@ -28,11 +28,17 @@ export function Contact({
   useEffect(() => () => clearTimeout(timer.current), [])
 
   const copy = () => {
+    // Sans API presse-papiers (contexte non sécurisé) : ni erreur ni mention `copied`.
+    const clipboard = navigator.clipboard as Clipboard | undefined
+    if (!clipboard) return
     setCopied(true)
     clearTimeout(timer.current)
     timer.current = setTimeout(() => setCopied(false), 1800)
-    // Presse-papiers refusé : on n'affiche pas une copie qui n'a pas eu lieu.
-    navigator.clipboard.writeText(EMAIL).catch(() => setCopied(false))
+    // Écriture refusée : on retire aussitôt la mention d'une copie qui n'a pas eu lieu.
+    clipboard.writeText(EMAIL).catch(() => {
+      clearTimeout(timer.current)
+      setCopied(false)
+    })
   }
 
   return (

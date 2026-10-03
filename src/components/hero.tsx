@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 export function Hero({ scrolled = false }: { scrolled?: boolean }) {
   return (
     <section data-section="hero" className="h-section-short">
-      <div data-sticky className="sticky top-0 bar:pt-bar">
+      <div data-sticky className="sticky top-0 bar:top-bar">
         <div className="flex min-h-stage flex-col justify-center-safe gap-hero-gap px-gutter py-hero-y">
           <div className="flex min-w-0 flex-col gap-hero-stack">
             <div className="font-mono text-annotation text-muted-foreground">

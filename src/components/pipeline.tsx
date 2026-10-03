@@ -85,7 +85,7 @@ export function Pipeline({
       </div>
       <div
         ref={rowRef}
-        className="relative flex flex-1 flex-col items-center py-0.5 labels:py-2 bar:h-16 bar:flex-none bar:flex-row bar:px-3 bar:py-0"
+        className="relative flex flex-1 flex-col items-center py-0.5 labels:py-2 bar:h-16 bar:flex-none bar:flex-row bar:px-pipeline-inline bar:py-0"
       >
         <span
           aria-hidden
@@ -150,10 +150,10 @@ export function Pipeline({
               href={`#${label}`}
               aria-current={current ? "true" : undefined}
               className={cn(
-                "border-b border-transparent pb-0.5 whitespace-nowrap",
+                "whitespace-nowrap bar:border-b bar:pb-0.5",
                 current
                   ? cn(tone, "text-tone bar:border-tone")
-                  : "text-muted-foreground"
+                  : "text-muted-foreground bar:border-transparent"
               )}
             >
               {label}
