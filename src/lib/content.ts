@@ -40,15 +40,15 @@ export const PROJECTS: readonly Project[] = [
     tone: "tone-spotime",
     url: "spotime.fr",
     problem:
-      "Field crews in construction (10 to 30 people, multi-site) track hours on paper. Every month-end turns into hours of manual re-entry before payroll can even start.",
+      "Field crews of 10 to 30 people, spread across sites, track hours on paper. Every month-end turns into hours of manual re-entry before payroll can start. Spotime replaces that with three surfaces: a web back office for admin and scheduling, an employee mobile app (iOS/Android) and an Electron desktop app for on-site clock-in, published on the Windows Store.",
     decision:
-      "Cold outreach to construction SMEs stalled below signal. A landscaping test confirmed the issue was channel, not message. Shifted testing to private security, using a call-first, persona-disciplined protocol, while the core product stayed untouched.",
+      "Clock-ins are stored local-first and synced as soon as the network returns, with no data loss or duplicates. GPS location is captured only at the moment of clock-in. Development runs with a team of subagents (PO, architect, tester, developer, reviewer), framed by user stories, a DoR/DoD and TDD.",
     tradeoff:
-      "Chose a slower, call-first outreach protocol over scalable cold email. Traded reach for signal quality, on purpose.",
+      "Cold email to construction SMEs wasn't landing, so I switched to cold calling. Traded reach for signal quality, on purpose.",
     learned:
-      "A landscaping campaign returned one reply on 26 sends. The pitch wasn't the problem, skipping the call before the email was. Channel discipline now comes before message iteration.",
+      "Construction still showed no traction, even on direct calls. Pivoting to personal care services brought a client signed through outbound. Testing the channel first, then the market, beats rewriting the pitch.",
     result:
-      "One paying client live in the agriculture sector. Private security vertical now in active test.",
+      "Two paying clients: one in agriculture, and one in personal care services signed through outbound.",
     stack: [
       "Tanstack Router",
       "PostgreSQL",
@@ -56,6 +56,8 @@ export const PROJECTS: readonly Project[] = [
       "TypeScript",
       "shadcn/ui",
       "Plausible (self-hosted)",
+      "Expo/React Native",
+      "Electron",
     ],
     media: {
       kind: "shots",

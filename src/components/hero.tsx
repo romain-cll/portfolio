@@ -89,7 +89,8 @@ export function Hero({ scrolled = false }: { scrolled?: boolean }) {
             </dt>
             <dd>
               <a
-                href="/cv.pdf"
+                href="/resume-romain-caille.pdf"
+                download
                 className="border-b border-border pb-px no-underline hover:border-muted-foreground"
               >
                 resume.pdf

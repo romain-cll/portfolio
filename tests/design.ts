@@ -1,5 +1,6 @@
 // Données et formules recopiées du design de référence
 // (`Portfolio Event-Driven.dc.html`, constantes `PROJECTS`, `LOG` et `annTexts`, méthodes `measure` et `renderVals`).
+// Spotime : textes et stack du design du 2026-10-03 (spec portfolio-cv, CA10 et CA11).
 // Les tests s'en servent comme oracle : rien n'est importé de `src/`.
 // Ce module ne dépend d'aucun outil de test, il se charge aussi bien depuis `node --test` que depuis Playwright.
 
@@ -67,12 +68,12 @@ export const DESIGN_PROJECTS: DesignProject[] = [
     url: "spotime.fr",
     shots: 2,
     video: false,
-    problem: "Field crews in construction (10 to 30 people, multi-site) track hours on paper. Every month-end turns into hours of manual re-entry before payroll can even start.",
-    decision: "Cold outreach to construction SMEs stalled below signal. A landscaping test confirmed the issue was channel, not message. Shifted testing to private security, using a call-first, persona-disciplined protocol, while the core product stayed untouched.",
-    tradeoff: "Chose a slower, call-first outreach protocol over scalable cold email. Traded reach for signal quality, on purpose.",
-    learned: "A landscaping campaign returned one reply on 26 sends. The pitch wasn't the problem, skipping the call before the email was. Channel discipline now comes before message iteration.",
-    result: "One paying client live in the agriculture sector. Private security vertical now in active test.",
-    stack: ["Tanstack Router","PostgreSQL","NestJS","TypeScript","shadcn/ui","Plausible (self-hosted)"],
+    problem: "Field crews of 10 to 30 people, spread across sites, track hours on paper. Every month-end turns into hours of manual re-entry before payroll can start. Spotime replaces that with three surfaces: a web back office for admin and scheduling, an employee mobile app (iOS/Android) and an Electron desktop app for on-site clock-in, published on the Windows Store.",
+    decision: "Clock-ins are stored local-first and synced as soon as the network returns, with no data loss or duplicates. GPS location is captured only at the moment of clock-in. Development runs with a team of subagents (PO, architect, tester, developer, reviewer), framed by user stories, a DoR/DoD and TDD.",
+    tradeoff: "Cold email to construction SMEs wasn't landing, so I switched to cold calling. Traded reach for signal quality, on purpose.",
+    learned: "Construction still showed no traction, even on direct calls. Pivoting to personal care services brought a client signed through outbound. Testing the channel first, then the market, beats rewriting the pitch.",
+    result: "Two paying clients: one in agriculture, and one in personal care services signed through outbound.",
+    stack: ["Tanstack Router","PostgreSQL","NestJS","TypeScript","shadcn/ui","Plausible (self-hosted)","Expo/React Native","Electron"],
     link: { label: "visit spotime.fr", href: "https://spotime.fr" },
   },
   {

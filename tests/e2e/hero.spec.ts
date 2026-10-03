@@ -158,12 +158,13 @@ test.describe('CA10 — section hero', () => {
     expect(round, `pastille ronde (border-radius ${found.dotRadius})`).toBe(true)
   })
 
-  test('CA10 — la ligne resume a le lien « resume.pdf » vers /cv.pdf, suivi d’une icône flèche Carbon', async ({ page }) => {
+  test('CA10 — la ligne resume a le lien « resume.pdf » vers /resume-romain-caille.pdf, avec download, suivi d’une icône flèche Carbon', async ({ page }) => {
     await openHome(page)
     const link = valueOf(page, 'resume').locator('a')
     await expect(link).toHaveCount(1)
     await expect(link).toHaveText('resume.pdf')
-    await expect(link).toHaveAttribute('href', '/cv.pdf')
+    await expect(link).toHaveAttribute('href', '/resume-romain-caille.pdf')
+    await expect(link).toHaveAttribute('download', '')
 
     const icon = link.locator('svg')
     await expect(icon).toHaveCount(1)
@@ -248,17 +249,15 @@ test.describe('CA11 — fenêtre de 320 px', () => {
 })
 
 // ---------------------------------------------------------------------------
-// CA20 — pas de favicon, pas d'erreur console
+// CA20 — pas d'erreur console, pas de ressource en échec (CA16 de la spec portfolio-cv : les icônes en font partie)
 // ---------------------------------------------------------------------------
 
 test.describe('CA20 — chargement de /', () => {
   test.use({ viewport: { width: 1440, height: 900 } })
 
-  test('CA20 — aucune requête /favicon.ico, aucune erreur console, aucune ressource en échec', async ({ page }) => {
-    const requested: string[] = []
+  test('CA20 — aucune erreur console, aucune ressource en échec', async ({ page }) => {
     const consoleErrors: string[] = []
     const failed: string[] = []
-    page.on('request', (request) => requested.push(request.url()))
     page.on('console', (message) => {
       if (message.type() === 'error') consoleErrors.push(message.text())
     })
@@ -270,13 +269,7 @@ test.describe('CA20 — chargement de /', () => {
 
     await openHome(page)
 
-    expect(requested.filter((url) => url.endsWith('/favicon.ico'))).toEqual([])
     expect(consoleErrors).toEqual([])
     expect(failed).toEqual([])
-  })
-
-  test('CA20 — l’absence de favicon est déclarée par <link rel="icon" href="data:,">', async ({ page }) => {
-    await openHome(page)
-    await expect(page.locator('link[rel~="icon"]')).toHaveAttribute('href', 'data:,')
   })
 })
