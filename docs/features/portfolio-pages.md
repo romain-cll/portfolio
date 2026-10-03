@@ -115,6 +115,158 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux parcourir a
 - Performance : Lighthouse mobile d'au moins 95 sur les 4 catégories (CA20 du socle), vérifié en local avec `pnpm lhci`, sans pipeline.
 - Langue du site : anglais.
 
+## Écarts après livraison
+*Relevés par la review de la MR !5 (mergée le 2026-10-02) et corrigés sur `fix/portfolio-pages-ecarts`. Le design de référence fait foi, et les écarts validés dans « Décisions » restent en l'état : titre du hero à 8,6vw et contrôles vidéo resserrés sous 700 px.*
+
+- [x] E1 — Étant donné les étiquettes de la stack d'un projet, quand elles apparaissent, alors leur transition dure 0,15 s, comme dans le design (l. 200), et non 0,2 s.
+- [x] E2 — Étant donné une fenêtre d'au moins 900 px de large, quand je fais défiler le hero, alors `> emit romain.init` n'est émis et le paquet ne pulse qu'au seuil du design : environ 123 px de défilement en 1440 × 900, soit les 112 px du bandeau plus 4 % de la plage du hero. L'indication `scroll ↓` a donc déjà disparu. Sous 900 px, rien ne change. Les seuils des autres sections restent ceux de CA13.
+- [x] E3 — Étant donné le bandeau, à partir de 900 px, quand je mesure la ligne des étapes, alors sa marge intérieure horizontale vaut 2 % de la largeur de sa colonne, comme dans le design (l. 35).
+- [x] E4 — Étant donné un navigateur sans API presse-papiers, ou qui refuse l'écriture, quand j'active le bouton e-mail, alors aucune erreur JavaScript n'est levée et la mention `copied` ne reste pas affichée. Quand l'écriture réussit, CA24 ne change pas.
+- [x] E5 — Étant donné un carrousel de captures, quand je l'inspecte avec l'arbre d'accessibilité, alors seule la capture affichée y figure, avec son texte alternatif `<Projet> — screenshot`. Les captures masquées en sont exclues, et le compteur `i / n` donne la position.
+- [x] E6 — Étant donné le rail, sous 900 px, quand j'inspecte les liens de navigation, alors ils n'ont ni marge basse ni bordure basse, comme dans le design (l. 98). Le soulignement reste réservé au bandeau (CA9).
+- [x] E7 — Étant donné un libellé qui roule (phase et étape du pipeline, étape de la ligne `event <nom> →`), quand il change, alors ses lettres partent l'une après l'autre, en volet : la lettre de rang i démarre i × 12 ms après la première, comme dans le design (`rollEl`, `D = 0.012`). Aujourd'hui, tout le mot glisse d'un bloc. Le sens reste celui de CA7. *Constat : le délai `calc(var(--i) * 12ms)` est écrit dans une variable de `@theme` résolue sur `:root`, où `--i` n'existe pas : toutes les lettres ont un délai nul. Le test de CA7 ne vérifiait que le nom des animations.*
+
+### Plan des correctifs
+
+#### Approche
+Sept corrections ponctuelles, sans nouvelle dépendance. La logique de défilement (`src/lib/pipeline.ts`) ne change pas : on touche des classes Tailwind, plus deux ajouts dans `styles.css` (un token et un bloc `@theme inline`).
+E2 ne touche que le hero : comme dans le design, c'est `<main>` qui porte le bandeau.
+Les tests des écarts vont dans un nouveau fichier e2e. Aucun test existant ne change.
+
+#### Fichiers
+- modifié : `src/styles.css` — E3 : token `--spacing-pipeline-inline: 2%`. E7 : les quatre `--animate-roll-*` passent dans un bloc `@theme inline`.
+- modifié : `src/components/project.tsx` — E1 : `duration-150` sur les étiquettes de la stack.
+- modifié : `src/components/home.tsx` — E2 : `bar:pt-bar` sur `<main>`.
+- modifié : `src/components/hero.tsx` — E2 : le contenu fixé passe en `bar:top-bar`, sans `bar:pt-bar`.
+- modifié : `src/components/pipeline.tsx` — E3 : marge de la ligne des étapes. E6 : bordure et marge basses des liens réservées au bandeau.
+- modifié : `src/components/contact.tsx` — E4 : garde sur l'API presse-papiers.
+- modifié : `src/components/carousel.tsx` — E5 : `aria-hidden` sur les captures masquées.
+- créé (tester) : `tests/e2e/ecarts.spec.ts` — un `describe` par écart, E1 à E7, avec les helpers existants de `support.ts`.
+- inchangés, vérifiés : `src/lib/pipeline.ts`, `src/components/roll-label.tsx`, `overview.tsx`, `tests/e2e/support.ts`, tous les specs existants, `tests/unit/*`, `package.json`.
+
+#### Tâches (ordonnées)
+1. **Stack en 0,15 s.** Couvre E1.
+   - Cause : les étiquettes sont des `Reveal` (`project.tsx` l. 83-92). L'utilitaire `reveal` fixe `transition: opacity 0.2s, translate 0.2s` (`styles.css` l. 340-342), alors que le design met `.15s` (l. 200).
+   - Correction : ajouter `duration-150` aux classes de l'étiquette (`project.tsx` l. 89). Ni token ni CSS.
+   - Pourquoi ça marche : Tailwind 4.3.3 trie les utilitaires selon leurs propriétés. `.duration-150` (`transition-duration`) sort donc après `.reveal`, ce que confirme le build actuel. Une seule durée s'applique aux deux propriétés de la liste. Les autres révélations restent à 0,2 s et la carte à 0,25 s.
+2. **Seuils du hero à partir de 900 px.** Couvre E2.
+   - Le design : le bandeau est porté par `<main>` (`padding-top: 112px`, l. 129), et le contenu du hero est fixé à `top: 112px` (l. 133). À `scrollY = 0`, le haut du hero est donc à 112 px, et sa progression vaut `(scrollY − 112) / (1,3 vh − vh)`. Le seuil 0,04 tombe à 112 + 10,8 = 122,8 px en 1440 × 900.
+   - Le code : `<main>` n'a pas de `pt` (`home.tsx` l. 276). Chaque contenu fixé porte lui-même le bandeau, en `top-0 bar:pt-bar` (`hero.tsx` l. 8, et aussi `overview.tsx` l. 7, `project.tsx` l. 40, `contact.tsx` l. 44). Le haut du hero est donc à 0, et `sectionProgress` (`pipeline.ts` l. 153-158) atteint 0,04 dès 10,8 px. `> emit romain.init` et la pulsation (`idle`, `pipeline.ts` l. 226) partent alors avant que l'indication ne s'efface, à 20 px.
+   - Les autres sections n'ont pas l'écart : leur progression ne dépend que de la position de leur propre haut, et le contenu fixé y arrive avec le même décalage de 112 px.
+   - Correction, sur le hero seul :
+     - `home.tsx` l. 276 : ajouter `bar:pt-bar` à `<main>` ;
+     - `hero.tsx` l. 8 : `sticky top-0 bar:pt-bar` devient `sticky top-0 bar:top-bar`.
+   - Effet :
+     - à `scrollY = 0`, le hero s'affiche au même endroit ;
+     - il reste immobile pendant les 112 premiers pixels, comme dans le design, puis progresse ;
+     - les sections suivantes gardent `top-0 bar:pt-bar` : elles descendent de 112 px dans le document sans changer de comportement par rapport à leur progression ;
+     - classes `bar:` uniquement, donc rien ne change sous 900 px.
+3. **Marge de la ligne des étapes.** Couvre E3.
+   - Cause : `pipeline.tsx` l. 88 utilise `bar:px-3`, soit 12 px fixes. Le design a `padding: 0 2%` (l. 35) : en CSS, un padding en pourcentage se rapporte à la largeur du bloc conteneur, ici la colonne `minmax(0,1fr)` de la grille.
+   - Correction : dans `@theme`, à côté de `--spacing-bar`, ajouter `--spacing-pipeline-inline: 2%`. Puis remplacer `bar:px-3` par `bar:px-pipeline-inline`.
+   - `measureBoxes` (`home.tsx` l. 105) remesure les cadres par rapport à la ligne : rien d'autre à changer.
+4. **Presse-papiers absent ou refusé.** Couvre E4.
+   - Cause : dans `contact.tsx` l. 30-36, `setCopied(true)` et la minuterie de 1,8 s sont posés avant l'appel à `navigator.clipboard.writeText`, qui n'a aucune garde.
+     - Sans API (contexte non sécurisé, ou navigateur qui ne l'a pas), `navigator.clipboard` est indéfini : l'appel lève un `TypeError` dans le gestionnaire et `copied` reste affiché 1,8 s.
+     - Le refus d'écriture est déjà rattrapé (l. 35), mais la minuterie n'est pas annulée.
+   - Correction (option A de la décision 2) :
+     ```ts
+     const copy = () => {
+       // Sans API presse-papiers (contexte non sécurisé) : ni erreur ni mention `copied`.
+       const clipboard = navigator.clipboard as Clipboard | undefined
+       if (!clipboard) return
+       setCopied(true)
+       clearTimeout(timer.current)
+       timer.current = setTimeout(() => setCopied(false), 1800)
+       // Écriture refusée : on retire aussitôt la mention d'une copie qui n'a pas eu lieu.
+       clipboard.writeText(EMAIL).catch(() => {
+         clearTimeout(timer.current)
+         setCopied(false)
+       })
+     }
+     ```
+5. **Captures masquées hors de l'arbre d'accessibilité.** Couvre E5.
+   - Cause : `carousel.tsx` l. 21-33 rend toutes les captures avec `alt="<Projet> — screenshot"`. Celles qui sont masquées ne le sont que par `opacity-0` : elles restent dans l'arbre d'accessibilité (cinq images pour Event Hub).
+   - Correction : `aria-hidden={i === index ? undefined : true}` sur chaque `<img>`.
+     - On garde `alt`, que CA20 exige pour chaque capture, et l'opacité, qui fait le fondu.
+     - Le compteur `i / n` (l. 50-52) est déjà du texte exposé et ne change pas. Aucune région live n'est ajoutée, ce n'est pas demandé.
+6. **Liens du rail sans soulignement.** Couvre E6.
+   - Cause : `pipeline.tsx` l. 153 applique `border-b border-transparent pb-0.5` à toutes les largeurs. Dans le design, le rail n'a ni bordure ni marge basse (l. 98), alors que le bandeau a `border-bottom: 1px` et `padding-bottom: 2px` (l. 58).
+   - Correction :
+     - classes de base : `whitespace-nowrap bar:border-b bar:pb-0.5` ;
+     - lien actif : `cn(tone, "text-tone bar:border-tone")`, sans changement ;
+     - liens inactifs : `text-muted-foreground bar:border-transparent`.
+   - La couleur transparente va dans la branche inactive pour ne pas dépendre de la fusion de `cn`. Sous la même variante `bar:`, l'ordre alphabétique du CSS ferait gagner `border-transparent` sur `border-tone`.
+7. **Lettres décalées de 12 ms.** Couvre E7.
+   - Cause : la cause notée dans la spec est confirmée.
+     - Les `--animate-roll-*` sont dans `@theme` (`styles.css` l. 207-210). Tailwind 4.3.3 les émet dans `@layer theme { :root, :host { … } }`, et l'utilitaire ne fait que les référencer. Dans le build actuel : `.motion-safe\:animate-roll-in{animation:var(--animate-roll-in)}` et, sur `:root`, `--animate-roll-in:roll-in .3s cubic-bezier(.4, 0, .2, 1) calc(var(--i,0) * 12ms) backwards`.
+     - Une propriété personnalisée résout ses `var()` sur l'élément qui la déclare, ici `:root`, où `--i` n'existe pas. Le repli `0` s'applique, et les lettres héritent d'une valeur déjà calculée : leur délai est nul.
+     - Le `--i` posé sur chaque lettre (`roll-label.tsx` l. 25) n'est donc jamais lu.
+   - Correction : déplacer `--animate-roll-in`, `--animate-roll-out`, `--animate-roll-in-down` et `--animate-roll-out-down` dans un nouveau bloc `@theme inline`.
+     - Tailwind recopie alors la valeur dans l'utilitaire, comme il le fait déjà pour `--color-tone`, qui donne `.text-tone{color:var(--tone)}`. `calc(var(--i, 0) * 12ms)` se résout ainsi sur chaque lettre.
+     - Les `@keyframes` restent dans `@theme`. Tailwind conserve les keyframes nommées par une déclaration `animation` (`node_modules/tailwindcss/dist/lib.mjs` : `if(h.property==="animation")for(let x of Zr(h.value))f.add(x)`).
+     - `--animate-roll-hold`, qui n'utilise pas `--i`, reste dans `@theme`.
+     - Placer le nouveau bloc après le premier `@theme inline` : `tests/unit/tokens.test.ts` lit le premier bloc `@theme inline` du fichier, celui des couleurs.
+8. **Vérifications locales.**
+   - `pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e`, puis `pnpm lhci`, puisque le rendu change.
+   - Les e2e passent aussi dans l'image de la CI limitée à 1 CPU, avant le push.
+
+#### Stratégie de test
+Tous les nouveaux tests vont dans `tests/e2e/ecarts.spec.ts`. Les valeurs attendues sont recopiées du design ou de la spec, jamais importées de `src/`.
+- E1 → e2e 1440 × 900 : chaque étiquette de la stack des trois projets a un `transition-duration` calculé de 0,15 s sur chaque entrée de la liste, avec `opacity` et `translate` dans `transition-property`. Témoins : problem reste à 0,2 s et la carte à 0,25 s. Rouge aujourd'hui (0,2 s).
+- E2 → e2e 1440 × 900 : seuil calculé dans le test, 112 + 0,04 × (1,3 − 1) × 900 = 122,8 px.
+  - À `scrollY` 118 : `events.log · 0` et aucune animation `packet-pulse`.
+  - À 128 : `events.log · 1`, dernière ligne `> emit romain.init`, `packet-pulse` en cours, indication `scroll ↓` à opacité 0.
+  - En 800 × 900 : la ligne est déjà émise à 12 px (0,04 × 270 = 10,8), comme aujourd'hui.
+  - Les positions sont absolues (`scrollToY`), pas calculées par `progressY`. C'est la géométrie relative à la section qui a laissé passer l'écart. Rouge aujourd'hui (émise à 10,8 px).
+- E3 → e2e en 1440 × 900 et 1920 × 1080, sur la ligne des étapes (premier ancêtre commun des trois cadres qui n'est pas en `display: contents`) : `padding-left` et `padding-right` valent 2 % de sa largeur, qui est celle de la colonne, à 0,5 px près. Deux largeurs prouvent une valeur proportionnelle. Rouge aujourd'hui : 12 px au lieu d'environ 18 et 27 px.
+- E4 → e2e 1440 × 900, contact en fin de section. On écoute `pageerror` et les erreurs de console.
+  - Sans API : un script d'initialisation rend `navigator.clipboard` indéfini (`Object.defineProperty(Navigator.prototype, 'clipboard', { get: () => undefined })`). Pendant les 500 ms qui suivent le clic : aucune erreur, `copied` n'apparaît jamais et l'icône de copie reste. Rouge aujourd'hui (`TypeError`, `copied` affiché 1,8 s).
+  - Écriture refusée : `Clipboard.prototype.writeText` rejette en `NotAllowedError`. Aucune erreur, `copied` masqué après le rejet et qui le reste. Vert dès aujourd'hui : c'est un test de non-régression.
+- E5 → e2e 1440 × 900, Spotime et Event Hub :
+  - dans la section, `getByRole('img', { name: '<Projet> — screenshot', exact: true })` trouve une seule image, dont le `src` est celui de la capture à opacité 1 ;
+  - même vérification après `next`, après `previous` et après un tour complet ;
+  - le compteur `i / n` est trouvé par `getByText` et n'est sous aucun `aria-hidden`.
+  - Rouge aujourd'hui : n images exposées.
+- E6 → e2e en 800 × 900, pendant le hero puis avec Fraud Engine actif (`scrollToProgress('fraud-engine', 0.3)`) : chaque lien de `nav[aria-label="sections"]` a `border-bottom-width` et `padding-bottom` à 0. En 1440 × 900, le lien actif garde 1 px et 2 px. Rouge aujourd'hui (1 px et 2 px dans le rail).
+- E7 → e2e 1440 × 900, au changement de libellé : la lettre de rang i (rang parmi ses sœurs) a un délai de 12 × i ms, à 0,5 ms près.
+  - Lettres entrantes : lire `getComputedStyle(lettre).animationDelay`, stable tant que le libellé ne change plus.
+  - Lettres sortantes : relever `document.getAnimations()` dans la même évaluation que le défilement, avant la fin de `roll-hold` (0,5 s).
+  - Cas couverts :
+    - phase `idle` vers `overview` en descendant (`roll-in` sur 8 lettres, `roll-out` sur 4) ;
+    - `overview` vers `idle` en remontant (variantes `-down`) ;
+    - étape de la ligne `event spotime →`, de `ingest` à `build`.
+  - Rouge aujourd'hui : tous les délais sont nuls.
+- Tests existants : aucun n'est modifié, et aucun ne devrait casser.
+  - CA20 (E5) : ses tests visent `img[alt="<Projet> — screenshot"]` par sélecteur CSS et lisent l'attribut `alt`, auquel `aria-hidden` ne touche pas. Un `alt=""` sur les captures masquées casserait en revanche l'assertion « chaque capture a le texte alternatif attendu » : c'est pour cela qu'on choisit `aria-hidden`.
+  - CA7 (E7) : il compte les animations par nom sur 900 ms. Une animation CSS existe dès sa phase de délai, donc les comptes ne changent pas. Le roulement le plus long passe à 0,3 + 11 × 0,012 = 0,432 s (`fraud.engine`) : il reste sous les 900 ms d'échantillonnage et sous les 0,5 s de `roll-hold`.
+  - CA8, CA9, CA12, CA13, CA16, CA17 et CA26 (E2) : leurs positions viennent de la géométrie de la section (`progressY`), qui suit le décalage de 112 px. Par exemple, `scrollToProgress('hero', 0)` donne maintenant 112.
+  - CA15 (E2) : ses positions absolues de 10 et 21 px restent justes, car `scrolled` se lit en absolu.
+  - CA9 dans le rail (E6) : reste vert, la bordure a maintenant une largeur nulle.
+  - CA24 (E4) : inchangé avec l'option A.
+  - `tokens.test.ts` (E7) : inchangé, grâce à la place du nouveau bloc `@theme inline`.
+
+#### Décisions à valider
+- **Portée d'E2.**
+  - Option A : hero seul, deux classes.
+  - Option B : `<main>` porte le bandeau pour toutes les sections. Overview l. 7, projet l. 40 et contact l. 44 passent aussi en `top-0 bar:top-bar`, sans `bar:pt-bar`.
+    - B reproduit aussi le design entre les sections. Aujourd'hui, à l'approche d'une section, son contenu arrive 112 px plus bas que dans le design, ce qui se voit pour l'overview et le contact, dont le contenu n'est pas masqué avant leur début. Chaque projet est aussi 112 px plus haut.
+  - Recommandation : A, parce qu'E2 limite le changement au hero et que B modifie l'approche de chaque section sans CA pour la vérifier. B peut faire l'objet d'un écart distinct.
+- **E4, moment de l'affichage de `copied`.**
+  - Option A : affichage immédiat, retiré au rejet. C'est le code actuel avec une garde en plus.
+  - Option B : affichage seulement après succès, comme `copyEmail` dans le design (`.then(done)`).
+  - Recommandation : A. Avec B, la minuterie ne repart qu'à la résolution de la promesse, alors que le test existant « CA24 — un second clic repart pour 1,8 s » avance l'horloge simulée juste après le clic. Ce test deviendrait une course entre la promesse et `clock.runFor`, fragile sur le runner de la CI. Avec A, en cas de refus, `copied` ne s'affiche que le temps du rejet : quelques millisecondes, sous la transition de 0,2 s.
+
+#### Risques
+- **E2.** À partir de 900 px, la page est 112 px plus longue, et ses 112 premiers pixels de défilement ne font bouger que le fondu de l'indication : c'est le comportement du design. Il reste de toute façon à vérifier visuellement.
+- **E1.** La correction repose sur l'ordre de sortie des utilitaires (`.duration-150` après `.reveal`), vérifié dans le build actuel. Le test E1 protège cet ordre.
+- **E7.** L'ancien libellé n'est pas coupé : le roulement le plus long (0,432 s) reste sous les 0,5 s de `roll-hold`. `settleAnimations` attend un peu plus longtemps.
+- **Stabilité des e2e.** E2 et E7 lisent un état à une position ou à un instant précis : utiliser `expect.poll` pour E2, et pour E7 lire les lettres sortantes dans la même évaluation que le défilement. Passer les e2e dans l'image de la CI limitée à 1 CPU avant le push.
+- **Lighthouse.** Aucun impact attendu, mais `pnpm lhci` est obligatoire en local puisque le rendu change.
+
+#### Ambiguïtés de la spec
+1. **E7, valeur exacte du pas.** Le design arrondit le délai au centième de seconde (`(i * D).toFixed(2) + 's'`, l. 459). Ses délais réels sont donc 0, 10, 20, 40, 50, 60, 70, 80, 100… ms, alors qu'E7 écrit i × 12 ms. Proposition : suivre E7, soit i × 12 ms. L'écart est au plus de 6 ms, imperceptible, et le test vérifie i × 12 ms.
+
 ## Plan technique
 ### Approche
 - **Rendu.** `/` reste prérendue et contient tout le contenu. Chaque section reprend la structure du design : une section haute, un contenu `sticky` et, pour les projets, un espaceur de 100vh. Un seul markup sert au bandeau (≥ 900 px) et au rail (< 900 px, libellés à partir de 700 px). La bascule passe par des breakpoints déclarés en tokens, sans détecter la largeur en JS, donc sans décalage à l'hydratation. Aucune nouvelle dépendance.
@@ -530,3 +682,9 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux parcourir a
 - 2026-10-02 — Livraison. Review OK au 2e passage, après correction de trois bloquants `[code]` sur la fidélité au design : couleur des liens `repo`, bordure haute du terminal, montée en trop de trois éléments des projets. CA1 à CA30, CA32 et CA33 sont vérifiés par les tests. Lighthouse mobile en local : 97 / 100 / 100 / 100. Il reste à vérifier à la main la lecture de la vidéo (CA31) dans Firefox, Safari macOS et Safari iOS, puis CA30 en CI sur `main`.
 - 2026-10-02 — Pipeline de la MR !5 en échec sur un seul e2e : CA14 mesurait le panneau du terminal pendant sa transition de 0,3 s, ce qu'on ne voit que sur le runner lent de la CI. On l'a reproduit dans l'image Docker de la CI limitée à 1 CPU. Le tester attend la fin des transitions (`settleAnimations`) avant les mesures de CA14, et le même motif est corrigé par prévention dans CA19, CA22, CA23 et CA28. Les assertions ne changent pas. Second push accepté par Romain. Règle retenue : avant chaque push, les e2e passent dans l'image de la CI limitée à 1 CPU (validée par Romain)
 - 2026-10-02 — Clôture : MR !5 mergée et déployée. Le pipeline `main` est vert, y compris Lighthouse en CI (CA30). Lighthouse mobile sur la prod : 99 à 100 / 100 / 100 / 100 en 12.6.1, 100 partout en 13.5.0. Romain mesure 100 / 100 / 96 / 100 avec son navigateur, tous les scores restant d'au moins 95. En prod, `/` répond 200, `/cv.pdf` et `/page-inconnue` répondent 404, les médias 200, et la vidéo répond 206 aux requêtes `Range` (CA32). Romain a validé à la main la lecture de la vidéo dans Chrome, Firefox, Safari macOS et Safari iOS (CA31). CA1 à CA33 sont cochés (validée par Romain)
+- 2026-10-02 — Écarts après livraison E1 à E7 validés (gate 1). E7 ajouté par Romain : le roulement des libellés doit décaler les lettres une à une, comme un volet, et non faire glisser le mot d'un bloc. Le pas de 12 ms par lettre est celui du design (validée par Romain)
+- 2026-10-03 — Plan des écarts validé (gate 2), avec les recommandations de l'architect (validée par Romain) :
+  - E2 ne corrige que le hero. Le décalage de 112 px à l'approche des autres sections reste un écart résiduel : le reproduire casserait CA17 sur les projets ;
+  - E4 garde l'affichage immédiat de `copied`, retiré si l'écriture échoue ;
+  - E7 applique 12 ms pile par lettre, sans l'arrondi au centième du design.
+- 2026-10-03 — Écarts E1 à E7 corrigés et vérifiés. Review OK au 1er passage. E2e : 259/259 en local et dans l'image de la CI limitée à 1 CPU. Lighthouse en local : 97 / 100 / 100 / 100.

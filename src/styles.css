@@ -178,6 +178,7 @@
   --spacing-spacer: 100vh;
   --spacing-anchor: 50vh;
   --spacing-bar: 112px;
+  --spacing-pipeline-inline: 2%;
   --spacing-rail: 56px;
   --spacing-rail-wide: 200px;
   --spacing-terminal: 36px;
@@ -204,10 +205,6 @@
   /* Keyframes du design. Le délai par lettre des libellés qui roulent passe par --i. */
   --animate-blink: blink 1s steps(1) infinite;
   --animate-packet-pulse: packet-pulse 1.2s ease-out infinite;
-  --animate-roll-in: roll-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) backwards;
-  --animate-roll-out: roll-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) forwards;
-  --animate-roll-in-down: roll-in-down 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) backwards;
-  --animate-roll-out-down: roll-out-down 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) forwards;
   --animate-roll-hold: roll-hold 0.5s linear both;
 
   @keyframes blink {
@@ -269,6 +266,14 @@
       visibility: hidden;
     }
   }
+}
+
+/* Valeur recopiée dans l'utilitaire : `--i` se résout sur chaque lettre, pas sur :root. */
+@theme inline {
+  --animate-roll-in: roll-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) backwards;
+  --animate-roll-out: roll-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) forwards;
+  --animate-roll-in-down: roll-in-down 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) backwards;
+  --animate-roll-out-down: roll-out-down 0.3s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 12ms) forwards;
 }
 
 /* Écart au design : sous 700 px, le rail de 56 px laisse 191 px au titre du hero à 320 px de large, pour 198 px de texte.

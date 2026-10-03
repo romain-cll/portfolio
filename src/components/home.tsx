@@ -273,7 +273,7 @@ export function Home() {
       <Terminal count={view.count} />
       <main
         ref={main}
-        className="overflow-x-clip pl-rail labels:pl-rail-wide bar:pl-0"
+        className="overflow-x-clip pl-rail labels:pl-rail-wide bar:pt-bar bar:pl-0"
       >
         <Hero scrolled={view.scrolled} />
         <Overview />
