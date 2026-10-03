@@ -5,6 +5,9 @@ import { expect, test } from '@playwright/test'
 
 import { assertBuilt, DIST } from './support.ts'
 
+/** Fichiers versionnés de `public/` : le serveur de prod doit les servir tels quels (Vite les copie dans dist/client). */
+const PUBLIC = join(process.cwd(), 'public')
+
 // Ces tests visent le serveur de production lancé par Playwright (`pnpm start`, voir playwright.config.ts),
 // sans simulation : ce sont les vraies réponses HTTP qui comptent.
 test.beforeEach(() => {
@@ -21,6 +24,33 @@ test('CA22 — un fichier manquant (/cv.pdf) répond 404', async ({ request }) =
   const response = await request.get('/cv.pdf')
   expect(response.status()).toBe(404)
 })
+
+// CA4 — les deux CV, servis comme fichiers statiques
+for (const file of ['resume-romain-caille.pdf', 'cv-romain-caille.pdf']) {
+  test(`CA4 — /${file} répond 200 en application/pdf, avec les octets du fichier de public/`, async ({ request }) => {
+    const response = await request.get(`/${file}`)
+    expect(response.status()).toBe(200)
+    expect(response.headers()['content-type']?.split(';')[0]).toBe('application/pdf')
+    const body = await response.body()
+    expect(body.subarray(0, 5).toString('latin1')).toBe('%PDF-')
+    expect(body.equals(readFileSync(join(PUBLIC, file)))).toBe(true)
+  })
+}
+
+// CA14 — les trois icônes, avec leur type
+const ICONS: { path: string; types: string[] }[] = [
+  { path: '/favicon.svg', types: ['image/svg+xml'] },
+  { path: '/favicon.ico', types: ['image/x-icon', 'image/vnd.microsoft.icon'] },
+  { path: '/apple-touch-icon.png', types: ['image/png'] },
+]
+for (const { path, types } of ICONS) {
+  test(`CA14 — ${path} répond 200 en ${types.join(' ou ')}`, async ({ request }) => {
+    const response = await request.get(path)
+    expect(response.status()).toBe(200)
+    expect(types).toContain(response.headers()['content-type']?.split(';')[0])
+    expect((await response.body()).length).toBeGreaterThan(0)
+  })
+}
 
 test('CA1 — GET / répond 200 avec exactement le index.html prérendu', async ({ request }) => {
   const response = await request.get('/')

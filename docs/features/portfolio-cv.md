@@ -18,6 +18,8 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux télécharg
 - [ ] CA6 — Étant donné les deux PDF, quand j'en lis le texte, alors `/resume-romain-caille.pdf` est la version anglaise (titres « Experience » et « Projects », accroche « Fullstack developer, ready for the agentic era. ») et `/cv-romain-caille.pdf` la version française (titres « Expérience » et « Projets »), avec les textes du design à la lettre.
 - [ ] CA7 — Étant donné l'URL `/cv.pdf`, qui n'est plus référencée, quand je la demande, alors elle répond toujours 404 (CA22 du socle).
 
+- [ ] CA18 — Étant donné les deux PDF, quand je liste les polices qu'ils embarquent (`/FontName` des descripteurs de police), alors ce sont uniquement Instrument Sans et IBM Plex Mono, sans aucune police système (par exemple `.SFNS`, Helvetica, Arial). Le rendu ne dépend donc pas de la machine qui lance `pnpm cv`.
+
 ### Script `pnpm cv`
 - [ ] CA8 — Étant donné le dossier de design, quand je lance `pnpm cv`, alors le script régénère `public/resume-romain-caille.pdf` depuis `Resume EN.dc.html` et `public/cv-romain-caille.pdf` depuis `CV FR.dc.html`, conformes à CA5 et CA6. Le dossier par défaut est `~/Downloads/Portfolio Event-Driven`, et on peut en passer un autre en argument (`pnpm cv <dossier>`).
 - [ ] CA9 — Étant donné un dossier de design introuvable, ou auquel il manque l'un des deux fichiers, quand je lance `pnpm cv`, alors le script s'arrête avec un message qui nomme le chemin manquant et un code de sortie non nul. Aucun PDF existant n'est modifié.
@@ -109,6 +111,7 @@ Prérequis : les tests rouges (voir la stratégie de test).
    - **Rendu, une page par CV.**
      - `goto(pathToFileURL(fichier).href, { waitUntil: "networkidle" })`. Le réseau sert à React et ReactDOM, que `support.js` charge depuis unpkg, et à Google Fonts.
      - `waitForFunction(() => document.querySelector("doc-page")?.shadowRoot?.querySelector(".sheet.paginated"))`. Cette condition garantit que l'élément est défini, rendu par le runtime x-dc, et mesuré en pagination explicite.
+     - Police du texte (CA18) : le composant `doc-page` de Claude Design impose la police système sur son hôte (`:host { font-family: -apple-system, … }`), ce qui écrase l'Instrument Sans du CSS du CV. Avant l'impression, le script ajoute donc `doc-page { font-family: 'Instrument Sans', Helvetica, sans-serif }` (`page.addStyleTag`), puis charge explicitement les graisses utilisées (`document.fonts.load`). *Ajout du PO du 2026-10-03 après les tests rouges.*
      - Polices : `evaluate` attend `document.fonts.ready`, puis renvoie les familles des `FontFace` en statut `loaded`, sans guillemets. Si « Instrument Sans » ou « IBM Plex Mono » manque, le script lève `"<source> : police … non chargée (réseau ?)"`.
      - `page.pdf({ format: "A4", printBackground: true, preferCSSPageSize: true, margin: { top: 0, right: 0, bottom: 0, left: 0 } })`. En Playwright 1.63.0, `margin` est un objet (`types.d.ts`, l. 4150). `doc-page.js` injecte `@page { size: 210mm 297mm; margin: 0 }`.
    - **Écriture.** Les deux buffers sont écrits seulement après les deux rendus. Toute exception fait rejeter le `await` de premier niveau : sortie en code 1, navigateur fermé dans le `finally`, aucun PDF touché.
@@ -249,3 +252,4 @@ Prérequis : les tests rouges (voir la stratégie de test).
   - `hero.spec.ts`, CA20 du socle : l'assertion « aucune requête `/favicon.ico` » est retirée et le test `data:,` est supprimé (CA13, CA16) ;
   - `sections.spec.ts`, CA25 de la spec pages : le lien `resume.pdf` pointe vers `/resume-romain-caille.pdf` (CA1) ;
   - `tests/design.ts` : textes et stack de Spotime recopiés du nouveau design (CA10, CA11).
+- 2026-10-03 — Police du texte des CV : Instrument Sans est forcée dans le PDF, au lieu de la police système que le composant `doc-page` de Claude Design impose (SF sur le Mac). Le CV prend ainsi la police du site, son rendu ne dépend pas de la machine, et on n'embarque pas la police système d'Apple dans un fichier publié. CA18 est ajouté, et la tâche 3 du plan est complétée (validée par Romain)

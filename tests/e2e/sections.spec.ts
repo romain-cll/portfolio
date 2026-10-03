@@ -866,7 +866,7 @@ test.describe('CA25 — contact (1440 × 900)', () => {
   const links: [string, string][] = [
     ['gitlab', 'https://gitlab.com/romain.caille'],
     ['linkedin', 'https://www.linkedin.com/in/romain-caill%C3%A9/'],
-    ['resume.pdf', '/cv.pdf'],
+    ['resume.pdf', '/resume-romain-caille.pdf'],
   ]
   for (const [name, href] of links) {
     test(`CA25 — le lien « ${name} » mène à ${href}, suivi d’une icône Carbon flèche`, async ({ page }) => {
