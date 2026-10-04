@@ -133,8 +133,9 @@ describe('CA6 — /resume-romain-caille.pdf est la version anglaise', () => {
     'Cold-call prospecting: no traction in construction, so I pivoted to test the personal care services market, which proved more receptive, with prospects coming in inbound.',
     'Development assisted by a team of subagents (PO, architect, tester, developer, reviewer), framed by user stories, a DoR/DoD and TDD.',
     "France's electricity grid, Europe's largest smart grid (37M+ connected meters)",
-    'Built an internal org chart in Nuxt.',
-    'Tech subsidiary of Système U · team building the warehouse applications',
+    // Décision 2026-10-04 (cv-mise-a-jour-2) : ces deux phrases sont remplacées par celles du nouveau design.
+    "Mon Orga, Enedis's company-wide org chart (41,000 employees): Nuxt 3 app and TypeScript REST API (AdonisJS, PostgreSQL), the single source of org data for internal apps. Main frontend dev in a team of 4.",
+    'Tech subsidiary of Système U · team building the applications for its 28 warehouses',
     'Loading app: loading those pallets onto trucks.',
     'Maps the four webhooks of one Stripe payment to disjoint event types so each euro is counted once.',
     'analytics + Stripe revenue attribution',
@@ -189,8 +190,9 @@ describe('CA6 — /cv-romain-caille.pdf est la version française', () => {
     'Développement assisté par une équipe de subagents (PO, architecte, testeur, développeur, reviewer), cadré par des user stories, une DoR/DoD et du TDD.',
     "La position GPS n'est capturée qu'au moment du pointage.",
     "Réseau électrique français, 1er smart grid d'Europe (37M+ compteurs connectés)",
-    "Conception d'un organigramme interne en Nuxt.",
-    "Filiale tech de Système U · équipe des applications d'entrepôt",
+    // Décision 2026-10-04 (cv-mise-a-jour-2) : ces deux phrases sont remplacées par celles du nouveau design.
+    "Mon Orga, organigramme national d'Enedis (41 000 salariés) : app Nuxt 3 et API REST TypeScript (AdonisJS, PostgreSQL), source unique des données d'organisation des apps internes. Dev frontend principal, équipe de 4.",
+    "Filiale tech de Système U · équipe des applications de ses 28 entrepôts",
     'analytics + attribution du revenu Stripe',
     "Les quatre webhooks d'un paiement Stripe sont mappés sur des types d'événements disjoints : chaque euro n'est compté qu'une fois.",
     'Trois services Go reliés par Kafka, partitionnés par card_id : une carte est toujours scorée par le même worker.',
@@ -216,6 +218,145 @@ describe('CA6 — /cv-romain-caille.pdf est la version française', () => {
     assert.deepEqual(present, [], 'anciennes phrases encore présentes dans le texte du PDF')
   })
 })
+
+// ---------------------------------------------------------------------------
+// cv-mise-a-jour-2 — CA2 à CA8 : Enedis, U Tech, formation en bas de page
+// ---------------------------------------------------------------------------
+
+// CA8 : le bas de la ligne de diplôme, dernière ligne de la page, est à au moins 3 mm du bord bas.
+// Le bas d'une ligne vaut sa ligne de base moins 0,3 em (décision 2026-10-04) ; IBM Plex Mono descend de 0,274 em.
+const MIN_MARGIN_PT = (3 * 72) / 25.4
+const toMm = (pt: number) => (pt * 25.4) / 72
+
+/** Dernière ligne de la page : les textes non vides posés à la plus basse ligne de base (à 0,5 pt près), et la marge sous cette ligne. */
+function lastLine(info: PdfInfo) {
+  const runs = info.pages[0]!.runs.filter((run) => run.text.trim() !== '')
+  assert.ok(runs.length > 0, 'aucun texte positionné dans le PDF')
+  const baseline = Math.min(...runs.map((run) => run.y))
+  const row = runs.filter((run) => run.y - baseline < 0.5)
+  return {
+    text: squash(row.map((run) => run.text).join('')),
+    bottom: Math.min(...row.map((run) => run.y - 0.3 * run.size)),
+  }
+}
+
+const countOf = (haystack: string, needle: string) => haystack.split(needle).length - 1
+
+// CA2 et CA3 pour l'anglais, CA4 et CA5 pour le français : textes présents (`keep`) et textes retirés (`drop`).
+const MISE_A_JOUR_2 = [
+  {
+    label: 'anglais',
+    pdf: EN,
+    keep: [
+      'May 2025 – Present',
+      'NestJS · TypeScript · PostgreSQL · React · TanStack Router · shadcn/ui · Plausible · Expo/React Native · Electron',
+      'Worksite inspection app (Pays de la Loire)',
+      'contractor-run worksites a year for safety, schedule and work quality.',
+      "Mon Orga, Enedis's company-wide org chart (41,000 employees): Nuxt 3 app and TypeScript REST API (AdonisJS, PostgreSQL), the single source of org data for internal apps. Main frontend dev in a team of 4.",
+      'GitLab CI/CD (80% coverage gate, Checkmarx, Docker, auto deploy, health check); OIDC SSO, role-based access, rate limiting, no personal data stored locally.',
+      'the time lost to cross-team CI/CD blockers and got a weekly sync set up with the Cloud and CI/CD teams.',
+      'Nuxt 3 · TypeScript · AdonisJS (Node.js) · PostgreSQL (SQL) · Docker · GitLab CI/CD · Symfony · AWS',
+      'Tech subsidiary of Système U · team building the applications for its 28 warehouses',
+      'Routing app: moves pallets to the loading dock.',
+      'Vue · JavaScript · Java Spring Boot · PWA',
+      "Master's in IT & Information Systems · EPSI",
+    ],
+    drop: [
+      'Built an internal org chart in Nuxt.',
+      'to understand their needs and design apps around them.',
+      'Clear dev process',
+      'Nuxt · Symfony · AdonisJS · GitLab CI/CD · AWS',
+      'team building the warehouse applications',
+      'Routing app: moves orders from picking to the loading dock, bringing every pallet in.',
+      'Education:',
+    ],
+    projects: 'projects',
+    education: 'education',
+    diploma: "Master's in IT & Information Systems · EPSI",
+    prefix: "Master's in IT & Information Systems",
+  },
+  {
+    label: 'français',
+    pdf: FR,
+    keep: [
+      'NestJS · TypeScript · PostgreSQL · React · TanStack Router · shadcn/ui · Plausible · Expo/React Native · Electron',
+      "App d'inspection des chantiers (Pays de la Loire) : ~15 agents terrain inspectent ~3 000 chantiers prestataires par an (sécurité, délais, qualité d'exécution).",
+      "Mon Orga, organigramme national d'Enedis (41 000 salariés) : app Nuxt 3 et API REST TypeScript (AdonisJS, PostgreSQL), source unique des données d'organisation des apps internes. Dev frontend principal, équipe de 4.",
+      'CI/CD GitLab (couverture 80 %, Checkmarx, Docker, déploiement auto, health check) ; SSO OIDC, autorisation par rôle, rate limiting, aucune donnée personnelle stockée en local.',
+      "du temps perdu en blocages inter-équipes, d'où une réunion hebdo avec les équipes Cloud et CI/CD.",
+      'Nuxt 3 · TypeScript · AdonisJS (Node.js) · PostgreSQL (SQL) · Docker · GitLab CI/CD · Symfony · AWS',
+      "Filiale tech de Système U · équipe des applications de ses 28 entrepôts",
+      "Application d'acheminement des palettes jusqu'au quai de chargement.",
+      'Vue · JavaScript · Java Spring Boot · PWA',
+      'Master Bac+5 · Expert en informatique et SI · EPSI',
+    ],
+    drop: [
+      "Conception d'un organigramme interne en Nuxt.",
+      'Rencontres avec les utilisateurs sur le terrain',
+      'Processus de dev clair',
+      'Nuxt · Symfony · AdonisJS · GitLab CI/CD · AWS',
+      "équipe des applications d'entrepôt",
+      'de la préparation de commandes jusqu\'au quai de chargement',
+      'Formation :',
+    ],
+    projects: 'projets',
+    education: 'formation',
+    diploma: 'Master Bac+5 · Expert en informatique et SI · EPSI',
+    prefix: 'Master Bac+5 · Expert en informatique et SI',
+  },
+] as const
+
+for (const { label, pdf, keep, drop, projects, education, diploma, prefix } of MISE_A_JOUR_2) {
+  const [present, absent] = pdf === EN ? ['CA2', 'CA3'] : ['CA4', 'CA5']
+
+  describe(`cv-mise-a-jour-2 — CV ${label}`, () => {
+    it(`cv-mise-a-jour-2 ${present} — contient à la lettre les textes Enedis, U Tech, Spotime et formation`, () => {
+      const { info } = load(pdf.file)
+      const text = squash(info.text)
+      const missing = keep.filter((phrase) => !text.includes(squash(phrase)))
+      assert.deepEqual(missing, [], 'textes absents du PDF')
+    })
+
+    it(`cv-mise-a-jour-2 ${absent} — ne contient plus aucun des anciens textes`, () => {
+      const { info } = load(pdf.file)
+      const text = squash(info.text)
+      const found = drop.filter((phrase) => text.includes(squash(phrase)))
+      assert.deepEqual(found, [], 'anciens textes encore présents dans le PDF')
+    })
+
+    it(`cv-mise-a-jour-2 CA6 — la ligne de diplôme suit le titre « ${education} », placé après la section « ${projects} », et n'apparaît qu'une fois`, () => {
+      const { info } = load(pdf.file)
+      const all = lines(info).filter((line) => line !== '')
+      const projectsAt = all.indexOf(projects)
+      const educationAt = all.indexOf(education)
+      assert.ok(projectsAt >= 0, `titre « ${projects} » absent`)
+      assert.ok(educationAt >= 0, `titre « ${education} » absent`)
+      assert.ok(educationAt > projectsAt, `titre « ${education} » (ligne ${educationAt}) avant « ${projects} » (ligne ${projectsAt})`)
+      const following = all.slice(educationAt + 1).join('')
+      assert.ok(
+        following.startsWith(squash(diploma).toLowerCase()),
+        `la ligne de diplôme ne suit pas le titre « ${education} », début trouvé : ${following.slice(0, 80)}`,
+      )
+      const occurrences = countOf(squash(info.text), squash(prefix))
+      assert.equal(occurrences, 1, `« ${prefix} » apparaît ${occurrences} fois dans le texte du PDF, une seule attendue`)
+    })
+
+    it(`cv-mise-a-jour-2 CA7 — ${pdf === EN ? 'aucune image' : "la photo de l'en-tête est toujours là"}`, () => {
+      const { info } = load(pdf.file)
+      if (pdf === EN) assert.equal(info.images, 0, 'images du PDF anglais')
+      else assert.ok(info.images > 0, 'aucune image : la photo de l’en-tête a disparu')
+    })
+
+    it('cv-mise-a-jour-2 CA8 — la ligne de diplôme, dernière ligne de la page, est entière et à au moins 3 mm du bord bas', () => {
+      const { info } = load(pdf.file)
+      const last = lastLine(info)
+      const margin = toMm(last.bottom)
+      const detail = `marge sous la dernière ligne : ${margin.toFixed(2)} mm, dernière ligne : « ${last.text} »`
+      assert.equal(last.text, squash(diploma), `la dernière ligne n'est pas la ligne de diplôme entière (${detail})`)
+      assert.ok(last.bottom >= MIN_MARGIN_PT, `${detail}, 3 mm attendus au moins`)
+    })
+  })
+}
 
 // ---------------------------------------------------------------------------
 // CA8 et CA9 — `scripts/cv.mjs` : dossier de design introuvable
