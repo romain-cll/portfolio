@@ -8,10 +8,10 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux télécharg
 *Source : `/Users/romain/Downloads/Portfolio Event-Driven/`, version du 2026-10-04 où la ligne de diplôme n'a plus de préfixe « Education: » ni « Formation : ». `Resume EN.dc.html` et `CV FR.dc.html` font foi pour le contenu et la mise en page des PDF. Les PDF sont produits par `pnpm cv` (spec `docs/features/portfolio-cv.md`), et le script ne change pas. Le site ne change pas.*
 
 ### Génération
-- [ ] CA1 — Étant donné le dossier de design ci-dessus, quand je lance `pnpm cv`, alors `public/resume-romain-caille.pdf` et `public/cv-romain-caille.pdf` sont régénérés depuis ces fichiers, puis versionnés.
+- [x] CA1 — Étant donné le dossier de design ci-dessus, quand je lance `pnpm cv`, alors `public/resume-romain-caille.pdf` et `public/cv-romain-caille.pdf` sont régénérés depuis ces fichiers, puis versionnés.
 
 ### CV anglais (`/resume-romain-caille.pdf`)
-- [ ] CA2 — Étant donné le PDF anglais, quand j'en lis le texte, alors il contient, à la lettre :
+- [x] CA2 — Étant donné le PDF anglais, quand j'en lis le texte, alors il contient, à la lettre :
   - « May 2025 – Present » ;
   - « NestJS · TypeScript · PostgreSQL · React · TanStack Router · shadcn/ui · Plausible · Expo/React Native · Electron » ;
   - « Worksite inspection app (Pays de la Loire) » et « contractor-run worksites a year for safety, schedule and work quality. » ;
@@ -23,7 +23,7 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux télécharg
   - « Routing app: moves pallets to the loading dock. » ;
   - « Vue · JavaScript · Java Spring Boot · PWA » ;
   - « Master's in IT & Information Systems · EPSI ».
-- [ ] CA3 — Étant donné le PDF anglais, quand j'en lis le texte, alors il ne contient plus aucun de ces textes :
+- [x] CA3 — Étant donné le PDF anglais, quand j'en lis le texte, alors il ne contient plus aucun de ces textes :
   - « Built an internal org chart in Nuxt. » ;
   - « to understand their needs and design apps around them. » ;
   - « Clear dev process » ;
@@ -33,7 +33,7 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux télécharg
   - « Education: ».
 
 ### CV français (`/cv-romain-caille.pdf`)
-- [ ] CA4 — Étant donné le PDF français, quand j'en lis le texte, alors il contient, à la lettre :
+- [x] CA4 — Étant donné le PDF français, quand j'en lis le texte, alors il contient, à la lettre :
   - « NestJS · TypeScript · PostgreSQL · React · TanStack Router · shadcn/ui · Plausible · Expo/React Native · Electron » ;
   - « App d'inspection des chantiers (Pays de la Loire) : ~15 agents terrain inspectent ~3 000 chantiers prestataires par an (sécurité, délais, qualité d'exécution). » ;
   - « Mon Orga, organigramme national d'Enedis (41 000 salariés) : app Nuxt 3 et API REST TypeScript (AdonisJS, PostgreSQL), source unique des données d'organisation des apps internes. Dev frontend principal, équipe de 4. » ;
@@ -44,7 +44,7 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux télécharg
   - « Application d'acheminement des palettes jusqu'au quai de chargement. » ;
   - « Vue · JavaScript · Java Spring Boot · PWA » ;
   - « Master Bac+5 · Expert en informatique et SI · EPSI ».
-- [ ] CA5 — Étant donné le PDF français, quand j'en lis le texte, alors il ne contient plus aucun de ces textes :
+- [x] CA5 — Étant donné le PDF français, quand j'en lis le texte, alors il ne contient plus aucun de ces textes :
   - « Conception d'un organigramme interne en Nuxt. » ;
   - « Rencontres avec les utilisateurs sur le terrain » ;
   - « Processus de dev clair » ;
@@ -54,14 +54,14 @@ En tant que recruteur ou client qui visite romain-caille.fr, je veux télécharg
   - « Formation : ».
 
 ### Mise en page des deux CV
-- [ ] CA6 — Étant donné chaque PDF, quand je lis son texte dans l'ordre, alors la ligne de diplôme (CA2 et CA4) vient juste après un titre de section « Education » (EN) ou « Formation » (FR), lui-même placé après la section « Projects » ou « Projets ». La ligne de diplôme n'apparaît qu'une fois, et plus sous l'accroche de l'en-tête.
-- [ ] CA7 — Étant donné le PDF anglais, quand je l'inspecte, alors il ne contient aucune image. Étant donné le PDF français, quand je l'inspecte, alors il contient toujours la photo de l'en-tête.
-- [ ] CA8 — Étant donné chaque PDF, quand je mesure la ligne de diplôme, dernière ligne de la page, alors elle est entière et son bas est à au moins 3 mm du bord bas de la page.
-- [ ] CA9 — Étant donné les deux nouveaux PDF, quand les tests existants tournent, alors restent verts : CA4, CA5 (une page A4, texte sélectionnable, liens cliquables, au plus 400 000 octets), CA6 (langues, titres, accroches) et CA18 (uniquement Instrument Sans et IBM Plex Mono) de `portfolio-cv`, ainsi que CA2 et CA3 (anciennes phrases absentes) de `cv-mise-a-jour`.
+- [x] CA6 — Étant donné chaque PDF, quand je lis son texte dans l'ordre, alors la ligne de diplôme (CA2 et CA4) vient juste après un titre de section « Education » (EN) ou « Formation » (FR), lui-même placé après la section « Projects » ou « Projets ». La ligne de diplôme n'apparaît qu'une fois, et plus sous l'accroche de l'en-tête.
+- [x] CA7 — Étant donné le PDF anglais, quand je l'inspecte, alors il ne contient aucune image. Étant donné le PDF français, quand je l'inspecte, alors il contient toujours la photo de l'en-tête.
+- [x] CA8 — Étant donné chaque PDF, quand je mesure la ligne de diplôme, dernière ligne de la page, alors elle est entière et son bas est à au moins 3 mm du bord bas de la page.
+- [x] CA9 — Étant donné les deux nouveaux PDF, quand les tests existants tournent, alors restent verts : CA4, CA5 (une page A4, texte sélectionnable, liens cliquables, au plus 400 000 octets), CA6 (langues, titres, accroches) et CA18 (uniquement Instrument Sans et IBM Plex Mono) de `portfolio-cv`, ainsi que CA2 et CA3 (anciennes phrases absentes) de `cv-mise-a-jour`.
 
 ### Site
-- [ ] CA10 — Étant donné les deux liens `resume.pdf` du site, quand je les inspecte, alors ils pointent toujours vers `/resume-romain-caille.pdf`, et le CV français n'est toujours pas lié.
-- [ ] CA11 — Étant donné le hero, quand je lis ses lignes `experience` et `education`, alors elles restent « Spotime · 2025–now », « Enedis, fullstack apprentice · 2023–2025 », « U Tech, fullstack apprentice · 2022–2023 » et « Master's, IT & Information Systems · EPSI ».
+- [x] CA10 — Étant donné les deux liens `resume.pdf` du site, quand je les inspecte, alors ils pointent toujours vers `/resume-romain-caille.pdf`, et le CV français n'est toujours pas lié.
+- [x] CA11 — Étant donné le hero, quand je lis ses lignes `experience` et `education`, alors elles restent « Spotime · 2025–now », « Enedis, fullstack apprentice · 2023–2025 », « U Tech, fullstack apprentice · 2022–2023 » et « Master's, IT & Information Systems · EPSI ».
 
 ## Hors scope
 - Alignement du hero sur les CV (intitulé Enedis, date « May 2025 » de Spotime) : le design du site n'a pas changé.
@@ -240,3 +240,8 @@ Prérequis : les tests rouges, faits après le rendu d'essai si la décision 2 e
   - CA8 : le bas de la dernière ligne vaut sa ligne de base − 0,3 em (option A) ;
   - rendu d'essai avant les tests rouges (option A). Il est fait par le tester, et non par le PO, qui ne lance pas `pnpm`. Les PDF sont copiés hors de `public/`, qui est ensuite restauré ;
   - CA2 à CA8 sont couverts par un nouveau bloc `cv-mise-a-jour-2` dans `cv.test.ts` (option A).
+- 2026-10-04 — Livraison. Review OK au 1er passage. CA1 à CA11 sont vérifiés, CA1 par `pnpm cv` (dossier de design daté du 2026-10-04 à 19 h 31).
+  - PDF : 128 919 o (EN) et 187 401 o (FR), une page A4 chacun.
+  - Marge basse de CA8 : 9,04 mm (EN) et 9,83 mm (FR). Le CV EN remplit sa page presque exactement (padding de 9 mm) : une ligne de plus entamerait le padding, avec encore environ 6 mm avant l'échec de CA8.
+  - E2e (277) verts en local et dans l'image de la CI à 1 CPU, sur un arbre qui contient les nouveaux PDF (`git stash create`).
+  - Reste à relire à la main : les deux PDF dans Aperçu.
