@@ -1,10 +1,10 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
 
 import {
+  CONTACT_NOTE,
   DESIGN_ANNOTATIONS,
   DESIGN_PROJECTS,
   EMAIL,
-  GITLAB_NOTE,
   HERO_HINT,
   KICKER_CONTACT,
   KICKER_OVERVIEW,
@@ -92,10 +92,10 @@ function revealedTargets(page: Page): { label: string; locator: Locator }[] {
     { label: 'contact : kicker', locator: contact.getByText(KICKER_CONTACT, { exact: true }) },
     { label: 'contact : titre', locator: contact.locator('h2') },
     { label: 'contact : bouton e-mail', locator: page.getByRole('button', { name: `copy email address ${EMAIL}`, exact: true }) },
-    { label: 'contact : lien gitlab', locator: contact.getByRole('link', { name: 'gitlab', exact: true }) },
+    { label: 'contact : lien github', locator: contact.getByRole('link', { name: 'github', exact: true }) },
     { label: 'contact : lien linkedin', locator: contact.getByRole('link', { name: 'linkedin', exact: true }) },
     { label: 'contact : lien resume.pdf', locator: contact.getByRole('link', { name: 'resume.pdf', exact: true }) },
-    { label: 'contact : mention GitLab', locator: contact.getByText(GITLAB_NOTE, { exact: true }) },
+    { label: 'contact : note', locator: contact.getByText(CONTACT_NOTE, { exact: true }) },
   )
   return targets
 }

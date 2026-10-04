@@ -2,6 +2,7 @@
 // (`Portfolio Event-Driven.dc.html`, constantes `PROJECTS`, `LOG` et `annTexts`, méthodes `measure` et `renderVals`).
 // Spotime : textes et stack du design du 2026-10-03 (spec portfolio-cv, CA10 et CA11),
 // `learned` et `result` du design du 2026-10-04 (spec cv-mise-a-jour, CA7 et CA8).
+// Liens GitHub du design du 2026-10-05 (spec liens-github, CA1, CA3 et CA4).
 // Les tests s'en servent comme oracle : rien n'est importé de `src/`.
 // Ce module ne dépend d'aucun outil de test, il se charge aussi bien depuis `node --test` que depuis Playwright.
 
@@ -51,7 +52,9 @@ export const TITLE_OVERVIEW = 'Each project is an event. It goes through three s
 export const KICKER_CONTACT = '// 3 events · 1 sink'
 export const TITLE_CONTACT = "This is what I do. Let's talk."
 export const EMAIL = 'r.caille@icloud.com'
-export const GITLAB_NOTE = 'Most of my GitLab work is in private repositories.'
+// Décision 2026-10-05 (liens-github, CA2) : la spec fait foi. Le design exporté affiche encore « Most of my GitHub work… » :
+// Romain l'a corrigé dans Claude Design, l'export local n'a pas été refait. Ne pas resynchroniser cette ligne depuis l'export.
+export const CONTACT_NOTE = 'Some of my work is in private repositories.'
 export const HERO_HINT = 'scroll ↓ to emit romain.init'
 export const LABEL_EXPAND = '+ trade-offs & what broke'
 export const LABEL_COLLAPSE = '− collapse'
@@ -91,14 +94,14 @@ export const DESIGN_PROJECTS: DesignProject[] = [
     learned: "The first version ran 3 scorers at ~3 tx/s. kafka-go's default 1s BatchTimeout capped writes at about one message per second, and each Redis command was its own round-trip. Explicit batching (size or timer, first one wins) and a pipelined Redis call fixed it: one optimized scorer now keeps up with a generator alone.",
     result: "Live scaling: with 1 scorer for 2 ramping generators, lag climbs to ~410 messages (~8s of traffic). Starting 2 more scorers drains it to 0. Three scorers handle ~220 tx/s combined.",
     stack: ["Go","Kafka","Redis","ClickHouse","Prometheus","Grafana","Docker"],
-    link: { label: "repo", href: "https://gitlab.com/romain.caille/fraud-engine-event-driven" },
+    link: { label: "repo", href: "https://github.com/romain-cll/fraud-engine-event-driven" },
   },
   {
     name: "Event Hub",
     ev: "event.hub",
     slug: "event-hub",
     accent: "#b78cf5",
-    url: "gitlab.com/romain.caille/event-hub",
+    url: "github.com/romain-cll/events-hub",
     shots: 5,
     video: false,
     problem: "Web analytics count visitors. Stripe counts money. Nothing joins the two, so teams selling through Stripe can't tell which source, campaign or page actually brings revenue without a data warehouse or a tag manager.",
@@ -107,7 +110,7 @@ export const DESIGN_PROJECTS: DesignProject[] = [
     learned: "One Stripe payment fires four webhooks that all carry an amount. Mapping them to disjoint event types and reading one precise type keeps the same euro from being counted four times. In tests, ad-hoc supertest ports failed once every ~66,000 requests on a random suite; a shared harness with one server per suite fixed it.",
     result: "Working proof of concept: web analytics and Stripe revenue attribution shipped, with traffic, revenue and deploy markers on one chart. Next: a per-project ingestion cap and cohort views in the dashboard.",
     stack: ["NestJS","PostgreSQL","Drizzle","Zod","TanStack Start","Stripe Connect","shadcn/ui","Turborepo"],
-    link: { label: "repo", href: "https://gitlab.com/romain.caille/event-hub" },
+    link: { label: "repo", href: "https://github.com/romain-cll/events-hub" },
   },
 ]
 
@@ -357,10 +360,10 @@ export function designTexts(): { section: SectionName; text: string }[] {
     { section: 'contact', text: KICKER_CONTACT },
     { section: 'contact', text: TITLE_CONTACT },
     { section: 'contact', text: EMAIL },
-    { section: 'contact', text: 'gitlab' },
+    { section: 'contact', text: 'github' },
     { section: 'contact', text: 'linkedin' },
     { section: 'contact', text: 'resume.pdf' },
-    { section: 'contact', text: GITLAB_NOTE },
+    { section: 'contact', text: CONTACT_NOTE },
   )
   return texts
 }

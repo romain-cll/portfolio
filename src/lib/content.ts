@@ -96,7 +96,7 @@ export const PROJECTS: readonly Project[] = [
     media: { kind: "video" },
     link: {
       label: "repo",
-      href: "https://gitlab.com/romain.caille/fraud-engine-event-driven",
+      href: "https://github.com/romain-cll/fraud-engine-event-driven",
     },
   },
   {
@@ -104,7 +104,7 @@ export const PROJECTS: readonly Project[] = [
     ev: "event.hub",
     slug: "event-hub",
     tone: "tone-event-hub",
-    url: "gitlab.com/romain.caille/event-hub",
+    url: "github.com/romain-cll/events-hub",
     problem:
       "Web analytics count visitors. Stripe counts money. Nothing joins the two, so teams selling through Stripe can't tell which source, campaign or page actually brings revenue without a data warehouse or a tag manager.",
     decision:
@@ -137,7 +137,7 @@ export const PROJECTS: readonly Project[] = [
     },
     link: {
       label: "repo",
-      href: "https://gitlab.com/romain.caille/event-hub",
+      href: "https://github.com/romain-cll/events-hub",
     },
   },
 ]

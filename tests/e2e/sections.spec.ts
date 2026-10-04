@@ -3,9 +3,9 @@ import { expect, test, type Locator, type Page } from '@playwright/test'
 import {
   DESIGN_ANNOTATIONS,
   DESIGN_COLORS,
+  CONTACT_NOTE,
   DESIGN_PROJECTS,
   EMAIL,
-  GITLAB_NOTE,
   HERO_HINT,
   KICKER_CONTACT,
   KICKER_OVERVIEW,
@@ -442,8 +442,8 @@ test.describe('CA19 — fenêtre de déploiement (1440 × 900)', () => {
     await openHome(page)
     await expect(sectionLocator(page, 'spotime').getByRole('link', { name: 'visit spotime.fr', exact: true })).toHaveAttribute('href', 'https://spotime.fr')
     await expect(sectionLocator(page, 'spotime').getByRole('link', { name: 'repo', exact: true })).toHaveCount(0)
-    await expect(sectionLocator(page, 'fraud-engine').getByRole('link', { name: 'repo', exact: true })).toHaveAttribute('href', 'https://gitlab.com/romain.caille/fraud-engine-event-driven')
-    await expect(sectionLocator(page, 'event-hub').getByRole('link', { name: 'repo', exact: true })).toHaveAttribute('href', 'https://gitlab.com/romain.caille/event-hub')
+    await expect(sectionLocator(page, 'fraud-engine').getByRole('link', { name: 'repo', exact: true })).toHaveAttribute('href', 'https://github.com/romain-cll/fraud-engine-event-driven')
+    await expect(sectionLocator(page, 'event-hub').getByRole('link', { name: 'repo', exact: true })).toHaveAttribute('href', 'https://github.com/romain-cll/events-hub')
   })
 })
 
@@ -840,22 +840,22 @@ test.describe('CA24 — bouton e-mail (1440 × 900)', () => {
 test.describe('CA25 — contact (1440 × 900)', () => {
   test.use({ viewport: { width: 1440, height: 900 } })
 
-  test('CA25 — kicker, titre, bouton e-mail, liens et mention GitLab, dans cet ordre', async ({ page }) => {
+  test('CA25 — kicker, titre, bouton e-mail, liens et note, dans cet ordre', async ({ page }) => {
     await openHome(page)
     await scrollToProgress(page, 'contact', 1)
     const section = sectionLocator(page, 'contact')
     const kicker = section.getByText(KICKER_CONTACT, { exact: true })
     const title = section.locator('h2')
     const email = page.getByRole('button', { name: `copy email address ${EMAIL}`, exact: true })
-    const gitlab = section.getByRole('link', { name: 'gitlab', exact: true })
-    const note = section.getByText(GITLAB_NOTE, { exact: true })
+    const github = section.getByRole('link', { name: 'github', exact: true })
+    const note = section.getByText(CONTACT_NOTE, { exact: true })
     await expect(kicker).toBeVisible()
     await expect(title).toHaveText(TITLE_CONTACT)
     await expect(email).toBeVisible()
     await expect(email).toContainText(EMAIL)
     await expect(note).toBeVisible()
 
-    const [k, t, e, g, n] = await Promise.all([rectOf(kicker), rectOf(title), rectOf(email), rectOf(gitlab), rectOf(note)])
+    const [k, t, e, g, n] = await Promise.all([rectOf(kicker), rectOf(title), rectOf(email), rectOf(github), rectOf(note)])
     expect(k.bottom).toBeLessThanOrEqual(t.top + 1)
     expect(t.bottom).toBeLessThanOrEqual(e.top + 1)
     expect(e.bottom).toBeLessThanOrEqual(n.top + 1)
@@ -864,7 +864,7 @@ test.describe('CA25 — contact (1440 × 900)', () => {
   })
 
   const links: [string, string][] = [
-    ['gitlab', 'https://gitlab.com/romain.caille'],
+    ['github', 'https://github.com/romain-cll'],
     ['linkedin', 'https://www.linkedin.com/in/romain-caill%C3%A9/'],
     ['resume.pdf', '/resume-romain-caille.pdf'],
   ]
@@ -888,10 +888,43 @@ test.describe('CA25 — contact (1440 × 900)', () => {
     })
   }
 
-  test('CA25 — la mention GitLab est en texte discret (plus claire que le fond, plus sombre que le texte atténué)', async ({ page }) => {
+  // liens-github CA1 : l'ordre, la rangée et le style des liens ne changent pas, seul `gitlab` devient `github`.
+  test('liens-github CA1 — les liens du contact sont github, linkedin, resume.pdf, sur une rangée, et github a le style de linkedin', async ({ page }) => {
     await openHome(page)
     await scrollToProgress(page, 'contact', 1)
-    const note = sectionLocator(page, 'contact').getByText(GITLAB_NOTE, { exact: true })
+    const contact = sectionLocator(page, 'contact')
+    const anchors = contact.getByRole('link')
+    await expect(anchors).toHaveCount(3)
+    const texts = await anchors.evaluateAll((all) => all.map((a) => (a.textContent ?? '').trim()))
+    expect(texts).toEqual(['github', 'linkedin', 'resume.pdf'])
+
+    const boxes = await Promise.all([0, 1, 2].map((i) => rectOf(anchors.nth(i))))
+    for (const [i, box] of boxes.entries()) {
+      expect(Math.abs(box.top - boxes[0]!.top), `lien ${texts[i]} sur la même rangée`).toBeLessThanOrEqual(2)
+      if (i > 0) expect(box.left, `lien ${texts[i]} à droite du précédent`).toBeGreaterThan(boxes[i - 1]!.left)
+    }
+
+    const styleOf = (link: Locator) =>
+      link.evaluate((a) => {
+        const cs = getComputedStyle(a)
+        const keys = [
+          'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
+          'borderTopStyle', 'borderBottomStyle', 'borderTopColor', 'borderBottomColor',
+          'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+          'color', 'backgroundColor', 'fontFamily', 'fontSize', 'textDecorationLine',
+        ] as const
+        return Object.fromEntries(keys.map((key) => [key, cs[key]]))
+      })
+    const [github, linkedin] = await Promise.all([styleOf(anchors.nth(0)), styleOf(anchors.nth(1))])
+    expect(github).toEqual(linkedin)
+
+    await expect(page.getByRole('link', { name: /gitlab/i })).toHaveCount(0)
+  })
+
+  test('CA25 — la note du contact est en texte discret (plus claire que le fond, plus sombre que le texte atténué)', async ({ page }) => {
+    await openHome(page)
+    await scrollToProgress(page, 'contact', 1)
+    const note = sectionLocator(page, 'contact').getByText(CONTACT_NOTE, { exact: true })
     const [color, muted, text] = await Promise.all([colorOf(note), cssRgb(page, DESIGN_COLORS.muted), cssRgb(page, DESIGN_COLORS.text)])
     const luminance = (c: number[]) => 0.2126 * c[0]! + 0.7152 * c[1]! + 0.0722 * c[2]!
     expect(luminance(color), 'moins claire que le texte atténué').toBeLessThan(luminance(muted))

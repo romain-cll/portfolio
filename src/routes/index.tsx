@@ -14,7 +14,7 @@ const PERSON = {
   url: ORIGIN,
   jobTitle: "Fullstack developer",
   sameAs: [
-    "https://gitlab.com/romain.caille",
+    "https://github.com/romain-cll",
     "https://www.linkedin.com/in/romain-caill%C3%A9/",
   ],
 }

@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 
-import { DESIGN_PROJECTS, EMAIL, GITLAB_NOTE, VIDEO_CAPTION, type SectionName } from '../design.ts'
+import { DESIGN_PROJECTS, CONTACT_NOTE, EMAIL, VIDEO_CAPTION, type SectionName } from '../design.ts'
 import {
   assertBuilt,
   nextFrames,
@@ -107,11 +107,11 @@ test.describe('CA28 — fenêtre de 320 × 568', () => {
     await openHome(page)
     await scrollToProgress(page, 'contact', 1)
     await nextFrames(page, 10)
-    const note = sectionLocator(page, 'contact').getByText(GITLAB_NOTE, { exact: true })
+    const note = sectionLocator(page, 'contact').getByText(CONTACT_NOTE, { exact: true })
     await expect(note).toBeVisible()
     const [box, t] = await Promise.all([rectOf(note), terminalSnapshot(page)])
     expect(t, 'terminal introuvable').not.toBeNull()
-    expect(box.bottom, 'mention GitLab au-dessus de la barre du terminal').toBeLessThanOrEqual(t!.bar.top + 0.5)
+    expect(box.bottom, 'note du contact au-dessus de la barre du terminal').toBeLessThanOrEqual(t!.bar.top + 0.5)
     expect(box.top).toBeGreaterThanOrEqual(0)
   })
 
@@ -121,7 +121,7 @@ test.describe('CA28 — fenêtre de 320 × 568', () => {
     const t = (await terminalSnapshot(page))!
     for (const target of [
       page.getByRole('button', { name: `copy email address ${EMAIL}`, exact: true }),
-      sectionLocator(page, 'contact').getByRole('link', { name: 'gitlab', exact: true }),
+      sectionLocator(page, 'contact').getByRole('link', { name: 'github', exact: true }),
       sectionLocator(page, 'contact').getByRole('link', { name: 'linkedin', exact: true }),
       sectionLocator(page, 'contact').getByRole('link', { name: 'resume.pdf', exact: true }),
     ]) {
@@ -246,7 +246,7 @@ test.describe('CA29 — navigation au clavier (1440 × 900)', () => {
     ['visit spotime.fr', 1],
     ['repo', 2],
     [`copy email address ${EMAIL}`, 1],
-    ['gitlab', 1],
+    ['github', 1],
     ['linkedin', 1],
   ]
 

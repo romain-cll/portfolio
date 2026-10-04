@@ -128,8 +128,8 @@ export function Contact({
                 copied
               </span>
             </button>
-            <a href="https://gitlab.com/romain.caille" className={LINK}>
-              gitlab
+            <a href="https://github.com/romain-cll" className={LINK}>
+              github
               <ArrowUpRight className="icon-inline" aria-hidden />
             </a>
             <a
@@ -145,7 +145,7 @@ export function Contact({
             </a>
           </div>
           <div className="font-mono text-xs text-foreground-faint">
-            Most of my GitLab work is in private repositories.
+            Some of my work is in private repositories.
           </div>
         </div>
       </div>
