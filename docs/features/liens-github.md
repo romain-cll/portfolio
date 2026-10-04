@@ -13,18 +13,18 @@ En tant que recruteur qui visite le portfolio ou lit le CV, je veux être renvoy
 *Dossier de design : `/Users/romain/Downloads/Portfolio Event-Driven/`, export du 2026-10-05 à 00 h 34. Romain y a déjà fait les changements dans Claude Design. `Resume EN.dc.html` et `CV FR.dc.html` sont les sources des PDF et font foi, sans aucune modification à faire. `Portfolio Event-Driven.dc.html` est la maquette du site. Elle porte les mêmes changements. Seule exception, la note de la section contact : l'export affiche encore « Most of my GitHub work is in private repositories. ». Romain l'a déjà corrigée dans Claude Design, mais l'export local n'a pas été refait. Cet écart est attendu, et c'est CA2 qui fait foi.*
 
 ### Site
-- [ ] CA1 — Étant donné la section contact, quand je l'inspecte, alors elle contient un lien `github` vers https://github.com/romain-cll, à la place du lien `gitlab`. L'ordre `github`, `linkedin`, `resume.pdf`, la flèche Carbon et le style des liens ne changent pas.
-- [ ] CA2 — Étant donné la section contact, quand je l'inspecte, alors la note sous les liens affiche exactement « Some of my work is in private repositories. », à la place de « Most of my GitLab work is in private repositories. ». Sa position, sous les liens et au-dessus de la barre du terminal, et son style (texte discret) ne changent pas.
-- [ ] CA3 — Étant donné la section Fraud Engine, quand je l'inspecte, alors son lien `repo` pointe vers https://github.com/romain-cll/fraud-engine-event-driven.
-- [ ] CA4 — Étant donné la section Event Hub, quand je l'inspecte, alors son lien `repo` pointe vers https://github.com/romain-cll/events-hub, et la barre d'URL de sa capture affiche `github.com/romain-cll/events-hub`.
-- [ ] CA5 — Étant donné la page d'accueil, quand je lis son JSON-LD `Person`, alors `sameAs` vaut [« https://github.com/romain-cll », « https://www.linkedin.com/in/romain-caill%C3%A9/ »].
-- [ ] CA6 — Étant donné le build, quand je cherche « gitlab » sans tenir compte de la casse dans le HTML prérendu de chaque route, alors je ne trouve aucune occurrence.
+- [x] CA1 — Étant donné la section contact, quand je l'inspecte, alors elle contient un lien `github` vers https://github.com/romain-cll, à la place du lien `gitlab`. L'ordre `github`, `linkedin`, `resume.pdf`, la flèche Carbon et le style des liens ne changent pas.
+- [x] CA2 — Étant donné la section contact, quand je l'inspecte, alors la note sous les liens affiche exactement « Some of my work is in private repositories. », à la place de « Most of my GitLab work is in private repositories. ». Sa position, sous les liens et au-dessus de la barre du terminal, et son style (texte discret) ne changent pas.
+- [x] CA3 — Étant donné la section Fraud Engine, quand je l'inspecte, alors son lien `repo` pointe vers https://github.com/romain-cll/fraud-engine-event-driven.
+- [x] CA4 — Étant donné la section Event Hub, quand je l'inspecte, alors son lien `repo` pointe vers https://github.com/romain-cll/events-hub, et la barre d'URL de sa capture affiche `github.com/romain-cll/events-hub`.
+- [x] CA5 — Étant donné la page d'accueil, quand je lis son JSON-LD `Person`, alors `sameAs` vaut [« https://github.com/romain-cll », « https://www.linkedin.com/in/romain-caill%C3%A9/ »].
+- [x] CA6 — Étant donné le build, quand je cherche « gitlab » sans tenir compte de la casse dans le HTML prérendu de chaque route, alors je ne trouve aucune occurrence.
 
 ### CV (PDF de `public/`)
-- [ ] CA7 — Étant donné `public/resume-romain-caille.pdf` et `public/cv-romain-caille.pdf`, quand je les ouvre, alors l'en-tête affiche `github.com/romain-cll`, avec un lien cliquable vers https://github.com/romain-cll, à la place de `gitlab.com/romain.caille`.
-- [ ] CA8 — Étant donné les deux PDF, quand je lis la section des projets, alors le lien d'Event Hub et celui de Fraud Engine s'intitulent `github`, à la place de `gitlab`, et pointent vers leurs nouvelles URL.
-- [ ] CA9 — Étant donné les deux PDF, quand je lis l'expérience Enedis, alors « GitLab CI/CD » y figure toujours, à l'identique. En anglais : la puce « GitLab CI/CD (80% coverage gate, Checkmarx, Docker, auto deploy, health check); OIDC SSO, role-based access, rate limiting, no personal data stored locally. » et la stack « Nuxt 3 · TypeScript · AdonisJS (Node.js) · PostgreSQL (SQL) · Docker · GitLab CI/CD · Symfony · AWS ». En français : la puce « CI/CD GitLab (couverture 80 %, Checkmarx, Docker, déploiement auto, health check) ; SSO OIDC, autorisation par rôle, rate limiting, aucune donnée personnelle stockée en local. » et la même stack. Ce sont les seules mentions de GitLab dans chaque PDF, et aucun lien ne pointe vers `gitlab.com`.
-- [ ] CA10 — Étant donné le dossier de design ci-dessus, quand je lance `pnpm cv`, alors les deux PDF sont régénérés depuis ces fichiers, puis versionnés. Chacun tient toujours sur une seule page A4, avec un texte sélectionnable et des liens cliquables.
+- [x] CA7 — Étant donné `public/resume-romain-caille.pdf` et `public/cv-romain-caille.pdf`, quand je les ouvre, alors l'en-tête affiche `github.com/romain-cll`, avec un lien cliquable vers https://github.com/romain-cll, à la place de `gitlab.com/romain.caille`.
+- [x] CA8 — Étant donné les deux PDF, quand je lis la section des projets, alors le lien d'Event Hub et celui de Fraud Engine s'intitulent `github`, à la place de `gitlab`, et pointent vers leurs nouvelles URL.
+- [x] CA9 — Étant donné les deux PDF, quand je lis l'expérience Enedis, alors « GitLab CI/CD » y figure toujours, à l'identique. En anglais : la puce « GitLab CI/CD (80% coverage gate, Checkmarx, Docker, auto deploy, health check); OIDC SSO, role-based access, rate limiting, no personal data stored locally. » et la stack « Nuxt 3 · TypeScript · AdonisJS (Node.js) · PostgreSQL (SQL) · Docker · GitLab CI/CD · Symfony · AWS ». En français : la puce « CI/CD GitLab (couverture 80 %, Checkmarx, Docker, déploiement auto, health check) ; SSO OIDC, autorisation par rôle, rate limiting, aucune donnée personnelle stockée en local. » et la même stack. Ce sont les seules mentions de GitLab dans chaque PDF, et aucun lien ne pointe vers `gitlab.com`.
+- [x] CA10 — Étant donné le dossier de design ci-dessus, quand je lance `pnpm cv`, alors les deux PDF sont régénérés depuis ces fichiers, puis versionnés. Chacun tient toujours sur une seule page A4, avec un texte sélectionnable et des liens cliquables.
 
 ## Hors scope
 - Migration du dépôt du portfolio vers GitHub : le remote `origin`, `.gitlab-ci.yml`, `glab`, et la section « CI GitLab » d'`AGENTS.md` restent tels quels.
@@ -240,3 +240,10 @@ Aucune.
 - 2026-10-05 — Spec validée (GATE 1).
 - 2026-10-05 — Plan validé (GATE 2). Décision 1 → A : les tests existants sont adaptés dans le commit rouge, avec `GITLAB_NOTE` renommé `CONTACT_NOTE` et des titres de test sans « GitLab ». Décision 2 → A : `rowOf` rattache chaque lien à sa rangée, avec B en repli si le calibrage de la tâche 1 échoue. Décision 3 → A : pas de rendu d'essai (validées par Romain).
 - 2026-10-05 — `events-hub` et `fraud-engine-event-driven` sont publics sur GitHub : Romain le confirme, et aucune vérification n'est nécessaire (validée par Romain).
+- 2026-10-05 — Livraison. La review est OK au premier passage, sans boucle. CA1 à CA10 sont couverts par les tests :
+  - `pnpm test` : 191/191 ;
+  - `pnpm test:e2e` : 279/279, y compris dans l'image de la CI à 1 CPU ;
+  - `pnpm lhci` : 97/100/100/100 ;
+  - PDF régénérés par `pnpm cv` depuis l'export du 2026-10-05 à 00 h 34.
+
+  Reste la vérification manuelle de la tâche 7 par Romain : la section contact à 1440 px et à 320 px, et un clic sur chaque lien `github` des deux PDF dans Aperçu.
