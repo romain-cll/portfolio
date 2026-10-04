@@ -121,6 +121,21 @@ test.describe('CA2 — textes du design dans le HTML reçu', () => {
     })
   })
 
+  // cv-mise-a-jour CA9 et CA12 : textes retirés du site (sensible à la casse, littéraux exacts).
+  const REMOVED_TEXTS = ['Full-time / freelance', 'signed through outbound', 'full-time or freelance']
+  const presentRemoved = (html: string) =>
+    REMOVED_TEXTS.filter((removed) => html.includes(removed) || htmlToText(html).includes(normalize(removed)))
+
+  test('cv-mise-a-jour CA9 et CA12 — dist/client/index.html ne contient plus les textes retirés', () => {
+    expect(presentRemoved(readFileSync(join(DIST, 'index.html'), 'utf8'))).toEqual([])
+  })
+
+  test('cv-mise-a-jour CA9 et CA12 — le HTML répondu par le serveur ne contient plus les textes retirés', async ({ request }) => {
+    const response = await request.get('/')
+    expect(response.status()).toBe(200)
+    expect(presentRemoved(await response.text())).toEqual([])
+  })
+
   test('CA2 — les libellés de l’overview et du contact sont ceux du design, à la lettre', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByText(KICKER_OVERVIEW, { exact: true })).toHaveCount(1)

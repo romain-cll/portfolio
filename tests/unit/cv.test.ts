@@ -120,19 +120,18 @@ describe('CA6 — /resume-romain-caille.pdf est la version anglaise', () => {
   // Phrases du design (`Resume EN.dc.html`), choisies sans ligature fi ni fl.
   const phrasesEn = [
     'Romain CAILLÉ',
-    "Master's in IT & Information Systems · 2025",
+    "Master's in IT & Information Systems",
     'romain-caille.fr',
     'r.caille@icloud.com',
     'gitlab.com/romain.caille',
     'linkedin.com/in/romain-caillé',
     'Open to work · available now',
-    'Full-time / freelance',
     'Remote or relocation · from Nantes, France',
     'I build TypeScript and Go backends, from REST APIs to event-driven pipelines on Kafka.',
     'French native, English C1.',
     'Founder, fullstack developer',
-    'Cold-call prospecting: no traction in construction despite direct calls.',
-    'Pivoted to personal care services, with a demo booked and a client signed through outbound.',
+    'Cold-call prospecting: no traction in construction, so I pivoted to test the personal care services market, which proved more receptive, with prospects coming in inbound.',
+    'Development assisted by a team of subagents (PO, architect, tester, developer, reviewer), framed by user stories, a DoR/DoD and TDD.',
     "France's electricity grid, Europe's largest smart grid (37M+ connected meters)",
     'Built an internal org chart in Nuxt.',
     'Tech subsidiary of Système U · team building the warehouse applications',
@@ -148,6 +147,18 @@ describe('CA6 — /resume-romain-caille.pdf est la version anglaise', () => {
     const { info } = load(EN.file)
     const missing = phrasesEn.filter((phrase) => !squash(info.text).includes(squash(phrase)))
     assert.deepEqual(missing, [], 'phrases absentes du texte du PDF')
+  })
+
+  // Décision 2026-10-04 (cv-mise-a-jour, CA2) : « Master's… » est contenue dans l'ancienne ligne, seule l'absence de la ligne complète prouve le retrait de « · 2025 ».
+  it('cv-mise-a-jour CA2 — ne contient plus les anciennes phrases', () => {
+    const { info } = load(EN.file)
+    const text = squash(info.text)
+    const present = [
+      "Master's in IT & Information Systems · 2025",
+      'Full-time / freelance',
+      'Pivoted to personal care services, with a demo booked and a client signed through outbound.',
+    ].filter((phrase) => text.includes(squash(phrase)))
+    assert.deepEqual(present, [], 'anciennes phrases encore présentes dans le texte du PDF')
   })
 })
 
@@ -168,14 +179,14 @@ describe('CA6 — /cv-romain-caille.pdf est la version française', () => {
   // Phrases du design (`CV FR.dc.html`), choisies sans ligature fi ni fl.
   const phrasesFr = [
     'Romain CAILLÉ',
-    'Master Bac+5 · Expert en informatique et SI · 2025',
+    'Master Bac+5 · Expert en informatique et SI',
     'En recherche · disponible immédiatement',
-    'CDI / freelance',
     'Remote ou relocalisation · basé à Nantes',
     'Je conçois des backends TypeScript et Go, des API REST aux pipelines event-driven sur Kafka.',
     'Français natif, anglais C1.',
     'Fondateur, développeur fullstack',
-    "Prospection en cold call : pas de traction dans le BTP malgré l'appel direct.",
+    'Prospection en cold call : sans résultat dans le BTP, pivot vers le service à la personne pour tester ce marché, plus réceptif, avec des prospects arrivés en inbound.',
+    'Développement assisté par une équipe de subagents (PO, architecte, testeur, développeur, reviewer), cadré par des user stories, une DoR/DoD et du TDD.',
     "La position GPS n'est capturée qu'au moment du pointage.",
     "Réseau électrique français, 1er smart grid d'Europe (37M+ compteurs connectés)",
     "Conception d'un organigramme interne en Nuxt.",
@@ -191,6 +202,18 @@ describe('CA6 — /cv-romain-caille.pdf est la version française', () => {
     const { info } = load(FR.file)
     const missing = phrasesFr.filter((phrase) => !squash(info.text).includes(squash(phrase)))
     assert.deepEqual(missing, [], 'phrases absentes du texte du PDF')
+  })
+
+  // Décision 2026-10-04 (cv-mise-a-jour, CA3) : même raisonnement que pour la version anglaise.
+  it('cv-mise-a-jour CA3 — ne contient plus les anciennes phrases', () => {
+    const { info } = load(FR.file)
+    const text = squash(info.text)
+    const present = [
+      'Master Bac+5 · Expert en informatique et SI · 2025',
+      'CDI / freelance',
+      "Prospection en cold call : pas de traction dans le BTP malgré l'appel direct.",
+    ].filter((phrase) => text.includes(squash(phrase)))
+    assert.deepEqual(present, [], 'anciennes phrases encore présentes dans le texte du PDF')
   })
 })
 
