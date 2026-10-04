@@ -15,7 +15,7 @@ test.beforeEach(async ({ page }) => {
 
 const HOME_TITLE = 'Romain Caillé · Fullstack developer'
 const HOME_DESCRIPTION =
-  'Fullstack developer, ready for the agentic era. Open to work, full-time or freelance, remote or relocation from Nantes, France.'
+  'Fullstack developer, ready for the agentic era. Open to work, remote or relocation from Nantes, France.'
 
 const stripTrailingSlash = (path: string) => (path.length > 1 ? path.replace(/\/$/, '') : path)
 

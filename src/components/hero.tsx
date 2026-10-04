@@ -39,10 +39,6 @@ export function Hero({ scrolled = false }: { scrolled?: boolean }) {
               Open to work · available now
             </dd>
             <dt className="self-baseline text-label text-muted-foreground uppercase">
-              contract
-            </dt>
-            <dd className="text-foreground-secondary">Full-time / freelance</dd>
-            <dt className="self-baseline text-label text-muted-foreground uppercase">
               location
             </dt>
             <dd className="text-foreground-secondary">

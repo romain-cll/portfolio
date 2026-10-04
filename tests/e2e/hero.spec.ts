@@ -98,17 +98,16 @@ test.describe('CA10 — section hero', () => {
     await expect(page.getByText(LEAD, { exact: true })).toBeVisible()
   })
 
-  test('CA10 — la liste porte les libellés status, contract, location, experience, education, english, resume', async ({ page }) => {
+  test('CA10 et cv-mise-a-jour CA6 — la liste porte les libellés status, location, experience, education, english, resume, sans contract', async ({ page }) => {
     await openHome(page)
     await expect(page.locator('dl dt')).toHaveText(
-      ['status', 'contract', 'location', 'experience', 'education', 'english', 'resume'].map((label) => new RegExp(`^\\s*${label}\\s*$`, 'i')),
+      ['status', 'location', 'experience', 'education', 'english', 'resume'].map((label) => new RegExp(`^\\s*${label}\\s*$`, 'i')),
     )
   })
 
   test('CA10 — la liste porte les textes du design', async ({ page }) => {
     await openHome(page)
     await expect(valueOf(page, 'status')).toHaveText('Open to work · available now')
-    await expect(valueOf(page, 'contract')).toHaveText('Full-time / freelance')
     await expect(valueOf(page, 'location')).toHaveText('Remote or relocation · from Nantes, France')
     await expect(valueOf(page, 'experience')).toContainText('Spotime · 2025–now')
     await expect(valueOf(page, 'experience')).toContainText('Enedis, fullstack apprentice · 2023–2025')

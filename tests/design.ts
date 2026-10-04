@@ -1,6 +1,7 @@
 // Données et formules recopiées du design de référence
 // (`Portfolio Event-Driven.dc.html`, constantes `PROJECTS`, `LOG` et `annTexts`, méthodes `measure` et `renderVals`).
-// Spotime : textes et stack du design du 2026-10-03 (spec portfolio-cv, CA10 et CA11).
+// Spotime : textes et stack du design du 2026-10-03 (spec portfolio-cv, CA10 et CA11),
+// `learned` et `result` du design du 2026-10-04 (spec cv-mise-a-jour, CA7 et CA8).
 // Les tests s'en servent comme oracle : rien n'est importé de `src/`.
 // Ce module ne dépend d'aucun outil de test, il se charge aussi bien depuis `node --test` que depuis Playwright.
 
@@ -71,8 +72,8 @@ export const DESIGN_PROJECTS: DesignProject[] = [
     problem: "Field crews of 10 to 30 people, spread across sites, track hours on paper. Every month-end turns into hours of manual re-entry before payroll can start. Spotime replaces that with three surfaces: a web back office for admin and scheduling, an employee mobile app (iOS/Android) and an Electron desktop app for on-site clock-in, published on the Windows Store.",
     decision: "Clock-ins are stored local-first and synced as soon as the network returns, with no data loss or duplicates. GPS location is captured only at the moment of clock-in. Development runs with a team of subagents (PO, architect, tester, developer, reviewer), framed by user stories, a DoR/DoD and TDD.",
     tradeoff: "Cold email to construction SMEs wasn't landing, so I switched to cold calling. Traded reach for signal quality, on purpose.",
-    learned: "Construction still showed no traction, even on direct calls. Pivoting to personal care services brought a client signed through outbound. Testing the channel first, then the market, beats rewriting the pitch.",
-    result: "Two paying clients: one in agriculture, and one in personal care services signed through outbound.",
+    learned: "Construction still showed no traction, even on direct calls. Pivoting to personal care services proved more receptive, with a client coming in inbound. Testing the channel first, then the market, beats rewriting the pitch.",
+    result: "Two paying clients: one in agriculture, and one in personal care services who came in inbound.",
     stack: ["Tanstack Router","PostgreSQL","NestJS","TypeScript","shadcn/ui","Plausible (self-hosted)","Expo/React Native","Electron"],
     link: { label: "visit spotime.fr", href: "https://spotime.fr" },
   },
