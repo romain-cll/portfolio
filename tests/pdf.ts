@@ -230,6 +230,16 @@ export interface PdfLink {
   rect: number[]
 }
 
+/** Un affichage de texte (`Tj`, `TJ`, `'` ou `"`) et la position verticale de sa ligne de base. */
+export interface PdfTextRun {
+  /** Texte décodé de l'opérateur ; vide pour un texte posé par `/ActualText`, qui n'a pas de position. */
+  text: string
+  /** Hauteur de la ligne de base au-dessus du bord bas de la MediaBox, en points. */
+  y: number
+  /** Taille effective du texte (Tf × échelle verticale de la matrice), en points. */
+  size: number
+}
+
 export interface PdfPageInfo {
   /** Largeur et hauteur de la MediaBox, en points (1/72 pouce). */
   width: number
@@ -237,6 +247,8 @@ export interface PdfPageInfo {
   links: PdfLink[]
   /** Texte de la page, un retour à la ligne à chaque déplacement du curseur de texte. */
   text: string
+  /** Un élément par opérateur d'affichage de texte, dans l'ordre du flux. Seule la hauteur est suivie, pas x. */
+  runs: PdfTextRun[]
 }
 
 export interface PdfInfo {
@@ -439,24 +451,47 @@ function* codes(bytes: Buffer, cmap: CMap | undefined): Generator<number> {
 
 interface TextState {
   out: string[]
+  runs: PdfTextRun[]
+  /** Bord bas de la MediaBox de la page en cours de lecture. */
+  y0: number
   undecodable: number
   operations: number
   cmaps: Map<PdfDict, CMap | null>
 }
 
+/** Matrice [a b c d e f] des PDF, en vecteurs lignes : `multiply(m, n)` applique m, puis n. */
+type Matrix = [number, number, number, number, number, number]
+const IDENTITY: Matrix = [1, 0, 0, 1, 0, 0]
+const multiply = (m: Matrix, n: Matrix): Matrix => [
+  m[0] * n[0] + m[1] * n[2],
+  m[0] * n[1] + m[1] * n[3],
+  m[2] * n[0] + m[3] * n[2],
+  m[2] * n[1] + m[3] * n[3],
+  m[4] * n[0] + m[5] * n[2] + n[4],
+  m[4] * n[1] + m[5] * n[3] + n[5],
+]
+const isMatrix = (value: unknown): value is Matrix =>
+  Array.isArray(value) && value.length === 6 && value.every((n) => typeof n === 'number')
+
 /** Texte d'un `/ActualText` : UTF-16BE avec BOM, sinon octets simples. */
 const actualText = (bytes: Buffer): string =>
   bytes.length >= 2 && bytes[0] === 0xfe && bytes[1] === 0xff ? utf16be(bytes.subarray(2)) : bytes.toString('latin1')
 
-function walkContent(doc: PdfDocument, content: Buffer, resources: PdfDict | undefined, state: TextState, depth = 0) {
+function walkContent(doc: PdfDocument, content: Buffer, resources: PdfDict | undefined, state: TextState, ctm0: Matrix = IDENTITY, depth = 0) {
   if (depth > 8) return
   const lexer = new Lexer(content)
   const fonts = doc.dict(doc.get(resources, 'Font'))
   const xobjects = doc.dict(doc.get(resources, 'XObject'))
   const properties = doc.dict(doc.get(resources, 'Properties'))
 
+  // État graphique sauvegardé par `q` / `Q` : police, taille et CTM. Les matrices de texte ne le sont pas (elles vivent dans BT…ET).
   let font: PdfDict | undefined
-  const fontStack: (PdfDict | undefined)[] = []
+  let fontSize = 0
+  let ctm: Matrix = ctm0
+  const stack: { font: PdfDict | undefined; fontSize: number; ctm: Matrix }[] = []
+  let tm: Matrix = IDENTITY
+  let tlm: Matrix = IDENTITY
+  let leading = 0
   // Contenu marqué : `true` si la pile compte au moins un `/ActualText` (les glyphes sont alors remplacés par ce texte).
   const marked: { replacement: string | undefined }[] = []
   const replaced = () => marked.some((m) => m.replacement !== undefined)
@@ -483,8 +518,22 @@ function walkContent(doc: PdfDocument, content: Buffer, resources: PdfDict | und
     return text
   }
 
-  const show = (value: PdfValue | { keyword: string } | undefined) => {
-    if (isString(value as PdfValue)) state.out.push(decode((value as PdfString).bytes))
+  const show = (value: PdfValue | { keyword: string } | undefined): string => {
+    if (!isString(value as PdfValue)) return ''
+    const text = decode((value as PdfString).bytes)
+    state.out.push(text)
+    return text
+  }
+
+  /** Enregistre la position de la ligne de base de l'affichage qui vient d'être lu. */
+  const record = (text: string) => {
+    const m = multiply(tm, ctm)
+    state.runs.push({ text, y: m[5] - state.y0, size: fontSize * Math.hypot(m[2], m[3]) })
+  }
+
+  const moveLine = (tx: number, ty: number) => {
+    tlm = multiply([1, 0, 0, 1, tx, ty], tlm)
+    tm = tlm
   }
 
   for (let token = lexer.next(); token.t !== 'eof'; token = lexer.next()) {
@@ -493,28 +542,47 @@ function walkContent(doc: PdfDocument, content: Buffer, resources: PdfDict | und
       const a = operands
       switch (op) {
         case 'q':
-          fontStack.push(font)
+          stack.push({ font, fontSize, ctm })
           break
-        case 'Q':
-          font = fontStack.pop()
+        case 'Q': {
+          const saved = stack.pop()
+          if (saved) ({ font, fontSize, ctm } = saved)
+          break
+        }
+        case 'cm':
+          if (isMatrix(a)) ctm = multiply(a, ctm)
           break
         case 'Tf': {
           const name = a[0]
           font = isName(name as PdfValue) ? doc.dict(fonts?.entries.get((name as PdfName).value)) : undefined
+          fontSize = typeof a[1] === 'number' ? a[1] : 0
           break
         }
+        case 'BT':
+          tm = IDENTITY
+          tlm = IDENTITY
+          break
+        case 'TL':
+          if (typeof a[0] === 'number') leading = a[0]
+          break
         case 'Tj':
         case "'":
-          if (op === "'") state.out.push('\n')
-          show(a[0])
+          if (op === "'") {
+            state.out.push('\n')
+            moveLine(0, -leading)
+          }
+          record(show(a[0]))
           break
         case '"':
           state.out.push('\n')
-          show(a[2])
+          moveLine(0, -leading)
+          record(show(a[2]))
           break
         case 'TJ': {
           const list = a[0]
-          if (Array.isArray(list)) for (const item of list) show(item)
+          let text = ''
+          if (Array.isArray(list)) for (const item of list) text += show(item)
+          record(text)
           break
         }
         case 'Td':
@@ -523,6 +591,16 @@ function walkContent(doc: PdfDocument, content: Buffer, resources: PdfDict | und
         case 'T*':
           // Un déplacement vertical commence une nouvelle ligne ; un déplacement horizontal enchaîne le texte.
           if (op === 'T*' || op === 'Tm' || (typeof a[1] === 'number' && a[1] !== 0)) state.out.push('\n')
+          if (op === 'Tm') {
+            if (isMatrix(a)) {
+              tm = a
+              tlm = a
+            }
+          } else if (op === 'T*') moveLine(0, -leading)
+          else if (typeof a[0] === 'number' && typeof a[1] === 'number') {
+            if (op === 'TD') leading = -a[1]
+            moveLine(a[0], a[1])
+          }
           break
         case 'ET':
           state.out.push('\n')
@@ -550,7 +628,10 @@ function walkContent(doc: PdfDocument, content: Buffer, resources: PdfDict | und
           const dict = object && isDict(object.value) ? object.value : undefined
           if (dict && isName(doc.get(dict, 'Subtype'), 'Form')) {
             const stream = doc.streamOf(ref)
-            if (stream) walkContent(doc, stream, doc.dict(doc.get(dict, 'Resources')) ?? resources, state, depth + 1)
+            const matrix = doc.get(dict, 'Matrix')
+            const formMatrix = Array.isArray(matrix) ? matrix.map((n) => doc.number(n)) : undefined
+            const nested = isMatrix(formMatrix) ? multiply(formMatrix, ctm) : ctm
+            if (stream) walkContent(doc, stream, doc.dict(doc.get(dict, 'Resources')) ?? resources, state, nested, depth + 1)
           }
           break
         }
@@ -608,11 +689,12 @@ export function inspectPdf(buffer: Buffer): PdfInfo {
   const leaves: Parameters<typeof collectPages>[3] = []
   collectPages(doc, root, {}, leaves)
 
-  const state: TextState = { out: [], undecodable: 0, operations: 0, cmaps: new Map() }
+  const state: TextState = { out: [], runs: [], y0: 0, undecodable: 0, operations: 0, cmaps: new Map() }
   const pages: PdfPageInfo[] = leaves.map(({ dict, inherited }) => {
     const box = doc.resolve(inherited.mediaBox)
     const numbers = Array.isArray(box) ? box.map((n) => doc.number(n)) : []
     const [x0 = 0, y0 = 0, x1 = 0, y1 = 0] = numbers
+    state.y0 = y0
 
     const links: PdfLink[] = []
     const annots = doc.get(dict, 'Annots')
@@ -628,6 +710,7 @@ export function inspectPdf(buffer: Buffer): PdfInfo {
     }
 
     const start = state.out.length
+    const runsStart = state.runs.length
     let contents = doc.get(dict, 'Contents')
     const refs = Array.isArray(contents) ? contents : [dict.entries.get('Contents')]
     contents = undefined
@@ -636,7 +719,7 @@ export function inspectPdf(buffer: Buffer): PdfInfo {
       const stream = doc.streamOf(ref)
       if (stream) walkContent(doc, stream, resources, state)
     }
-    return { width: x1 - x0, height: y1 - y0, links, text: state.out.slice(start).join('') }
+    return { width: x1 - x0, height: y1 - y0, links, text: state.out.slice(start).join(''), runs: state.runs.slice(runsStart) }
   })
 
   const fonts: Record<string, number> = {}
