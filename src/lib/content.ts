@@ -46,9 +46,9 @@ export const PROJECTS: readonly Project[] = [
     tradeoff:
       "Cold email to construction SMEs wasn't landing, so I switched to cold calling. Traded reach for signal quality, on purpose.",
     learned:
-      "Construction still showed no traction, even on direct calls. Pivoting to personal care services brought a client signed through outbound. Testing the channel first, then the market, beats rewriting the pitch.",
+      "Construction still showed no traction, even on direct calls. Pivoting to personal care services proved more receptive, with a client coming in inbound. Testing the channel first, then the market, beats rewriting the pitch.",
     result:
-      "Two paying clients: one in agriculture, and one in personal care services signed through outbound.",
+      "Two paying clients: one in agriculture, and one in personal care services who came in inbound.",
     stack: [
       "Tanstack Router",
       "PostgreSQL",

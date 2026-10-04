@@ -5,7 +5,7 @@ import { Home } from "@/components/home"
 const ORIGIN = "https://romain-caille.fr"
 const TITLE = "Romain Caillé · Fullstack developer"
 const DESCRIPTION =
-  "Fullstack developer, ready for the agentic era. Open to work, full-time or freelance, remote or relocation from Nantes, France."
+  "Fullstack developer, ready for the agentic era. Open to work, remote or relocation from Nantes, France."
 
 const PERSON = {
   "@context": "https://schema.org",
