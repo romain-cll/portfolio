@@ -12,7 +12,7 @@ import {
   TITLE_OVERVIEW,
   designTexts,
 } from '../design.ts'
-import { assertBuilt, DIST, htmlToText, markScriptless, normalize, openHome, sectionLocator } from './support.ts'
+import { assertBuilt, DIST, htmlToText, markScriptless, normalize, openHome, prerenderedRoutes, sectionLocator } from './support.ts'
 
 // Les specs de la feature « pages » visent le serveur de production lancé par Playwright (baseURL), sans simulation.
 
@@ -140,5 +140,25 @@ test.describe('CA2 — textes du design dans le HTML reçu', () => {
     await page.goto('/')
     await expect(page.getByText(KICKER_OVERVIEW, { exact: true })).toHaveCount(1)
     await expect(page.getByText(KICKER_CONTACT, { exact: true })).toHaveCount(1)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// liens-github CA6 — plus aucune mention de GitLab dans le HTML prérendu
+// ---------------------------------------------------------------------------
+
+test.describe('liens-github CA6 — HTML prérendu', () => {
+  test('liens-github CA6 — aucune occurrence de « gitlab », sans tenir compte de la casse, dans le HTML de chaque route prérendue', () => {
+    const routes = prerenderedRoutes()
+    expect(routes, 'routes prérendues').toContain('/')
+    const found: string[] = []
+    for (const route of routes) {
+      const html = readFileSync(join(DIST, route, 'index.html'), 'utf8')
+      for (const match of html.matchAll(/gitlab/gi)) {
+        const at = match.index ?? 0
+        found.push(`${route} : …${html.slice(Math.max(0, at - 40), at + match[0].length + 40)}…`)
+      }
+    }
+    expect(found).toEqual([])
   })
 })

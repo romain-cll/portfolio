@@ -184,6 +184,6 @@ test('CA6 — le JSON-LD de / décrit un Person avec name, url, jobTitle et same
     name: 'Romain Caillé',
     url: 'https://romain-caille.fr',
     jobTitle: 'Fullstack developer',
-    sameAs: ['https://gitlab.com/romain.caille', 'https://www.linkedin.com/in/romain-caill%C3%A9/'],
+    sameAs: ['https://github.com/romain-cll', 'https://www.linkedin.com/in/romain-caill%C3%A9/'],
   })
 })

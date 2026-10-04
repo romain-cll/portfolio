@@ -53,18 +53,19 @@ for (const { file } of [EN, FR]) {
       assert.equal(info.undecodable, 0, 'glyphes sans ToUnicode')
     })
 
-    it('CA5 — les liens sont cliquables : site, e-mail, GitLab, LinkedIn, spotime.fr et les deux dépôts', () => {
+    it('CA5 — les liens sont cliquables : site, e-mail, GitHub, LinkedIn, spotime.fr et les deux dépôts', () => {
       const { info } = load(file)
       // Chromium écrit des URL résolues (`https://spotime.fr/`) : on compare après `new URL(…).href`.
+      // Décision 2026-10-05 (liens-github, CA7 et CA8) : le profil et les deux dépôts passent de GitLab à GitHub.
       const uris = info.pages[0]!.links.map((link) => new URL(link.uri).href)
       for (const expected of [
         'https://romain-caille.fr',
         'mailto:r.caille@icloud.com',
-        'https://gitlab.com/romain.caille',
+        'https://github.com/romain-cll',
         'https://www.linkedin.com/in/romain-caill%C3%A9/',
         'https://spotime.fr',
-        'https://gitlab.com/romain.caille/event-hub',
-        'https://gitlab.com/romain.caille/fraud-engine-event-driven',
+        'https://github.com/romain-cll/events-hub',
+        'https://github.com/romain-cll/fraud-engine-event-driven',
       ]) {
         assert.ok(uris.includes(new URL(expected).href), `lien ${expected} absent, liens trouvés : ${uris.join(', ')}`)
       }
@@ -118,12 +119,13 @@ describe('CA6 — /resume-romain-caille.pdf est la version anglaise', () => {
   })
 
   // Phrases du design (`Resume EN.dc.html`), choisies sans ligature fi ni fl.
+  // Décision 2026-10-05 (liens-github, CA7) : l'en-tête affiche `github.com/romain-cll` à la place de `gitlab.com/romain.caille`.
   const phrasesEn = [
     'Romain CAILLÉ',
     "Master's in IT & Information Systems",
     'romain-caille.fr',
     'r.caille@icloud.com',
-    'gitlab.com/romain.caille',
+    'github.com/romain-cll',
     'linkedin.com/in/romain-caillé',
     'Open to work · available now',
     'Remote or relocation · from Nantes, France',
@@ -178,6 +180,7 @@ describe('CA6 — /cv-romain-caille.pdf est la version française', () => {
   })
 
   // Phrases du design (`CV FR.dc.html`), choisies sans ligature fi ni fl.
+  // Décision 2026-10-05 (liens-github) : pas de ligne d'en-tête ici, le profil GitHub est vérifié dans le bloc `liens-github`.
   const phrasesFr = [
     'Romain CAILLÉ',
     'Master Bac+5 · Expert en informatique et SI',
@@ -354,6 +357,86 @@ for (const { label, pdf, keep, drop, projects, education, diploma, prefix } of M
       const detail = `marge sous la dernière ligne : ${margin.toFixed(2)} mm, dernière ligne : « ${last.text} »`
       assert.equal(last.text, squash(diploma), `la dernière ligne n'est pas la ligne de diplôme entière (${detail})`)
       assert.ok(last.bottom >= MIN_MARGIN_PT, `${detail}, 3 mm attendus au moins`)
+    })
+  })
+}
+
+// ---------------------------------------------------------------------------
+// liens-github — CA7 à CA9 : profil et dépôts sur GitHub, GitLab CI/CD d'Enedis inchangé
+// ---------------------------------------------------------------------------
+
+const PROFILE = 'https://github.com/romain-cll'
+const REPOS = [
+  { project: 'Event Hub', uri: 'https://github.com/romain-cll/events-hub' },
+  { project: 'Fraud Engine', uri: 'https://github.com/romain-cll/fraud-engine-event-driven' },
+] as const
+
+// CA9 : les seules mentions de GitLab de chaque PDF, dans l'expérience Enedis (« hors scope » de la spec : c'est l'outil de l'employeur).
+const ENEDIS = {
+  en: {
+    pdf: EN,
+    bullet: 'GitLab CI/CD (80% coverage gate, Checkmarx, Docker, auto deploy, health check); OIDC SSO, role-based access, rate limiting, no personal data stored locally.',
+    stack: 'Nuxt 3 · TypeScript · AdonisJS (Node.js) · PostgreSQL (SQL) · Docker · GitLab CI/CD · Symfony · AWS',
+  },
+  fr: {
+    pdf: FR,
+    bullet: 'CI/CD GitLab (couverture 80 %, Checkmarx, Docker, déploiement auto, health check) ; SSO OIDC, autorisation par rôle, rate limiting, aucune donnée personnelle stockée en local.',
+    stack: 'Nuxt 3 · TypeScript · AdonisJS (Node.js) · PostgreSQL (SQL) · Docker · GitLab CI/CD · Symfony · AWS',
+  },
+} as const
+
+/** Texte de la rangée du lien `uri` : les textes non vides dont la ligne de base tombe entre les deux bornes verticales de son `Rect`. */
+function rowOf(info: PdfInfo, uri: string): string {
+  const page = info.pages[0]!
+  const link = page.links.find((l) => new URL(l.uri).href === new URL(uri).href)
+  assert.ok(link, `lien ${uri} absent, liens trouvés : ${page.links.map((l) => l.uri).join(', ')}`)
+  const [low, high] = [link.rect[1]!, link.rect[3]!].sort((a, b) => a - b)
+  return squash(
+    page.runs
+      .filter((run) => run.text.trim() !== '' && run.y >= low! && run.y <= high!)
+      .map((run) => run.text)
+      .join(''),
+  )
+}
+
+for (const { pdf, bullet, stack } of Object.values(ENEDIS)) {
+  describe(`liens-github — public/${pdf.file}`, () => {
+    it('liens-github CA7 — l’en-tête affiche github.com/romain-cll, entre l’e-mail et LinkedIn, et plus gitlab.com/romain.caille', () => {
+      const { info } = load(pdf.file)
+      const text = squash(info.text)
+      assert.ok(text.includes('github.com/romain-cll'), 'github.com/romain-cll absent du texte')
+      assert.ok(!text.includes('gitlab.com/romain.caille'), 'gitlab.com/romain.caille encore présent')
+      const email = text.indexOf('r.caille@icloud.com')
+      const github = text.indexOf('github.com/romain-cll')
+      const linkedin = text.indexOf('linkedin.com/in/romain-caillé')
+      assert.ok(email >= 0 && email < github, `e-mail (${email}) avant github (${github}) attendu`)
+      assert.ok(github < linkedin, `github (${github}) avant linkedin (${linkedin}) attendu`)
+    })
+
+    it('liens-github CA7 — le lien cliquable vers https://github.com/romain-cll est posé sur le texte github.com/romain-cll', () => {
+      const { info } = load(pdf.file)
+      assert.ok(rowOf(info, PROFILE).includes('github.com/romain-cll'), `rangée du lien : ${rowOf(info, PROFILE)}`)
+    })
+
+    for (const { project, uri } of REPOS) {
+      it(`liens-github CA8 — le lien de ${project} s’intitule « github », sur la rangée du projet, et pointe vers ${uri}`, () => {
+        const { info } = load(pdf.file)
+        const row = rowOf(info, uri)
+        assert.ok(row.includes('github'), `« github » absent de la rangée : ${row}`)
+        assert.ok(row.includes(squash(project)), `« ${project} » absent de la rangée : ${row}`)
+        assert.ok(!/gitlab/i.test(row), `« gitlab » dans la rangée : ${row}`)
+      })
+    }
+
+    it('liens-github CA9 — « GitLab CI/CD » reste dans l’expérience Enedis, à l’identique, et ne figure nulle part ailleurs', () => {
+      const { info } = load(pdf.file)
+      const text = squash(info.text)
+      for (const phrase of [bullet, stack]) assert.ok(text.includes(squash(phrase)), `phrase Enedis absente : ${phrase}`)
+      const rest = [bullet, stack].reduce((remaining, phrase) => remaining.replace(squash(phrase), ''), text)
+      const leftover = /.{0,30}gitlab.{0,30}/i.exec(rest)
+      assert.equal(leftover, null, `mention de GitLab hors de l’expérience Enedis : ${leftover?.[0]}`)
+      const gitlabLinks = info.pages[0]!.links.filter((link) => /gitlab/i.test(link.uri)).map((link) => link.uri)
+      assert.deepEqual(gitlabLinks, [], 'liens vers gitlab')
     })
   })
 }
