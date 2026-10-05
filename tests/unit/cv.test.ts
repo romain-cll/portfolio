@@ -490,7 +490,7 @@ for (const { label, pdf, ca, subtitle, bullets, fraudSentence, diploma } of VIDE
       const ordered = ['videoCn', subtitle, bullets[0], bullets[1], VIDEOCN_STACK, diploma]
       const expected = [EVENT_HUB_STACK, ...ordered]
       const positions = expected.map((phrase) => text.indexOf(squash(phrase)))
-      const problems = expected.filter((phrase, i) => positions[i]! < 0 || (i > 0 && positions[i]! <= positions[i - 1]!))
+      const problems = expected.filter((_, i) => positions[i]! < 0 || (i > 0 && positions[i]! <= positions[i - 1]!))
       assert.deepEqual(
         problems,
         [],
