@@ -57,6 +57,7 @@ for (const { file } of [EN, FR]) {
       const { info } = load(file)
       // Chromium écrit des URL résolues (`https://spotime.fr/`) : on compare après `new URL(…).href`.
       // Décision 2026-10-05 (liens-github, CA7 et CA8) : le profil et les deux dépôts passent de GitLab à GitHub.
+      // Décision 2026-10-05 (cv-videocn, CA5) : le dépôt de videoCn remplace celui de Fraud Engine.
       const uris = info.pages[0]!.links.map((link) => new URL(link.uri).href)
       for (const expected of [
         'https://romain-caille.fr',
@@ -65,7 +66,7 @@ for (const { file } of [EN, FR]) {
         'https://www.linkedin.com/in/romain-caill%C3%A9/',
         'https://spotime.fr',
         'https://github.com/romain-cll/events-hub',
-        'https://github.com/romain-cll/fraud-engine-event-driven',
+        'https://github.com/romain-cll/videocn',
       ]) {
         assert.ok(uris.includes(new URL(expected).href), `lien ${expected} absent, liens trouvés : ${uris.join(', ')}`)
       }
@@ -141,9 +142,10 @@ describe('CA6 — /resume-romain-caille.pdf est la version anglaise', () => {
     'Loading app: loading those pallets onto trucks.',
     'Maps the four webhooks of one Stripe payment to disjoint event types so each euro is counted once.',
     'analytics + Stripe revenue attribution',
-    'Three Go services linked by Kafka, partitioned by card_id so a card is always scored by the same worker.',
-    'Scales without code changes: lag of ~410 messages drains to 0 when 2 scorers join. Three scorers handle ~220 tx/s.',
-    'Go · Kafka · Redis · ClickHouse · Prometheus · Grafana · Docker',
+    // Décision 2026-10-05 (cv-videocn) : les trois lignes de Fraud Engine sont remplacées par celles de videoCn, le bloc ayant changé dans le design.
+    "Full video player built with shadcn/ui components and distributed as a shadcn registry: one command installs it, and it takes on the host project's theme.",
+    'Supports HLS streaming, WebVTT subtitles and chapters, and keyboard shortcuts.',
+    'React · TypeScript · Next.js · shadcn/ui',
   ]
 
   it('CA6 — reprend à la lettre les phrases du design', () => {
@@ -198,9 +200,10 @@ describe('CA6 — /cv-romain-caille.pdf est la version française', () => {
     "Filiale tech de Système U · équipe des applications de ses 28 entrepôts",
     'analytics + attribution du revenu Stripe',
     "Les quatre webhooks d'un paiement Stripe sont mappés sur des types d'événements disjoints : chaque euro n'est compté qu'une fois.",
-    'Trois services Go reliés par Kafka, partitionnés par card_id : une carte est toujours scorée par le même worker.',
-    'Scale sans changer le code : ~410 messages de lag résorbés en ajoutant 2 scorers. Trois scorers absorbent ~220 tx/s.',
-    'Go · Kafka · Redis · ClickHouse · Prometheus · Grafana · Docker',
+    // Décision 2026-10-05 (cv-videocn) : les trois lignes de Fraud Engine sont remplacées par celles de videoCn, le bloc ayant changé dans le design.
+    "Lecteur vidéo complet construit avec les composants shadcn/ui et distribué comme registry shadcn : une commande l'installe, et il reprend le thème du projet hôte.",
+    'Streaming HLS, sous-titres et chapitres WebVTT, raccourcis clavier.',
+    'React · TypeScript · Next.js · shadcn/ui',
   ]
 
   it('CA6 — reprend à la lettre les phrases du design', () => {
@@ -366,9 +369,10 @@ for (const { label, pdf, keep, drop, projects, education, diploma, prefix } of M
 // ---------------------------------------------------------------------------
 
 const PROFILE = 'https://github.com/romain-cll'
+// Décision 2026-10-05 (cv-videocn) : le dépôt de videoCn remplace celui de Fraud Engine dans les deux CV.
 const REPOS = [
   { project: 'Event Hub', uri: 'https://github.com/romain-cll/events-hub' },
-  { project: 'Fraud Engine', uri: 'https://github.com/romain-cll/fraud-engine-event-driven' },
+  { project: 'videoCn', uri: 'https://github.com/romain-cll/videocn' },
 ] as const
 
 // CA9 : les seules mentions de GitLab de chaque PDF, dans l'expérience Enedis (« hors scope » de la spec : c'est l'outil de l'employeur).
@@ -437,6 +441,96 @@ for (const { pdf, bullet, stack } of Object.values(ENEDIS)) {
       assert.equal(leftover, null, `mention de GitLab hors de l’expérience Enedis : ${leftover?.[0]}`)
       const gitlabLinks = info.pages[0]!.links.filter((link) => /gitlab/i.test(link.uri)).map((link) => link.uri)
       assert.deepEqual(gitlabLinks, [], 'liens vers gitlab')
+    })
+  })
+}
+
+// ---------------------------------------------------------------------------
+// cv-videocn — CA2 à CA6 : le bloc videoCn remplace Fraud Engine dans les deux CV
+// ---------------------------------------------------------------------------
+
+const VIDEOCN_SITE = 'https://videocn.dev/'
+const VIDEOCN_REPO = 'https://github.com/romain-cll/videocn'
+const VIDEOCN_STACK = 'React · TypeScript · Next.js · shadcn/ui'
+const EVENT_HUB_STACK = 'NestJS · PostgreSQL · Drizzle · Zod · TanStack Start · Stripe Connect · Turborepo'
+const FRAUD_ENGINE_STACK = 'Go · Kafka · Redis · ClickHouse · Prometheus · Grafana · Docker'
+
+const VIDEOCN = [
+  {
+    label: 'anglais',
+    pdf: EN,
+    ca: 'CA2',
+    subtitle: '· open-source video player for shadcn/ui',
+    bullets: [
+      "Full video player built with shadcn/ui components and distributed as a shadcn registry: one command installs it, and it takes on the host project's theme.",
+      'Supports HLS streaming, WebVTT subtitles and chapters, and keyboard shortcuts.',
+    ],
+    fraudSentence: 'Three Go services linked by Kafka, partitioned by card_id so a card is always scored by the same worker.',
+    diploma: "Master's in IT & Information Systems · EPSI",
+  },
+  {
+    label: 'français',
+    pdf: FR,
+    ca: 'CA3',
+    subtitle: '· lecteur vidéo open source pour shadcn/ui',
+    bullets: [
+      "Lecteur vidéo complet construit avec les composants shadcn/ui et distribué comme registry shadcn : une commande l'installe, et il reprend le thème du projet hôte.",
+      'Streaming HLS, sous-titres et chapitres WebVTT, raccourcis clavier.',
+    ],
+    fraudSentence: 'Trois services Go reliés par Kafka, partitionnés par card_id : une carte est toujours scorée par le même worker.',
+    diploma: 'Master Bac+5 · Expert en informatique et SI · EPSI',
+  },
+] as const
+
+for (const { label, pdf, ca, subtitle, bullets, fraudSentence, diploma } of VIDEOCN) {
+  describe(`cv-videocn — CV ${label}`, () => {
+    it(`cv-videocn ${ca} — le bloc videoCn suit celui d'Event Hub, dans la section des projets, avec ses textes à la lettre`, () => {
+      const { info } = load(pdf.file)
+      const text = squash(info.text)
+      const ordered = ['videoCn', subtitle, bullets[0], bullets[1], VIDEOCN_STACK, diploma]
+      const expected = [EVENT_HUB_STACK, ...ordered]
+      const positions = expected.map((phrase) => text.indexOf(squash(phrase)))
+      const problems = expected.filter((phrase, i) => positions[i]! < 0 || (i > 0 && positions[i]! <= positions[i - 1]!))
+      assert.deepEqual(
+        problems,
+        [],
+        `textes absents ou mal placés (positions : ${positions.join(', ')}). Ordre attendu : stack Event Hub, videoCn, sous-titre, puce 1, puce 2, stack videoCn, diplôme`,
+      )
+    })
+
+    it('cv-videocn CA4 — la rangée de videoCn porte deux liens : « videocn.dev » vers https://videocn.dev/, à gauche de « github » vers le dépôt', () => {
+      const { info } = load(pdf.file)
+      const siteRow = rowOf(info, VIDEOCN_SITE)
+      const repoRow = rowOf(info, VIDEOCN_REPO)
+      for (const row of [siteRow, repoRow]) {
+        assert.ok(row.includes('videoCn'), `« videoCn » absent de la rangée : ${row}`)
+        assert.ok(row.includes('videocn.dev'), `« videocn.dev » absent de la rangée : ${row}`)
+        assert.ok(row.includes('github'), `« github » absent de la rangée : ${row}`)
+        assert.ok(row.indexOf('videocn.dev') < row.indexOf('github'), `« videocn.dev » doit précéder « github » dans la rangée : ${row}`)
+      }
+      const links = info.pages[0]!.links
+      const rectOf = (uri: string) => links.find((link) => new URL(link.uri).href === new URL(uri).href)!.rect
+      const [site, repo] = [rectOf(VIDEOCN_SITE), rectOf(VIDEOCN_REPO)]
+      const right = Math.max(site[0]!, site[2]!)
+      const left = Math.min(repo[0]!, repo[2]!)
+      assert.ok(right <= left, `le lien videocn.dev (bord droit ${right} pt) doit être entièrement à gauche du lien github (bord gauche ${left} pt)`)
+    })
+
+    it('cv-videocn CA5 — aucun lien ne mène encore à fraud-engine-event-driven', () => {
+      const { info } = load(pdf.file)
+      const uris = info.pages[0]!.links.map((link) => link.uri)
+      assert.deepEqual(
+        uris.filter((uri) => uri.includes('fraud-engine-event-driven')),
+        [],
+        `liens vers fraud-engine-event-driven, liens trouvés : ${uris.join(', ')}`,
+      )
+    })
+
+    it('cv-videocn CA6 — ne contient plus « Fraud Engine », sa description ni sa stack', () => {
+      const { info } = load(pdf.file)
+      const text = squash(info.text)
+      const found = ['Fraud Engine', fraudSentence, FRAUD_ENGINE_STACK].filter((phrase) => text.includes(squash(phrase)))
+      assert.deepEqual(found, [], 'textes de Fraud Engine encore présents dans le PDF')
     })
   })
 }
