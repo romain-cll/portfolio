@@ -5,7 +5,7 @@ En tant que recruteur ou client qui télécharge le CV de Romain sur romain-cail
 
 ## Critères d'acceptation
 
-*Source : `/Users/romain/Downloads/Portfolio Event-Driven/`, export du 2026-10-05 à 02 h 48. Romain y a déjà fait les changements dans Claude Design. `Resume EN.dc.html` et `CV FR.dc.html` font foi pour le contenu et la mise en page des PDF, sans aucune modification à faire. Les PDF sont produits par `pnpm cv` (spec `docs/features/portfolio-cv.md`), et le script ne change pas. Le site ne change pas.*
+*Source : `/Users/romain/Downloads/Portfolio Event-Driven/`, export du 2026-10-05 à 03 h 08 (contenu identique à celui de 02 h 48). Romain y a déjà fait les changements dans Claude Design. `Resume EN.dc.html` et `CV FR.dc.html` font foi pour le contenu et la mise en page des PDF, sans aucune modification à faire. Les PDF sont produits par `pnpm cv` (spec `docs/features/portfolio-cv.md`), et le script ne change pas. Le site ne change pas.*
 
 *Constat du PO, export comparé au texte des PDF en ligne : les deux CV changent sur les mêmes points, listés ci-dessous. Tout le reste est identique.*
 
@@ -328,3 +328,4 @@ Un nouveau bloc `cv-mise-a-jour-3` couvre CA2 à CA15 avec l'outillage existant.
 - 2026-10-05 — CA16 est prouvé par les tests existants, les fragments du nouveau bloc et une comparaison complète du texte ancien/nouveau faite une fois par le dev, notée à la livraison (option A, validée par Romain).
 - 2026-10-05 — CA3 et CA10 sont testés par la rangée du lien `spotime.fr` (`rowOf`), préfixe et suffixe sans ligature en EN, égalité stricte en FR (option A, validée par Romain).
 - 2026-10-05 — Le tester fait un rendu d'essai avec `pnpm cv` pour calibrer les tests, puis restaure `public/` avant le commit rouge (option A, validée par Romain).
+- 2026-10-05 — Romain a ré-exporté le dossier de design à 03 h 08. Le PO a relu `Resume EN.dc.html` et `CV FR.dc.html` : texte identique ligne à ligne à l'export de 02 h 48, tailles inchangées. Le plan reste valable ; à la tâche 1, l'horodatage attendu devient 03 h 08 (validée par Romain).
