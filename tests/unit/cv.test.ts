@@ -121,23 +121,24 @@ describe('CA6 — /resume-romain-caille.pdf est la version anglaise', () => {
 
   // Phrases du design (`Resume EN.dc.html`), choisies sans ligature fi ni fl.
   // Décision 2026-10-05 (liens-github, CA7) : l'en-tête affiche `github.com/romain-cll` à la place de `gitlab.com/romain.caille`.
+  // Décision 2026-10-05 (cv-mise-a-jour-3) : diplôme, 1re phrase de l'accroche, 2e puce de Spotime et Mon Orga prennent le texte de l'export de 03 h 08 du design.
   const phrasesEn = [
     'Romain CAILLÉ',
-    "Master's in IT & Information Systems",
+    "Master's in Computer Science & Information Systems",
     'romain-caille.fr',
     'r.caille@icloud.com',
     'github.com/romain-cll',
     'linkedin.com/in/romain-caillé',
     'Open to work · available now',
     'Remote or relocation · from Nantes, France',
-    'I build TypeScript and Go backends, from REST APIs to event-driven pipelines on Kafka.',
+    'I build full-stack TypeScript products end to end, from the backend to web, mobile and desktop apps.',
     'French native, English C1.',
     'Founder, fullstack developer',
-    'Cold-call prospecting: no traction in construction, so I pivoted to test the personal care services market, which proved more receptive, with prospects coming in inbound.',
+    'Cold-called 150 construction companies with no traction, so I switched to personal care services, where prospects come in through the website. 3 paying clients, 15 users.',
     'Development assisted by a team of subagents (PO, architect, tester, developer, reviewer), framed by user stories, a DoR/DoD and TDD.',
     "France's electricity grid, Europe's largest smart grid (37M+ connected meters)",
     // Décision 2026-10-04 (cv-mise-a-jour-2) : ces deux phrases sont remplacées par celles du nouveau design.
-    "Mon Orga, Enedis's company-wide org chart (41,000 employees): Nuxt 3 app and TypeScript REST API (AdonisJS, PostgreSQL), the single source of org data for internal apps. Main frontend dev in a team of 4.",
+    "Mon Orga, Enedis's company-wide org chart (41,000 employees): Nuxt 3 app and TypeScript REST API (AdonisJS, PostgreSQL), built as the single source of org data for internal apps. Main frontend dev in a team of 4.",
     'Tech subsidiary of Système U · team building the applications for its 28 warehouses',
     'Loading app: loading those pallets onto trucks.',
     'Maps the four webhooks of one Stripe payment to disjoint event types so each euro is counted once.',
@@ -183,20 +184,21 @@ describe('CA6 — /cv-romain-caille.pdf est la version française', () => {
 
   // Phrases du design (`CV FR.dc.html`), choisies sans ligature fi ni fl.
   // Décision 2026-10-05 (liens-github) : pas de ligne d'en-tête ici, le profil GitHub est vérifié dans le bloc `liens-github`.
+  // Décision 2026-10-05 (cv-mise-a-jour-3) : diplôme, 1re phrase de l'accroche, 2e puce de Spotime et Mon Orga prennent le texte de l'export de 03 h 08 du design.
   const phrasesFr = [
     'Romain CAILLÉ',
-    'Master Bac+5 · Expert en informatique et SI',
+    "Master Bac+5 · Informatique et systèmes d'information",
     'En recherche · disponible immédiatement',
     'Remote ou relocalisation · basé à Nantes',
-    'Je conçois des backends TypeScript et Go, des API REST aux pipelines event-driven sur Kafka.',
+    'Je construis des produits TypeScript fullstack de bout en bout, du backend aux apps web, mobile et desktop.',
     'Français natif, anglais C1.',
     'Fondateur, développeur fullstack',
-    'Prospection en cold call : sans résultat dans le BTP, pivot vers le service à la personne pour tester ce marché, plus réceptif, avec des prospects arrivés en inbound.',
+    '150 entreprises du BTP démarchées en cold call, sans résultat : pivot vers le service à la personne, où les prospects arrivent par le site. 3 clients payants, 15 utilisateurs.',
     'Développement assisté par une équipe de subagents (PO, architecte, testeur, développeur, reviewer), cadré par des user stories, une DoR/DoD et du TDD.',
     "La position GPS n'est capturée qu'au moment du pointage.",
     "Réseau électrique français, 1er smart grid d'Europe (37M+ compteurs connectés)",
     // Décision 2026-10-04 (cv-mise-a-jour-2) : ces deux phrases sont remplacées par celles du nouveau design.
-    "Mon Orga, organigramme national d'Enedis (41 000 salariés) : app Nuxt 3 et API REST TypeScript (AdonisJS, PostgreSQL), source unique des données d'organisation des apps internes. Dev frontend principal, équipe de 4.",
+    "Mon Orga, organigramme national d'Enedis (41 000 salariés) : app Nuxt 3 et API REST TypeScript (AdonisJS, PostgreSQL), conçue comme source unique des données d'organisation des apps internes. Dev frontend principal, équipe de 4.",
     "Filiale tech de Système U · équipe des applications de ses 28 entrepôts",
     'analytics + attribution du revenu Stripe',
     "Les quatre webhooks d'un paiement Stripe sont mappés sur des types d'événements disjoints : chaque euro n'est compté qu'une fois.",
@@ -249,6 +251,7 @@ function lastLine(info: PdfInfo) {
 const countOf = (haystack: string, needle: string) => haystack.split(needle).length - 1
 
 // CA2 et CA3 pour l'anglais, CA4 et CA5 pour le français : textes présents (`keep`) et textes retirés (`drop`).
+// Décision 2026-10-05 (cv-mise-a-jour-3) : Mon Orga et la ligne de diplôme (`keep`, `diploma`, `prefix`) prennent le texte de l'export de 03 h 08 du design.
 const MISE_A_JOUR_2 = [
   {
     label: 'anglais',
@@ -258,14 +261,14 @@ const MISE_A_JOUR_2 = [
       'NestJS · TypeScript · PostgreSQL · React · TanStack Router · shadcn/ui · Plausible · Expo/React Native · Electron',
       'Worksite inspection app (Pays de la Loire)',
       'contractor-run worksites a year for safety, schedule and work quality.',
-      "Mon Orga, Enedis's company-wide org chart (41,000 employees): Nuxt 3 app and TypeScript REST API (AdonisJS, PostgreSQL), the single source of org data for internal apps. Main frontend dev in a team of 4.",
+      "Mon Orga, Enedis's company-wide org chart (41,000 employees): Nuxt 3 app and TypeScript REST API (AdonisJS, PostgreSQL), built as the single source of org data for internal apps. Main frontend dev in a team of 4.",
       'GitLab CI/CD (80% coverage gate, Checkmarx, Docker, auto deploy, health check); OIDC SSO, role-based access, rate limiting, no personal data stored locally.',
       'the time lost to cross-team CI/CD blockers and got a weekly sync set up with the Cloud and CI/CD teams.',
       'Nuxt 3 · TypeScript · AdonisJS (Node.js) · PostgreSQL (SQL) · Docker · GitLab CI/CD · Symfony · AWS',
       'Tech subsidiary of Système U · team building the applications for its 28 warehouses',
       'Routing app: moves pallets to the loading dock.',
       'Vue · JavaScript · Java Spring Boot · PWA',
-      "Master's in IT & Information Systems · EPSI",
+      "Master's in Computer Science & Information Systems · EPSI, France",
     ],
     drop: [
       'Built an internal org chart in Nuxt.',
@@ -278,8 +281,8 @@ const MISE_A_JOUR_2 = [
     ],
     projects: 'projects',
     education: 'education',
-    diploma: "Master's in IT & Information Systems · EPSI",
-    prefix: "Master's in IT & Information Systems",
+    diploma: "Master's in Computer Science & Information Systems · EPSI, France",
+    prefix: "Master's in Computer Science & Information Systems",
   },
   {
     label: 'français',
@@ -287,14 +290,14 @@ const MISE_A_JOUR_2 = [
     keep: [
       'NestJS · TypeScript · PostgreSQL · React · TanStack Router · shadcn/ui · Plausible · Expo/React Native · Electron',
       "App d'inspection des chantiers (Pays de la Loire) : ~15 agents terrain inspectent ~3 000 chantiers prestataires par an (sécurité, délais, qualité d'exécution).",
-      "Mon Orga, organigramme national d'Enedis (41 000 salariés) : app Nuxt 3 et API REST TypeScript (AdonisJS, PostgreSQL), source unique des données d'organisation des apps internes. Dev frontend principal, équipe de 4.",
+      "Mon Orga, organigramme national d'Enedis (41 000 salariés) : app Nuxt 3 et API REST TypeScript (AdonisJS, PostgreSQL), conçue comme source unique des données d'organisation des apps internes. Dev frontend principal, équipe de 4.",
       'CI/CD GitLab (couverture 80 %, Checkmarx, Docker, déploiement auto, health check) ; SSO OIDC, autorisation par rôle, rate limiting, aucune donnée personnelle stockée en local.',
       "du temps perdu en blocages inter-équipes, d'où une réunion hebdo avec les équipes Cloud et CI/CD.",
       'Nuxt 3 · TypeScript · AdonisJS (Node.js) · PostgreSQL (SQL) · Docker · GitLab CI/CD · Symfony · AWS',
       "Filiale tech de Système U · équipe des applications de ses 28 entrepôts",
       "Application d'acheminement des palettes jusqu'au quai de chargement.",
       'Vue · JavaScript · Java Spring Boot · PWA',
-      'Master Bac+5 · Expert en informatique et SI · EPSI',
+      "Master Bac+5 · Informatique et systèmes d'information · EPSI, France",
     ],
     drop: [
       "Conception d'un organigramme interne en Nuxt.",
@@ -307,8 +310,8 @@ const MISE_A_JOUR_2 = [
     ],
     projects: 'projets',
     education: 'formation',
-    diploma: 'Master Bac+5 · Expert en informatique et SI · EPSI',
-    prefix: 'Master Bac+5 · Expert en informatique et SI',
+    diploma: "Master Bac+5 · Informatique et systèmes d'information · EPSI, France",
+    prefix: "Master Bac+5 · Informatique et systèmes d'information",
   },
 ] as const
 
@@ -455,6 +458,7 @@ const VIDEOCN_STACK = 'React · TypeScript · Next.js · shadcn/ui'
 const EVENT_HUB_STACK = 'NestJS · PostgreSQL · Drizzle · Zod · TanStack Start · Stripe Connect · Turborepo'
 const FRAUD_ENGINE_STACK = 'Go · Kafka · Redis · ClickHouse · Prometheus · Grafana · Docker'
 
+// Décision 2026-10-05 (cv-mise-a-jour-3) : le diplôme ferme la suite ordonnée de CA2 et CA3, il prend le texte de l'export de 03 h 08 du design.
 const VIDEOCN = [
   {
     label: 'anglais',
@@ -466,7 +470,7 @@ const VIDEOCN = [
       'Supports HLS streaming, WebVTT subtitles and chapters, and keyboard shortcuts.',
     ],
     fraudSentence: 'Three Go services linked by Kafka, partitioned by card_id so a card is always scored by the same worker.',
-    diploma: "Master's in IT & Information Systems · EPSI",
+    diploma: "Master's in Computer Science & Information Systems · EPSI, France",
   },
   {
     label: 'français',
@@ -478,7 +482,7 @@ const VIDEOCN = [
       'Streaming HLS, sous-titres et chapitres WebVTT, raccourcis clavier.',
     ],
     fraudSentence: 'Trois services Go reliés par Kafka, partitionnés par card_id : une carte est toujours scorée par le même worker.',
-    diploma: 'Master Bac+5 · Expert en informatique et SI · EPSI',
+    diploma: "Master Bac+5 · Informatique et systèmes d'information · EPSI, France",
   },
 ] as const
 
@@ -531,6 +535,189 @@ for (const { label, pdf, ca, subtitle, bullets, fraudSentence, diploma } of VIDE
       const text = squash(info.text)
       const found = ['Fraud Engine', fraudSentence, FRAUD_ENGINE_STACK].filter((phrase) => text.includes(squash(phrase)))
       assert.deepEqual(found, [], 'textes de Fraud Engine encore présents dans le PDF')
+    })
+  })
+}
+
+// ---------------------------------------------------------------------------
+// cv-mise-a-jour-3 — CA2 à CA15 : accroche, Spotime, Enedis, U Tech et diplôme, d'après l'export de 03 h 08
+// ---------------------------------------------------------------------------
+
+// Chaque entrée : `seq` = textes qui doivent tous figurer dans le texte du PDF, dans cet ordre (positions strictement croissantes) ;
+// `gone` = textes retirés, comparés en respectant la casse. Les fragments évitent les ligatures fi, fl et ff (« eld crews » : « field » sans son « fi »).
+const OLD_EN_BULLET =
+  'Cold-call prospecting: no traction in construction, so I pivoted to test the personal care services market, which proved more receptive, with prospects coming in inbound.'
+const OLD_FR_BULLET =
+  'Prospection en cold call : sans résultat dans le BTP, pivot vers le service à la personne pour tester ce marché, plus réceptif, avec des prospects arrivés en inbound.'
+
+const MISE_A_JOUR_3 = [
+  {
+    label: 'anglais',
+    pdf: EN,
+    entries: [
+      {
+        ca: 'CA2',
+        what: 'l’accroche commence par la nouvelle phrase, juste après la rangée de statut, et l’ancienne a disparu',
+        seq: [
+          'Remote or relocation · from Nantes, France I build full-stack TypeScript products end to end, from the backend to web, mobile and desktop apps. I also run Spotime, a time-tracking SaaS for',
+          'eld crews, end to end: product, code and sales. French native, English C1.',
+        ],
+        gone: ['I build TypeScript and Go backends, from REST APIs to event-driven pipelines on Kafka.'],
+      },
+      {
+        ca: 'CA4',
+        what: 'la 2e puce de Spotime est la nouvelle, entre les puces 1 et 3, et l’ancienne a disparu',
+        seq: [
+          '3-surface product: web back',
+          'Cold-called 150 construction companies with no traction, so I switched to personal care services, where prospects come in through the website. 3 paying clients, 15 users.',
+          'Clock-ins are stored local-',
+          'Development assisted by a team of subagents',
+        ],
+        gone: [OLD_EN_BULLET],
+      },
+      {
+        ca: 'CA5',
+        what: 'la date d’Enedis est « Sep 2023 – Sep 2025 », entre le titre et le sous-titre, et « 2023–2025 » a disparu',
+        seq: ['Fullstack developer, Enedis Lab', 'Sep 2023 – Sep 2025', "France's electricity grid"],
+        gone: ['2023–2025'],
+      },
+      {
+        ca: 'CA6',
+        what: 'la 2e puce d’Enedis contient « built as the single source of org data », entre les puces 1 et 3, et l’ancien texte a disparu',
+        seq: [
+          'Worksite inspection app (Pays de la Loire)',
+          '(AdonisJS, PostgreSQL), built as the single source of org data for internal apps.',
+          'GitLab CI/CD (80% coverage gate',
+        ],
+        gone: ['(AdonisJS, PostgreSQL), the single source of org data'],
+      },
+      {
+        ca: 'CA7',
+        what: 'U Tech : date « Sep 2022 – Aug 2023 », puces Routing, Loading puis la 3e (visites en entrepôt), puis la stack',
+        seq: [
+          'Fullstack developer, apprentice',
+          'Sep 2022 – Aug 2023',
+          'Tech subsidiary of Système U',
+          'Routing app: moves pallets to the loading dock.',
+          'Loading app: loading those pallets onto trucks.',
+          'Visited warehouses to watch operators use the apps and adjust them to how they work.',
+          'Vue · JavaScript · Java Spring Boot · PWA',
+        ],
+        gone: ['2022–2023'],
+      },
+      {
+        ca: 'CA8',
+        what: 'la ligne de diplôme est « Master’s in Computer Science & Information Systems · EPSI, France », et l’ancienne a disparu',
+        seq: ["Master's in Computer Science & Information Systems · EPSI, France"],
+        gone: ["Master's in IT & Information Systems"],
+      },
+    ],
+    spotime: {
+      ca: 'CA3',
+      what: 'le sous-titre de Spotime est « Time-tracking SaaS for field crews · spotime.fr », sans « construction and », et le lien spotime.fr est posé sur cette rangée',
+      prefix: 'Time-tracking SaaS for',
+      suffix: 'eld crews · spotime.fr',
+      // Le « fi » de « field » se lit sur 2 caractères, en U+FB01 ou (via /ActualText) pas du tout : 0 à 2 caractères entre le préfixe et le suffixe.
+      maxGap: 2,
+    },
+  },
+  {
+    label: 'français',
+    pdf: FR,
+    entries: [
+      {
+        ca: 'CA9',
+        what: 'l’accroche commence par la nouvelle phrase, juste après la rangée de statut, et l’ancienne a disparu',
+        seq: [
+          'Remote ou relocalisation · basé à Nantes Je construis des produits TypeScript fullstack de bout en bout, du backend aux apps web, mobile et desktop. Je porte aussi Spotime, un SaaS de suivi des heures pour les équipes terrain, de bout en bout : produit, code et vente. Français natif, anglais C1.',
+        ],
+        gone: ['Je conçois des backends TypeScript et Go, des API REST aux pipelines event-driven sur Kafka.'],
+      },
+      {
+        ca: 'CA11',
+        what: 'la 2e puce de Spotime est la nouvelle, entre les puces 1 et 3, et l’ancienne a disparu',
+        seq: [
+          'Produit à 3 interfaces',
+          '150 entreprises du BTP démarchées en cold call, sans résultat : pivot vers le service à la personne, où les prospects arrivent par le site. 3 clients payants, 15 utilisateurs.',
+          'Pointages enregistrés en local-',
+          'Développement assisté par une équipe de subagents',
+        ],
+        gone: [OLD_FR_BULLET],
+      },
+      {
+        ca: 'CA12',
+        what: 'la date d’Enedis est « sept. 2023 – sept. 2025 », entre le titre et le sous-titre, et « 2023–2025 » a disparu',
+        seq: ['Développeur fullstack, Enedis Lab', 'sept. 2023 – sept. 2025', 'Réseau électrique français'],
+        gone: ['2023–2025'],
+      },
+      {
+        ca: 'CA13',
+        what: 'la 2e puce d’Enedis contient « conçue comme source unique des données d’organisation », entre les puces 1 et 3, et l’ancien texte a disparu',
+        seq: [
+          "App d'inspection des chantiers (Pays de la Loire)",
+          "(AdonisJS, PostgreSQL), conçue comme source unique des données d'organisation des apps internes.",
+          'CI/CD GitLab (couverture 80 %',
+        ],
+        gone: ['(AdonisJS, PostgreSQL), source unique des données'],
+      },
+      {
+        ca: 'CA14',
+        what: 'U Tech : date « sept. 2022 – août 2023 », puces d’acheminement, de chargement puis la 3e (visites en entrepôt), puis la stack',
+        seq: [
+          'Développeur fullstack, alternant',
+          'sept. 2022 – août 2023',
+          'Filiale tech de Système U',
+          "Application d'acheminement des palettes jusqu'au quai de chargement.",
+          'Application de chargement : le chargement de ces palettes dans les camions.',
+          "Visites en entrepôt pour observer les opérateurs utiliser les apps et les adapter à leur façon de travailler.",
+          'Vue · JavaScript · Java Spring Boot · PWA',
+        ],
+        gone: ['2022–2023'],
+      },
+      {
+        ca: 'CA15',
+        what: 'la ligne de formation est « Master Bac+5 · Informatique et systèmes d’information · EPSI, France », et l’ancienne a disparu',
+        seq: ["Master Bac+5 · Informatique et systèmes d'information · EPSI, France"],
+        gone: ['Master Bac+5 · Expert en informatique et SI'],
+      },
+    ],
+    spotime: {
+      ca: 'CA10',
+      what: 'le sous-titre de Spotime est « SaaS de suivi des heures pour les équipes terrain · spotime.fr », sans « le BTP et », et le lien spotime.fr est posé sur cette rangée',
+      prefix: 'SaaS de suivi des heures pour les équipes terrain · spotime.fr',
+      // Sans ligature en français : la rangée est exactement le sous-titre.
+      suffix: '',
+      maxGap: 0,
+    },
+  },
+] as const
+
+for (const { label, pdf, entries, spotime } of MISE_A_JOUR_3) {
+  describe(`cv-mise-a-jour-3 — CV ${label}`, () => {
+    for (const { ca, what, seq, gone } of entries) {
+      it(`cv-mise-a-jour-3 ${ca} — ${what}`, () => {
+        const { info } = load(pdf.file)
+        const text = squash(info.text)
+        const positions = seq.map((phrase) => text.indexOf(squash(phrase)))
+        const misplaced = seq.filter((_, i) => positions[i]! < 0 || (i > 0 && positions[i]! <= positions[i - 1]!))
+        const present = gone.filter((phrase) => text.includes(squash(phrase)))
+        assert.deepEqual(
+          { 'textes absents ou mal placés': misplaced, 'anciens textes encore présents': present },
+          { 'textes absents ou mal placés': [], 'anciens textes encore présents': [] },
+          `positions des textes attendus : ${positions.join(', ')}`,
+        )
+      })
+    }
+
+    it(`cv-mise-a-jour-3 ${spotime.ca} — ${spotime.what}`, () => {
+      const { info } = load(pdf.file)
+      const row = rowOf(info, 'https://spotime.fr')
+      const [prefix, suffix] = [squash(spotime.prefix), squash(spotime.suffix)]
+      const gap = row.length - prefix.length - suffix.length
+      assert.ok(
+        row.startsWith(prefix) && row.endsWith(suffix) && gap >= 0 && gap <= spotime.maxGap,
+        `rangée du lien spotime.fr : « ${row} », attendu : « ${prefix} » + 0 à ${spotime.maxGap} caractère(s) + « ${suffix} »`,
+      )
     })
   })
 }
