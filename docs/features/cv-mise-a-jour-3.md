@@ -10,39 +10,39 @@ En tant que recruteur ou client qui télécharge le CV de Romain sur romain-cail
 *Constat du PO, export comparé au texte des PDF en ligne : les deux CV changent sur les mêmes points, listés ci-dessous. Tout le reste est identique.*
 
 ### Génération
-- [ ] CA1 — Étant donné le dossier de design ci-dessus, quand je lance `pnpm cv`, alors `public/resume-romain-caille.pdf` et `public/cv-romain-caille.pdf` sont régénérés depuis cet export, puis versionnés.
+- [x] CA1 — Étant donné le dossier de design ci-dessus, quand je lance `pnpm cv`, alors `public/resume-romain-caille.pdf` et `public/cv-romain-caille.pdf` sont régénérés depuis cet export, puis versionnés.
 
 ### CV anglais (`/resume-romain-caille.pdf`)
-- [ ] CA2 — Étant donné le PDF anglais, quand j'en lis l'accroche, alors elle commence, à la lettre, par « I build full-stack TypeScript products end to end, from the backend to web, mobile and desktop apps. », et ne contient plus « I build TypeScript and Go backends, from REST APIs to event-driven pipelines on Kafka. ». La suite de l'accroche ne change pas.
-- [ ] CA3 — Étant donné le bloc Spotime, quand j'en lis le sous-titre, alors c'est « Time-tracking SaaS for field crews · spotime.fr », sans « construction and ». Le lien `spotime.fr` reste cliquable.
-- [ ] CA4 — Étant donné le bloc Spotime, quand j'en lis la 2e puce, alors c'est, à la lettre, « Cold-called 150 construction companies with no traction, so I switched to personal care services, where prospects come in through the website. 3 paying clients, 15 users. ». L'ancienne puce (« Cold-call prospecting: no traction in construction, so I pivoted to test the personal care services market, which proved more receptive, with prospects coming in inbound. ») a disparu. Les 3 autres puces ne changent pas.
-- [ ] CA5 — Étant donné le bloc Enedis, quand j'en lis la date, alors c'est « Sep 2023 – Sep 2025 », et plus « 2023–2025 ».
-- [ ] CA6 — Étant donné le bloc Enedis, quand j'en lis la 2e puce, alors elle contient « (AdonisJS, PostgreSQL), built as the single source of org data for internal apps. ». Les 3 autres puces ne changent pas.
-- [ ] CA7 — Étant donné le bloc U Tech, quand je le lis, alors :
+- [x] CA2 — Étant donné le PDF anglais, quand j'en lis l'accroche, alors elle commence, à la lettre, par « I build full-stack TypeScript products end to end, from the backend to web, mobile and desktop apps. », et ne contient plus « I build TypeScript and Go backends, from REST APIs to event-driven pipelines on Kafka. ». La suite de l'accroche ne change pas.
+- [x] CA3 — Étant donné le bloc Spotime, quand j'en lis le sous-titre, alors c'est « Time-tracking SaaS for field crews · spotime.fr », sans « construction and ». Le lien `spotime.fr` reste cliquable.
+- [x] CA4 — Étant donné le bloc Spotime, quand j'en lis la 2e puce, alors c'est, à la lettre, « Cold-called 150 construction companies with no traction, so I switched to personal care services, where prospects come in through the website. 3 paying clients, 15 users. ». L'ancienne puce (« Cold-call prospecting: no traction in construction, so I pivoted to test the personal care services market, which proved more receptive, with prospects coming in inbound. ») a disparu. Les 3 autres puces ne changent pas.
+- [x] CA5 — Étant donné le bloc Enedis, quand j'en lis la date, alors c'est « Sep 2023 – Sep 2025 », et plus « 2023–2025 ».
+- [x] CA6 — Étant donné le bloc Enedis, quand j'en lis la 2e puce, alors elle contient « (AdonisJS, PostgreSQL), built as the single source of org data for internal apps. ». Les 3 autres puces ne changent pas.
+- [x] CA7 — Étant donné le bloc U Tech, quand je le lis, alors :
   - la date est « Sep 2022 – Aug 2023 », et plus « 2022–2023 » ;
   - une 3e puce suit « Loading app: loading those pallets onto trucks. » : « Visited warehouses to watch operators use the apps and adjust them to how they work. » ;
   - la stack « Vue · JavaScript · Java Spring Boot · PWA » suit cette 3e puce.
-- [ ] CA8 — Étant donné la section « Education », quand je la lis, alors la ligne de diplôme est « Master's in Computer Science & Information Systems · EPSI, France », et plus « Master's in IT & Information Systems · EPSI ».
+- [x] CA8 — Étant donné la section « Education », quand je la lis, alors la ligne de diplôme est « Master's in Computer Science & Information Systems · EPSI, France », et plus « Master's in IT & Information Systems · EPSI ».
 
 ### CV français (`/cv-romain-caille.pdf`)
-- [ ] CA9 — Étant donné le PDF français, quand j'en lis l'accroche, alors elle commence, à la lettre, par « Je construis des produits TypeScript fullstack de bout en bout, du backend aux apps web, mobile et desktop. », et ne contient plus « Je conçois des backends TypeScript et Go, des API REST aux pipelines event-driven sur Kafka. ». La suite de l'accroche ne change pas.
-- [ ] CA10 — Étant donné le bloc Spotime, quand j'en lis le sous-titre, alors c'est « SaaS de suivi des heures pour les équipes terrain · spotime.fr », sans « le BTP et ». Le lien `spotime.fr` reste cliquable.
-- [ ] CA11 — Étant donné le bloc Spotime, quand j'en lis la 2e puce, alors c'est, à la lettre, « 150 entreprises du BTP démarchées en cold call, sans résultat : pivot vers le service à la personne, où les prospects arrivent par le site. 3 clients payants, 15 utilisateurs. ». L'ancienne puce (« Prospection en cold call : sans résultat dans le BTP, pivot vers le service à la personne pour tester ce marché, plus réceptif, avec des prospects arrivés en inbound. ») a disparu. Les 3 autres puces ne changent pas.
-- [ ] CA12 — Étant donné le bloc Enedis, quand j'en lis la date, alors c'est « sept. 2023 – sept. 2025 », et plus « 2023–2025 ».
-- [ ] CA13 — Étant donné le bloc Enedis, quand j'en lis la 2e puce, alors elle contient « (AdonisJS, PostgreSQL), conçue comme source unique des données d'organisation des apps internes. ». Les 3 autres puces ne changent pas.
-- [ ] CA14 — Étant donné le bloc U Tech, quand je le lis, alors :
+- [x] CA9 — Étant donné le PDF français, quand j'en lis l'accroche, alors elle commence, à la lettre, par « Je construis des produits TypeScript fullstack de bout en bout, du backend aux apps web, mobile et desktop. », et ne contient plus « Je conçois des backends TypeScript et Go, des API REST aux pipelines event-driven sur Kafka. ». La suite de l'accroche ne change pas.
+- [x] CA10 — Étant donné le bloc Spotime, quand j'en lis le sous-titre, alors c'est « SaaS de suivi des heures pour les équipes terrain · spotime.fr », sans « le BTP et ». Le lien `spotime.fr` reste cliquable.
+- [x] CA11 — Étant donné le bloc Spotime, quand j'en lis la 2e puce, alors c'est, à la lettre, « 150 entreprises du BTP démarchées en cold call, sans résultat : pivot vers le service à la personne, où les prospects arrivent par le site. 3 clients payants, 15 utilisateurs. ». L'ancienne puce (« Prospection en cold call : sans résultat dans le BTP, pivot vers le service à la personne pour tester ce marché, plus réceptif, avec des prospects arrivés en inbound. ») a disparu. Les 3 autres puces ne changent pas.
+- [x] CA12 — Étant donné le bloc Enedis, quand j'en lis la date, alors c'est « sept. 2023 – sept. 2025 », et plus « 2023–2025 ».
+- [x] CA13 — Étant donné le bloc Enedis, quand j'en lis la 2e puce, alors elle contient « (AdonisJS, PostgreSQL), conçue comme source unique des données d'organisation des apps internes. ». Les 3 autres puces ne changent pas.
+- [x] CA14 — Étant donné le bloc U Tech, quand je le lis, alors :
   - la date est « sept. 2022 – août 2023 », et plus « 2022–2023 » ;
   - une 3e puce suit « Application de chargement : le chargement de ces palettes dans les camions. » : « Visites en entrepôt pour observer les opérateurs utiliser les apps et les adapter à leur façon de travailler. » ;
   - la stack « Vue · JavaScript · Java Spring Boot · PWA » suit cette 3e puce.
-- [ ] CA15 — Étant donné la section « Formation », quand je la lis, alors la ligne de diplôme est « Master Bac+5 · Informatique et systèmes d'information · EPSI, France », et plus « Master Bac+5 · Expert en informatique et SI · EPSI ».
+- [x] CA15 — Étant donné la section « Formation », quand je la lis, alors la ligne de diplôme est « Master Bac+5 · Informatique et systèmes d'information · EPSI, France », et plus « Master Bac+5 · Expert en informatique et SI · EPSI ».
 
 ### Non-régression
-- [ ] CA16 — Étant donné chaque PDF, quand j'en lis le texte, alors tout le reste est identique au PDF actuel : en-tête (portrait compris en FR), rangée de statut, date de Spotime, puces et stacks non citées plus haut, section des projets (Event Hub, videoCn) et tous les liens.
-- [ ] CA17 — Étant donné les nouveaux PDF, quand les tests existants tournent, alors ils restent verts, hors textes adaptés selon les Contraintes :
+- [x] CA16 — Étant donné chaque PDF, quand j'en lis le texte, alors tout le reste est identique au PDF actuel : en-tête (portrait compris en FR), rangée de statut, date de Spotime, puces et stacks non citées plus haut, section des projets (Event Hub, videoCn) et tous les liens.
+- [x] CA17 — Étant donné les nouveaux PDF, quand les tests existants tournent, alors ils restent verts, hors textes adaptés selon les Contraintes :
   - CA5 (une page A4, texte sélectionnable, liens cliquables, au plus 400 000 octets), CA6 (langues, titres) et CA18 (uniquement Instrument Sans et IBM Plex Mono) de `portfolio-cv` ;
   - les blocs `cv-mise-a-jour` et `cv-mise-a-jour-2`, dont CA8 : la ligne de diplôme reste la dernière ligne, entière, à au moins 3 mm du bas de la page ;
   - les blocs `liens-github` et `cv-videocn`.
-- [ ] CA18 — Étant donné le site, quand je l'inspecte, alors rien ne change : les deux liens `resume.pdf` pointent toujours vers `/resume-romain-caille.pdf`, et le CV français n'est toujours pas lié.
+- [x] CA18 — Étant donné le site, quand je l'inspecte, alors rien ne change : les deux liens `resume.pdf` pointent toujours vers `/resume-romain-caille.pdf`, et le CV français n'est toujours pas lié.
 
 ## Hors scope
 - Le site : ses textes (accroche, Spotime, Enedis, U Tech) restent tels quels, même s'ils divergent désormais des CV.
@@ -329,3 +329,5 @@ Un nouveau bloc `cv-mise-a-jour-3` couvre CA2 à CA15 avec l'outillage existant.
 - 2026-10-05 — CA3 et CA10 sont testés par la rangée du lien `spotime.fr` (`rowOf`), préfixe et suffixe sans ligature en EN, égalité stricte en FR (option A, validée par Romain).
 - 2026-10-05 — Le tester fait un rendu d'essai avec `pnpm cv` pour calibrer les tests, puis restaure `public/` avant le commit rouge (option A, validée par Romain).
 - 2026-10-05 — Romain a ré-exporté le dossier de design à 03 h 08. Le PO a relu `Resume EN.dc.html` et `CV FR.dc.html` : texte identique ligne à ligne à l'export de 02 h 48, tailles inchangées. Le plan reste valable ; à la tâche 1, l'horodatage attendu devient 03 h 08 (validée par Romain).
+- 2026-10-05 — Un premier passage du tester, interrompu, avait déjà adapté une partie des littéraux de `cv.test.ts`. Le second passage a vérifié ce diff contre le plan et l'a complété. Commit rouge de référence : b63253b.
+- 2026-10-05 — Livraison : PDF régénérés par `pnpm cv` depuis l'export de 03 h 08. `pnpm test` 213 sur 213, e2e 279 sur 279 en local et dans l'image de la CI à 1 CPU. Ce run a été fait sur l'arbre de `git stash create`, avec les mêmes PDF que le commit final, qui n'y ajoute que la spec. Marge sous la ligne de diplôme : 9,04 mm (EN) et 9,83 mm (FR). CA16 : comparaison complète du texte entre les PDF de `main` et les nouveaux, seules les lignes de CA2 à CA15 diffèrent. Le FR a aussi un retour à la ligne décalé dans l'accroche, qui reste sur 3 lignes. Reste manuel : la relecture des deux PDF dans Aperçu par Romain (tâche 7).
