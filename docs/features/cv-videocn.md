@@ -8,39 +8,39 @@ En tant que recruteur ou client qui télécharge le CV de Romain sur romain-cail
 *Source : `/Users/romain/Downloads/Portfolio Event-Driven/`, export du 2026-10-05 à 01 h 21. Romain y a déjà fait les changements dans Claude Design. `Resume EN.dc.html` et `CV FR.dc.html` font foi pour le contenu et la mise en page des PDF, sans aucune modification à faire. Le seul changement par rapport aux PDF actuels : dans la section des projets, le bloc Fraud Engine est remplacé par un bloc videoCn. Les PDF sont produits par `pnpm cv` (spec `docs/features/portfolio-cv.md`), et le script ne change pas. Le site ne change pas.*
 
 ### Génération
-- [ ] CA1 — Étant donné le dossier de design ci-dessus, quand je lance `pnpm cv`, alors `public/resume-romain-caille.pdf` et `public/cv-romain-caille.pdf` sont régénérés depuis ces fichiers, puis versionnés.
+- [x] CA1 — Étant donné le dossier de design ci-dessus, quand je lance `pnpm cv`, alors `public/resume-romain-caille.pdf` et `public/cv-romain-caille.pdf` sont régénérés depuis ces fichiers, puis versionnés.
 
 ### CV anglais (`/resume-romain-caille.pdf`)
-- [ ] CA2 — Étant donné le PDF anglais, quand j'en lis le texte, alors la section « Projects » contient, après le bloc Event Hub, un bloc videoCn avec, à la lettre :
+- [x] CA2 — Étant donné le PDF anglais, quand j'en lis le texte, alors la section « Projects » contient, après le bloc Event Hub, un bloc videoCn avec, à la lettre :
   - « videoCn » et « · open-source video player for shadcn/ui » ;
   - « Full video player built with shadcn/ui components and distributed as a shadcn registry: one command installs it, and it takes on the host project's theme. » ;
   - « Supports HLS streaming, WebVTT subtitles and chapters, and keyboard shortcuts. » ;
   - « React · TypeScript · Next.js · shadcn/ui ».
 
 ### CV français (`/cv-romain-caille.pdf`)
-- [ ] CA3 — Étant donné le PDF français, quand j'en lis le texte, alors la section « Projets » contient, après le bloc Event Hub, un bloc videoCn avec, à la lettre :
+- [x] CA3 — Étant donné le PDF français, quand j'en lis le texte, alors la section « Projets » contient, après le bloc Event Hub, un bloc videoCn avec, à la lettre :
   - « videoCn » et « · lecteur vidéo open source pour shadcn/ui » ;
   - « Lecteur vidéo complet construit avec les composants shadcn/ui et distribué comme registry shadcn : une commande l'installe, et il reprend le thème du projet hôte. » ;
   - « Streaming HLS, sous-titres et chapitres WebVTT, raccourcis clavier. » ;
   - « React · TypeScript · Next.js · shadcn/ui ».
 
 ### Liens des deux CV
-- [ ] CA4 — Étant donné chaque PDF, quand je lis la rangée du titre videoCn, alors elle porte deux liens cliquables : `videocn.dev` vers https://videocn.dev/ et `github` vers https://github.com/romain-cll/videocn.
-- [ ] CA5 — Étant donné chaque PDF, quand j'en liste les liens, alors on y trouve toujours le site, l'e-mail, le profil GitHub, LinkedIn, spotime.fr et le dépôt Event Hub, et plus aucun lien vers `fraud-engine-event-driven`.
+- [x] CA4 — Étant donné chaque PDF, quand je lis la rangée du titre videoCn, alors elle porte deux liens cliquables : `videocn.dev` vers https://videocn.dev/ et `github` vers https://github.com/romain-cll/videocn.
+- [x] CA5 — Étant donné chaque PDF, quand j'en liste les liens, alors on y trouve toujours le site, l'e-mail, le profil GitHub, LinkedIn, spotime.fr et le dépôt Event Hub, et plus aucun lien vers `fraud-engine-event-driven`.
 
 ### Fraud Engine retiré des deux CV
-- [ ] CA6 — Étant donné chaque PDF, quand j'en lis le texte, alors il ne contient plus aucun de ces textes :
+- [x] CA6 — Étant donné chaque PDF, quand j'en lis le texte, alors il ne contient plus aucun de ces textes :
   - « Fraud Engine » ;
   - « Three Go services linked by Kafka, partitioned by card_id so a card is always scored by the same worker. » (EN) ;
   - « Trois services Go reliés par Kafka, partitionnés par card_id : une carte est toujours scorée par le même worker. » (FR) ;
   - « Go · Kafka · Redis · ClickHouse · Prometheus · Grafana · Docker ».
 
 ### Non-régression
-- [ ] CA7 — Étant donné les deux nouveaux PDF, quand les tests existants tournent, alors restent verts, hors textes et liens de Fraud Engine adaptés selon les Contraintes :
+- [x] CA7 — Étant donné les deux nouveaux PDF, quand les tests existants tournent, alors restent verts, hors textes et liens de Fraud Engine adaptés selon les Contraintes :
   - CA5 (une page A4, texte sélectionnable, liens cliquables, au plus 400 000 octets), CA6 (langues, titres, accroches) et CA18 (uniquement Instrument Sans et IBM Plex Mono) de `portfolio-cv` ;
   - les blocs `cv-mise-a-jour` et `cv-mise-a-jour-2`, dont CA8 : la ligne de diplôme reste la dernière ligne, entière, à au moins 3 mm du bas de la page ;
   - les blocs `liens-github` : profil GitHub dans l'en-tête, GitLab cité seulement pour Enedis.
-- [ ] CA8 — Étant donné le site, quand je l'inspecte, alors rien ne change : la section Fraud Engine et son lien `repo` restent, les deux liens `resume.pdf` pointent toujours vers `/resume-romain-caille.pdf`, et le CV français n'est toujours pas lié.
+- [x] CA8 — Étant donné le site, quand je l'inspecte, alors rien ne change : la section Fraud Engine et son lien `repo` restent, les deux liens `resume.pdf` pointent toujours vers `/resume-romain-caille.pdf`, et le CV français n'est toujours pas lié.
 
 ## Hors scope
 - Le site : sa section Fraud Engine reste telle quelle. La maquette du site n'a pas changé.
@@ -212,3 +212,5 @@ Dans `tests/unit/cv.test.ts`, chaque ligne qui porte sur Fraud Engine est rempla
 - 2026-10-05 — Le tester fait un rendu d'essai avec `pnpm cv` pour calibrer les tests, puis restaure `public/` avant le commit rouge (option A, validée par Romain).
 - 2026-10-05 — videocn.dev et https://github.com/romain-cll/videocn sont publics : Romain le confirme, et aucune vérification n'est nécessaire (validée par Romain).
 - 2026-10-05 — Export vérifié par le PO : `Resume EN.dc.html` et `CV FR.dc.html` datés du 2026-10-05 à 01 h 21, sans aucune occurrence de « fraud ».
+- 2026-10-05 — Premier commit rouge 091f27d corrigé par le tester : le paramètre `phrase`, inutilisé, devient `_` (l. 493 de `cv.test.ts`), car il cassait `pnpm typecheck`. Aucun changement de comportement. Nouveau commit rouge de référence : 8767ef5 (validée par Romain).
+- 2026-10-05 — Livraison : PDF régénérés par `pnpm cv` depuis l'export du 2026-10-05 à 01 h 21. Les vérifications automatiques passent : `pnpm test` 199 sur 199, e2e 279 sur 279 en local et dans l'image de la CI à 1 CPU. La marge sous la ligne de diplôme est de 13,5 mm (EN) et de 14,3 mm (FR). Reste manuel : la relecture des deux PDF dans Aperçu par Romain (tâche 7). Les liens videoCn ne sont pas cliqués, puisqu'ils sont publics selon la décision ci-dessus.
