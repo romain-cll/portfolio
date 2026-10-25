@@ -10,33 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectsSpotimeRouteImport } from './routes/projects/spotime'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsSpotimeRoute = ProjectsSpotimeRouteImport.update({
+  id: '/projects/spotime',
+  path: '/projects/spotime',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/projects/spotime': typeof ProjectsSpotimeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/projects/spotime': typeof ProjectsSpotimeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/projects/spotime': typeof ProjectsSpotimeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/projects/spotime'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/projects/spotime'
+  id: '__root__' | '/' | '/projects/spotime'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProjectsSpotimeRoute: typeof ProjectsSpotimeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +58,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/spotime': {
+      id: '/projects/spotime'
+      path: '/projects/spotime'
+      fullPath: '/projects/spotime'
+      preLoaderRoute: typeof ProjectsSpotimeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProjectsSpotimeRoute: ProjectsSpotimeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

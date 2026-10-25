@@ -35,7 +35,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        {/* Same centered column for every page */}
+        <main className="mx-auto box-content flex max-w-(--container) flex-col gap-(--section-gap) p-(--page-padding)">
+          {children}
+        </main>
         <TanStackDevtools
           config={{
             position: 'bottom-right',

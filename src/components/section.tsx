@@ -10,7 +10,8 @@ export function Section({
   children,
 }: {
   title: string
-  children: ReactNode
+  /** Optional while a section is still being written */
+  children?: ReactNode
 }) {
   const id = sectionId(title)
 

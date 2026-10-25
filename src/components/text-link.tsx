@@ -1,3 +1,4 @@
+import { createLink } from '@tanstack/react-router'
 import type { ComponentProps, ReactNode } from 'react'
 
 type TextLinkProps = ComponentProps<'a'> & {
@@ -55,6 +56,9 @@ export function TextLink({
     </a>
   )
 }
+
+/** TextLink to a route of the site: typed `to`, client-side navigation, preload on hover */
+export const RouteLink = createLink(TextLink)
 
 // Text glyphs (↗) render as is; SVG icons are sized to the text
 function Icon({ children }: { children: ReactNode }) {

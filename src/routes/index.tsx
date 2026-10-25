@@ -1,23 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 
+import { DetailList } from '../components/detail-list'
+import type { Detail } from '../components/detail-list'
 import { Navbar } from '../components/navbar'
 import { Section } from '../components/section'
+import { StatusDot } from '../components/status-dot'
 import { TextLink } from '../components/text-link'
+import { projects } from '../data/projects'
 
 export const Route = createFileRoute('/')({ component: Home })
 
-const information: Array<{ label: string; value: ReactNode }> = [
+const information: Array<Detail> = [
   { label: 'Based in', value: 'Nantes, France' },
-  {
-    label: 'Availability',
-    value: (
-      <span className="flex items-center gap-2">
-        <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
-        Now
-      </span>
-    ),
-  },
+  { label: 'Availability', value: <StatusDot>Now</StatusDot> },
   {
     label: 'Education',
     // Non-breaking space keeps "@ EPSI" together when the line wraps
@@ -52,31 +48,6 @@ const experience: Array<{ title: ReactNode; detail: string; period: string }> =
     },
   ]
 
-// `id` is the in-page anchor of each project row
-const projects = [
-  {
-    id: 'spotime',
-    name: 'Spotime',
-    href: 'https://spotime.fr',
-    description:
-      'Replaces paper hour tracking for field crews of 10–30. Web, mobile and Windows desktop app, local-first clock-ins.',
-  },
-  {
-    id: 'fraud-engine',
-    name: 'Fraud Engine',
-    href: 'https://github.com/romain-cll/fraud-engine-event-driven',
-    description:
-      'Event-driven fraud detection in Go over Kafka, Redis and ClickHouse. ~220 tx/s across three scorers.',
-  },
-  {
-    id: 'event-hub',
-    name: 'Event Hub',
-    href: 'https://github.com/romain-cll/events-hub',
-    description:
-      'Cookieless analytics joined with Stripe revenue, to see which sources actually drive sales.',
-  },
-]
-
 // Placeholders from the mockup, until the posts exist
 const posts = [
   {
@@ -96,7 +67,7 @@ const posts = [
   },
 ]
 
-const contact: Array<{ label: string; value: ReactNode }> = [
+const contact: Array<Detail> = [
   {
     label: 'Email',
     value: (
@@ -137,7 +108,7 @@ const contact: Array<{ label: string; value: ReactNode }> = [
 
 function Home() {
   return (
-    <main className="mx-auto box-content flex max-w-(--container) flex-col gap-(--section-gap) p-(--page-padding)">
+    <>
       <Navbar />
 
       <Section title="About">
@@ -165,17 +136,7 @@ function Home() {
       </Section>
 
       <Section title="Information">
-        <dl className="flex flex-col gap-(--gap-info)">
-          {information.map(({ label, value }) => (
-            <div
-              key={label}
-              className="flex justify-between gap-(--gap-inline)"
-            >
-              <dt className="text-muted">{label}</dt>
-              <dd className="text-right">{value}</dd>
-            </div>
-          ))}
-        </dl>
+        <DetailList items={information} />
       </Section>
 
       <Section title="Experience">
@@ -228,18 +189,8 @@ function Home() {
       </Section>
 
       <Section title="Contact">
-        <dl className="flex flex-col gap-(--gap-info)">
-          {contact.map(({ label, value }) => (
-            <div
-              key={label}
-              className="flex justify-between gap-(--gap-inline)"
-            >
-              <dt className="text-muted">{label}</dt>
-              <dd className="text-right">{value}</dd>
-            </div>
-          ))}
-        </dl>
+        <DetailList items={contact} />
       </Section>
-    </main>
+    </>
   )
 }

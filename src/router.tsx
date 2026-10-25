@@ -5,6 +5,9 @@ export function getRouter() {
   const router = createTanStackRouter({
     routeTree,
     scrollRestoration: true,
+    // A new page starts at its top right away; smooth scrolling (styles.css)
+    // stays for in-page anchors
+    scrollRestorationBehavior: 'instant',
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
   })

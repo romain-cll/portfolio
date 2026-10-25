@@ -20,7 +20,7 @@ export function Figure({ src, alt, caption, ratio = '16 / 10' }: FigureProps) {
     <figure className="flex flex-col gap-(--gap-caption)">
       <div
         style={{ aspectRatio: ratio }}
-        className="overflow-hidden rounded-md border border-surface-border bg-surface"
+        className="overflow-hidden rounded-md border border-divider bg-surface"
       >
         {failed ? (
           <div className="flex size-full items-center justify-center p-4 text-center text-muted">
