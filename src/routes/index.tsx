@@ -6,7 +6,7 @@ import type { Detail } from '../components/detail-list'
 import { Navbar } from '../components/navbar'
 import { Section } from '../components/section'
 import { StatusDot } from '../components/status-dot'
-import { TextLink } from '../components/text-link'
+import { RouteLink, TextLink } from '../components/text-link'
 import { projects } from '../data/projects'
 
 export const Route = createFileRoute('/')({ component: Home })
@@ -127,9 +127,9 @@ function Home() {
           </p>
           <p className="text-muted">
             Built{' '}
-            <TextLink href="#spotime" variant="inline">
+            <RouteLink to="/projects/spotime" variant="inline">
               Spotime
-            </TextLink>
+            </RouteLink>
             . Now looking for a full-time role, remote or relocation.
           </p>
         </div>
@@ -158,19 +158,32 @@ function Home() {
 
       <Section title="Projects">
         <ul className="flex flex-col gap-(--gap-projects)">
-          {projects.map(({ id, name, href, description }) => (
+          {projects.map(({ id, name, href, description, page }) => (
             <li
               key={id}
               id={id}
               className="flex flex-col gap-(--gap-title-desc)"
             >
-              <TextLink
-                href={href}
-                iconRight={<span className="text-muted">↗</span>}
-                className="flex justify-between gap-(--gap-inline)"
-              >
-                {name}
-              </TextLink>
+              {page ? (
+                // Name to the case study, ↗ to the live site or repo
+                <div className="flex justify-between gap-(--gap-inline)">
+                  <RouteLink to={page}>{name}</RouteLink>
+                  <TextLink
+                    href={href}
+                    aria-label={`${name}, ${new URL(href).host}`}
+                  >
+                    <span className="text-muted">↗</span>
+                  </TextLink>
+                </div>
+              ) : (
+                <TextLink
+                  href={href}
+                  iconRight={<span className="text-muted">↗</span>}
+                  className="flex justify-between gap-(--gap-inline)"
+                >
+                  {name}
+                </TextLink>
+              )}
               <p className="text-muted">{description}</p>
             </li>
           ))}
