@@ -13,7 +13,7 @@ const variants = {
 }
 
 export function TextLink({
-  variant = 'default',
+  variant = 'inline',
   iconLeft,
   iconRight,
   className,
