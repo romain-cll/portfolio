@@ -52,20 +52,24 @@ const experience: Array<{ title: ReactNode; detail: string; period: string }> =
     },
   ]
 
+// `id` is the in-page anchor of each project row
 const projects = [
   {
+    id: 'spotime',
     name: 'Spotime',
     href: 'https://spotime.fr',
     description:
       'Replaces paper hour tracking for field crews of 10–30. Web, mobile and Windows desktop app, local-first clock-ins.',
   },
   {
+    id: 'fraud-engine',
     name: 'Fraud Engine',
     href: 'https://github.com/romain-cll/fraud-engine-event-driven',
     description:
       'Event-driven fraud detection in Go over Kafka, Redis and ClickHouse. ~220 tx/s across three scorers.',
   },
   {
+    id: 'event-hub',
     name: 'Event Hub',
     href: 'https://github.com/romain-cll/events-hub',
     description:
@@ -152,11 +156,10 @@ function Home() {
           </p>
           <p className="text-muted">
             Built{' '}
-            <TextLink href="https://spotime.fr" variant="inline">
+            <TextLink href="#spotime" variant="inline">
               Spotime
             </TextLink>
-            , a time-tracking SaaS. Now looking for a full-time role, remote or
-            relocation.
+            . Now looking for a full-time role, remote or relocation.
           </p>
         </div>
       </Section>
@@ -194,8 +197,12 @@ function Home() {
 
       <Section title="Projects">
         <ul className="flex flex-col gap-(--gap-projects)">
-          {projects.map(({ name, href, description }) => (
-            <li key={name} className="flex flex-col gap-(--gap-title-desc)">
+          {projects.map(({ id, name, href, description }) => (
+            <li
+              key={id}
+              id={id}
+              className="flex flex-col gap-(--gap-title-desc)"
+            >
               <TextLink
                 href={href}
                 iconRight={<span className="text-muted">↗</span>}
