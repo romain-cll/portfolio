@@ -18,8 +18,14 @@ export function TextLink({
   iconRight,
   className,
   children,
+  href,
+  target,
+  rel,
   ...props
 }: TextLinkProps) {
+  // Links leaving the portfolio open in a new tab, so visitors keep their place
+  const external = href !== undefined && /^https?:\/\//.test(href)
+
   return (
     <a
       className={[
@@ -29,6 +35,9 @@ export function TextLink({
       ]
         .filter(Boolean)
         .join(' ')}
+      href={href}
+      target={target ?? (external ? '_blank' : undefined)}
+      rel={rel ?? (external ? 'noopener' : undefined)}
       {...props}
     >
       {iconLeft && (
