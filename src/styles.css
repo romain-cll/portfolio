@@ -34,7 +34,7 @@
   --font-size: 14px; /* everything, titles included */
   --line-height: 1.6;
   --weight-regular: 400;
-  --weight-medium: 500; /* name in header only */
+  --weight-medium: 500; /* name in header and sub-page titles only */
 
   /* Layout */
   --container: 600px; /* max-width, centered (margin: 0 auto) */
@@ -54,6 +54,7 @@
   --gap-inline: 16px; /* text ↔ date/value on the right */
   --gap-caption: 8px; /* figure → caption */
   --gap-separator: 24px; /* separator → what follows */
+  --gap-page-title: 24px; /* sub-page title → its first section */
 
   /* Header */
   --header-gap: 12px 24px;

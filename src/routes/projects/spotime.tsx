@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { DetailList } from '../../components/detail-list'
 import type { Detail } from '../../components/detail-list'
 import { Figure } from '../../components/figure'
+import { PageHeader } from '../../components/page-header'
 import { ProjectNav } from '../../components/project-nav'
 import { Section } from '../../components/section'
 import { StatusDot } from '../../components/status-dot'
@@ -37,17 +38,18 @@ const results: Array<Detail> = []
 function Spotime() {
   return (
     <>
-      <header>
-        <h1 className="font-(--weight-medium)">Spotime</h1>
-        <p className="text-muted">Time tracking for field crews</p>
-      </header>
+      <PageHeader label="Project" />
 
-      <Section title="About">
-        <p>
-          Time tracking for small and mid-sized businesses with field teams.
-          Replaces paper timesheets and the month-end re-entry before payroll.
-        </p>
-      </Section>
+      {/* The title sits closer to About than sections do to each other */}
+      <div className="flex flex-col gap-(--gap-page-title)">
+        <h1 className="font-(--weight-medium)">Spotime</h1>
+        <Section title="About">
+          <p>
+            Time tracking for small and mid-sized businesses with field teams.
+            Replaces paper timesheets and the month-end re-entry before payroll.
+          </p>
+        </Section>
+      </div>
 
       <Section title="Information">
         <DetailList items={information} />
