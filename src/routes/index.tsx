@@ -20,7 +20,7 @@ const information: Array<{ label: string; value: ReactNode }> = [
   },
   {
     label: 'Education',
-    value: "Master's, IT & Information Systems, EPSI — 2025",
+    value: "Master's, IT & Information Systems @ EPSI, 2025",
   },
   { label: 'Languages', value: 'French, English (C1)' },
 ]
