@@ -139,9 +139,16 @@ function Home() {
       <Section title="About">
         <div className="flex flex-col gap-(--gap-about)">
           <p>
-            Fullstack developer, ready for the agentic era. I build products end
-            to end — back office, mobile, desktop — and get them in front of
-            paying users.
+            Full-stack developer who ships fast. I build products end to end
+            with{' '}
+            <TextLink
+              href="https://github.com/romain-cll/rstack"
+              variant="inline"
+            >
+              rstack
+            </TextLink>
+            , the agent loop I designed and open-sourced, and get them in front
+            of paying users.
           </p>
           <p className="text-muted">
             Currently building{' '}
