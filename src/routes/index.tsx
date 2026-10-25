@@ -151,11 +151,12 @@ function Home() {
             of paying users.
           </p>
           <p className="text-muted">
-            Currently building{' '}
+            Built{' '}
             <TextLink href="https://spotime.fr" variant="inline">
               Spotime
             </TextLink>
-            . Open to work, remote or relocation.
+            , a time-tracking SaaS. Now looking for a full-time role, remote or
+            relocation.
           </p>
         </div>
       </Section>
