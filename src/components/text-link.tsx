@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactNode } from 'react'
 
 type TextLinkProps = ComponentProps<'a'> & {
-  /** `inline`: link inside running text, always underlined in --border */
+  /** `inline`: link inside running text, underlined in --border, darker on hover */
   variant?: 'default' | 'inline'
   iconLeft?: ReactNode
   iconRight?: ReactNode
@@ -9,7 +9,7 @@ type TextLinkProps = ComponentProps<'a'> & {
 
 const variants = {
   default: 'hover:underline',
-  inline: 'text-text underline decoration-border',
+  inline: 'text-text underline decoration-border hover:decoration-current',
 }
 
 export function TextLink({
