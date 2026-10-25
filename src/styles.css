@@ -69,6 +69,13 @@
 
 /* Margins (h2, p, dl, dd, ol, ul) and list styles are already reset by Tailwind preflight */
 @layer base {
+  /* In-page links (navbar → sections) scroll instead of jumping */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     background: var(--bg);
     color: var(--text);
