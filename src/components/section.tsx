@@ -14,9 +14,17 @@ export function Section({
 }) {
   const id = sectionId(title)
 
+  // Below 504px (label col + gap + content col) the title wraps above its
+  // content: it is then uppercased to stand out
   return (
-    <section aria-labelledby={id} className="flex flex-wrap gap-(--row-gap)">
-      <h2 id={id} className="flex-[0_0_var(--label-col)] text-muted">
+    <section
+      aria-labelledby={id}
+      className="@container flex flex-wrap gap-(--row-gap)"
+    >
+      <h2
+        id={id}
+        className="flex-[0_0_var(--label-col)] text-muted @max-[504px]:tracking-wider @max-[504px]:uppercase"
+      >
         {title}
       </h2>
       <div className="min-w-0 flex-[1_1_var(--content-col)]">{children}</div>
