@@ -200,14 +200,9 @@ function Home() {
       <Section title="Writing">
         <ul className="flex flex-col gap-(--gap-writing)">
           {posts.map(({ title, date, href }) => (
-            <li key={title}>
-              <TextLink
-                href={href}
-                className="flex justify-between gap-(--gap-inline)"
-              >
-                <span>{title}</span>
-                <span className="whitespace-nowrap text-muted">{date}</span>
-              </TextLink>
+            <li key={title} className="flex justify-between gap-(--gap-inline)">
+              <TextLink href={href}>{title}</TextLink>
+              <span className="whitespace-nowrap text-muted">{date}</span>
             </li>
           ))}
         </ul>
