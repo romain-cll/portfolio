@@ -1,17 +1,82 @@
+@import 'tailwindcss';
+@import '@fontsource/geist/400.css';
+@import '@fontsource/geist/500.css';
 
-@import "tailwindcss";
+/* `dark:` follows data-theme, like the tokens below */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-* {
-  box-sizing: border-box;
+@theme {
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
 }
 
-html,
-body,
-#app {
-  min-height: 100%;
+/* Colors as utilities: text-muted, bg-bg, border-border, … */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
 }
 
-body {
-  margin: 0;
+:root {
+  /* Colors — light */
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #6b6b6b; /* secondary text, section labels, dates, ↗ */
+  --border: #d4d4d4; /* underline color on inline links */
+  --accent: #16a34a; /* availability dot only */
+
+  /* Typography (--font-sans lives in @theme above) */
+  --font-size: 14px; /* everything, titles included */
+  --line-height: 1.6;
+  --weight-regular: 400;
+  --weight-medium: 500; /* name in header only */
+
+  /* Layout */
+  --container: 600px; /* max-width, centered (margin: 0 auto) */
+  --page-padding: 88px 20px 80px; /* top / sides / bottom */
+  --section-gap: 56px; /* between sections */
+  --label-col: 120px; /* left label column (flex: 0 0 120px) */
+  --content-col: 360px; /* content column basis (flex: 1 1 360px) */
+  --row-gap: 8px 24px; /* label ↔ content (wraps on mobile) */
+
+  /* Lists */
+  --gap-experience: 16px;
+  --gap-projects: 20px;
+  --gap-writing: 10px;
+  --gap-info: 6px; /* Information + Contact rows */
+  --gap-about: 12px; /* between About paragraphs */
+  --gap-title-desc: 2px; /* project name → description */
+  --gap-inline: 16px; /* text ↔ date/value on the right */
+
+  /* Header */
+  --header-gap: 12px 24px;
+  --nav-gap: 4px 16px;
+
+  /* Links */
+  --underline-offset: 3px;
+  --underline-thickness: 1px; /* underline on hover; inline links always underlined in --border */
 }
 
+/* Dark */
+:root[data-theme='dark'] {
+  --bg: #0a0a0a;
+  --text: #ededed;
+  --muted: #a1a1a1;
+  --border: #3f3f3f;
+  color-scheme: dark;
+}
+
+/* Margins (h2, p, dl, dd, ol, ul) and list styles are already reset by Tailwind preflight */
+@layer base {
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    font-weight: var(--weight-regular);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-variant-numeric: tabular-nums;
+  }
+}
