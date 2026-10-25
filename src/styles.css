@@ -16,6 +16,8 @@
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-accent: var(--accent);
+  --color-surface: var(--surface);
+  --color-surface-border: var(--surface-border);
 }
 
 :root {
@@ -25,6 +27,8 @@
   --muted: #6b6b6b; /* secondary text, section labels, dates, ↗ */
   --border: #d4d4d4; /* underline color on inline links */
   --accent: #16a34a; /* availability dot only */
+  --surface: #f7f7f7; /* figure frame, behind the image or its placeholder */
+  --surface-border: #e5e5e5;
 
   /* Typography (--font-sans lives in @theme above) */
   --font-size: 14px; /* everything, titles included */
@@ -48,6 +52,7 @@
   --gap-about: 12px; /* between About paragraphs */
   --gap-title-desc: 2px; /* project name → description */
   --gap-inline: 16px; /* text ↔ date/value on the right */
+  --gap-caption: 8px; /* figure → caption */
 
   /* Header */
   --header-gap: 12px 24px;
@@ -64,6 +69,8 @@
   --text: #ededed;
   --muted: #a1a1a1;
   --border: #3f3f3f;
+  --surface: #141414;
+  --surface-border: #262626;
   color-scheme: dark;
 }
 
