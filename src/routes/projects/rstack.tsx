@@ -195,16 +195,28 @@ function FeatureFlow() {
             }
           >
             <Stack direction="row" spacing={24} align="stretch">
-              <Node id="tester" title="Tester" className="flex-1">
+              <Node
+                id="tester"
+                title={<Chip variant="agent">@tester</Chip>}
+                className="flex-1"
+              >
                 red tests, frozen
               </Node>
-              <Node id="dev" title="Dev" className="flex-1">
+              <Node
+                id="dev"
+                title={<Chip variant="agent">@dev</Chip>}
+                className="flex-1"
+              >
                 makes them pass
               </Node>
               <Node title="Rebase" className="flex-1">
                 onto main
               </Node>
-              <Node id="reviewer" title="Reviewer" className="flex-1">
+              <Node
+                id="reviewer"
+                title={<Chip variant="agent">@reviewer</Chip>}
+                className="flex-1"
+              >
                 fresh each round
               </Node>
             </Stack>
