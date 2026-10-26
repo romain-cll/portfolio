@@ -503,13 +503,16 @@ export function Lane({
         ref={ref}
         className={cx(
           'relative rounded-lg border border-border bg-bg p-6',
-          label != null && 'pt-12',
+          label != null && 'pt-10',
           className,
         )}
         style={{ marginRight: count * GHOST_X }}
       >
+        {/* Same spot as the ghosts' labels, so they line up */}
         {label != null && (
-          <div className="absolute top-3 left-4 text-muted">{label}</div>
+          <div className="absolute top-px right-4 left-4 truncate text-muted">
+            {label}
+          </div>
         )}
         {children}
       </div>
