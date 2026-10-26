@@ -72,6 +72,11 @@ const decisions: Array<Item> = [
     detail:
       'Each rule tagged by source (law, collective agreement, company) instead of hardcoded.',
   },
+  {
+    title: 'Flat, transparent pricing',
+    detail:
+      'One simple per-user price, no setup fees or paid add-ons, so small teams on tight budgets know exactly what they’ll pay.',
+  },
 ]
 
 const tradeOffs: Array<Item> = [
