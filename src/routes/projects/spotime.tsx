@@ -153,8 +153,11 @@ function Spotime() {
 
       {/* Full width, outside the label/content columns */}
       <Figure
-        alt="Back office screenshot"
+        src="/projects/spotime/back-office.webp"
+        alt="Spotime back office, weekly hours review"
         caption="Web back office: admin and scheduling."
+        // Size of the capture, so nothing is cropped
+        ratio="3024 / 1722"
       />
 
       <Section title="Problem">
