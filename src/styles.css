@@ -46,6 +46,7 @@
 
   /* Lists */
   --gap-experience: 16px;
+  --gap-items: 16px; /* title + detail lists on project pages, same rhythm as Experience */
   --gap-projects: 20px;
   --gap-writing: 10px;
   --gap-info: 6px; /* Information + Contact rows */
