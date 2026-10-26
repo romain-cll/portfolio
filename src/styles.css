@@ -86,6 +86,11 @@
     }
   }
 
+  /* No page scroll behind an open lightbox (Figure) */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
   body {
     background: var(--bg);
     color: var(--text);
