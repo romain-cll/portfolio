@@ -1,7 +1,7 @@
 import { sectionId } from './section'
 import { TextLink } from './text-link'
 
-const sections = ['Experience', 'Projects', 'Writing', 'Contact']
+const sections = ['Experiences', 'Projects', 'Writing', 'Contact']
 
 export function Navbar() {
   return (

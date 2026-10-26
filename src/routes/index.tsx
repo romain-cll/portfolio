@@ -28,9 +28,9 @@ const experience: Array<{ title: ReactNode; detail: string; period: string }> =
       title: (
         <>
           Founder,{' '}
-          <TextLink href="https://spotime.fr" variant="inline">
+          <RouteLink to="/projects/spotime" variant="inline">
             Spotime
-          </TextLink>
+          </RouteLink>
         </>
       ),
       detail: 'Time tracking for field crews',
@@ -139,7 +139,7 @@ function Home() {
         <DetailList items={information} />
       </Section>
 
-      <Section title="Experience">
+      <Section title="Experiences">
         <ol className="flex flex-col gap-(--gap-experience)">
           {experience.map(({ title, detail, period }) => (
             <li
