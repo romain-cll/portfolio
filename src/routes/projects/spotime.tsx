@@ -45,8 +45,9 @@ function Spotime() {
         <h1 className="font-(--weight-medium)">Spotime</h1>
         <Section title="About">
           <p>
-            Time tracking for small and mid-sized businesses with field teams.
-            Replaces paper timesheets and the month-end re-entry before payroll.
+            Time tracking for small and mid-sized businesses (SMBs) with field
+            teams. Replaces paper timesheets and the month-end re-entry before
+            payroll.
           </p>
         </Section>
       </div>
