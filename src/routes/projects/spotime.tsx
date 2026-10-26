@@ -105,7 +105,24 @@ const learned: Array<Item> = [
 ]
 
 const results: Array<Detail> = [
-  { label: 'Live on', value: 'App Store, Google Play, Microsoft Store' },
+  {
+    label: 'Live on',
+    value: (
+      <>
+        <TextLink href="https://apps.apple.com/fr/app/spotime/id6758910855">
+          App Store
+        </TextLink>
+        ,{' '}
+        <TextLink href="https://play.google.com/store/apps/details?id=fr.spotime.mobileapplication&hl=fr">
+          Google Play
+        </TextLink>
+        ,{' '}
+        <TextLink href="https://apps.microsoft.com/detail/9p969491d8w8?hl=fr-FR&gl=FR">
+          Microsoft Store
+        </TextLink>
+      </>
+    ),
+  },
   { label: 'Customers', value: '3 paying, 15 users (Oct 2026)' },
   { label: 'Retention', value: 'First customer still on it since 2025' },
   { label: 'Inbound', value: 'First leads in home care' },
