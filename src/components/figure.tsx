@@ -68,14 +68,17 @@ export function Figure({ src, alt, caption, ratio = '16 / 10' }: FigureProps) {
         <dialog
           ref={lightbox}
           aria-label={alt}
-          // A click anywhere closes it, like the close button
-          onClick={() => lightbox.current?.close()}
+          // A click outside the image closes it, like the close button: the
+          // dialog fills the screen, so only clicks around the image land on it
+          onClick={(event) => {
+            if (event.target === event.currentTarget) lightbox.current?.close()
+          }}
           className="m-0 size-full max-h-none max-w-none cursor-zoom-out items-center justify-center bg-transparent p-4 transition-opacity duration-200 open:flex backdrop:bg-black/60 backdrop:backdrop-blur-sm backdrop:transition-opacity backdrop:duration-200 motion-reduce:transition-none sm:p-12 starting:open:opacity-0 starting:open:backdrop:opacity-0"
         >
           <img
             src={src}
             alt={alt}
-            className="max-h-full max-w-full rounded-md object-contain"
+            className="max-h-full max-w-full cursor-auto rounded-md object-contain"
           />
           <form method="dialog">
             <button
