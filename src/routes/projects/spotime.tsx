@@ -87,7 +87,7 @@ const tradeOffs: Array<Item> = [
   {
     title: 'Punch-time GPS',
     detail:
-      'Weaker proof than live tracking, but much easier for crews to accept.',
+      'Weaker proof than live tracking, in exchange for employees’ privacy.',
   },
 ]
 
