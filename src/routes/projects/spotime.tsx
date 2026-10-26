@@ -123,9 +123,11 @@ const results: Array<Detail> = [
       </>
     ),
   },
-  { label: 'Customers', value: '3 paying, 15 users (Oct 2026)' },
   { label: 'Retention', value: 'First customer still on it since 2025' },
-  { label: 'Inbound', value: 'First leads in home care' },
+  {
+    label: 'Sectors',
+    value: 'Agriculture, Home care, Private security, Construction',
+  },
 ]
 
 function Spotime() {
