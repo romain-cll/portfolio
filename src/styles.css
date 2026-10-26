@@ -18,6 +18,9 @@
   --color-accent: var(--accent);
   --color-surface: var(--surface);
   --color-divider: var(--divider);
+  --color-edge: var(--edge);
+  --color-accent-surface: var(--accent-surface);
+  --color-accent-border: var(--accent-border);
 }
 
 :root {
@@ -26,9 +29,13 @@
   --text: #111111;
   --muted: #6b6b6b; /* secondary text, section labels, dates, ↗ */
   --border: #d4d4d4; /* underline color on inline links */
-  --accent: #16a34a; /* availability dot only */
+  --accent: #16a34a; /* availability dot, ◆ on diagram gates */
+  --accent-surface: #f0fdf4; /* diagram gate fill */
+  --accent-border: #bbf7d0; /* diagram gate border */
   --surface: #f7f7f7; /* figure frame, behind the image or its placeholder */
   --divider: #e5e5e5; /* figure frame border, separators, table rows */
+  --edge: #a3a3a3; /* diagram arrows */
+  --edge-width: 1px;
 
   /* Typography (--font-sans lives in @theme above) */
   --font-size: 14px; /* everything, titles included */
@@ -76,6 +83,9 @@
   --border: #3f3f3f;
   --surface: #141414;
   --divider: #262626;
+  --edge: #5c5c5c;
+  --accent-surface: #0c1f13;
+  --accent-border: #14532d;
   color-scheme: dark;
 }
 
