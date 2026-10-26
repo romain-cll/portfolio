@@ -152,6 +152,14 @@ const learned: Array<Item> = [
   },
 ]
 
+const results: Array<Detail> = [
+  repository,
+  {
+    label: 'GitHub contributions',
+    value: 'April 166 → October 535 (×3.2)',
+  },
+]
+
 function FeatureFlow() {
   return (
     <FlowDiagram
@@ -303,8 +311,8 @@ function Rstack() {
         <ItemList items={learned} />
       </Section>
 
-      <Section title="Links">
-        <DetailList items={[repository]} />
+      <Section title="Results">
+        <DetailList items={results} />
       </Section>
 
       <ProjectNav current="rstack" />
