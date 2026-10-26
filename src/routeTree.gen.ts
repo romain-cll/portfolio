@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsReflexRagRouteImport } from './routes/projects/reflex-rag'
+import { Route as ProjectsRstackRouteImport } from './routes/projects/rstack'
 import { Route as ProjectsSpotimeRouteImport } from './routes/projects/spotime'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const ProjectsReflexRagRoute = ProjectsReflexRagRouteImport.update({
   path: '/projects/reflex-rag',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsRstackRoute = ProjectsRstackRouteImport.update({
+  id: '/projects/rstack',
+  path: '/projects/rstack',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsSpotimeRoute = ProjectsSpotimeRouteImport.update({
   id: '/projects/spotime',
   path: '/projects/spotime',
@@ -32,30 +38,40 @@ const ProjectsSpotimeRoute = ProjectsSpotimeRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/projects/reflex-rag': typeof ProjectsReflexRagRoute
+  '/projects/rstack': typeof ProjectsRstackRoute
   '/projects/spotime': typeof ProjectsSpotimeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/projects/reflex-rag': typeof ProjectsReflexRagRoute
+  '/projects/rstack': typeof ProjectsRstackRoute
   '/projects/spotime': typeof ProjectsSpotimeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/projects/reflex-rag': typeof ProjectsReflexRagRoute
+  '/projects/rstack': typeof ProjectsRstackRoute
   '/projects/spotime': typeof ProjectsSpotimeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/projects/reflex-rag' | '/projects/spotime'
+  fullPaths:
+    '/' | '/projects/reflex-rag' | '/projects/rstack' | '/projects/spotime'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/projects/reflex-rag' | '/projects/spotime'
-  id: '__root__' | '/' | '/projects/reflex-rag' | '/projects/spotime'
+  to: '/' | '/projects/reflex-rag' | '/projects/rstack' | '/projects/spotime'
+  id:
+    | '__root__'
+    | '/'
+    | '/projects/reflex-rag'
+    | '/projects/rstack'
+    | '/projects/spotime'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProjectsReflexRagRoute: typeof ProjectsReflexRagRoute
+  ProjectsRstackRoute: typeof ProjectsRstackRoute
   ProjectsSpotimeRoute: typeof ProjectsSpotimeRoute
 }
 
@@ -75,6 +91,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsReflexRagRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/rstack': {
+      id: '/projects/rstack'
+      path: '/projects/rstack'
+      fullPath: '/projects/rstack'
+      preLoaderRoute: typeof ProjectsRstackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects/spotime': {
       id: '/projects/spotime'
       path: '/projects/spotime'
@@ -88,6 +111,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProjectsReflexRagRoute: ProjectsReflexRagRoute,
+  ProjectsRstackRoute: ProjectsRstackRoute,
   ProjectsSpotimeRoute: ProjectsSpotimeRoute,
 }
 export const routeTree = rootRouteImport

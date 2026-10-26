@@ -121,12 +121,9 @@ function Home() {
           <p>
             Full-stack developer who ships fast. I build products end to end
             with{' '}
-            <TextLink
-              href="https://github.com/romain-cll/rstack"
-              variant="inline"
-            >
+            <RouteLink to="/projects/rstack" variant="inline">
               rstack
-            </TextLink>
+            </RouteLink>
             , the agent loop I designed and open-sourced, and get them in front
             of paying users.
           </p>

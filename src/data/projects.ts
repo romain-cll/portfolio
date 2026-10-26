@@ -20,6 +20,14 @@ export const projects: Array<Project> = [
     page: '/projects/spotime',
   },
   {
+    id: 'rstack',
+    name: 'rstack',
+    href: 'https://github.com/romain-cll/rstack',
+    description:
+      'Skills and agent loops to build features in parallel: one worktree per feature, from a spec I approve to a tested pull request.',
+    page: '/projects/rstack',
+  },
+  {
     id: 'reflex-rag',
     name: 'Reflex RAG',
     href: 'https://github.com/romain-cll/reflex-rag',
