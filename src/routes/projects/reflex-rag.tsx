@@ -40,7 +40,7 @@ const report: Detail = {
 
 const information: Array<Detail> = [
   { label: 'Period', value: 'October 2026' },
-  { label: 'License', value: 'MIT' },
+  { label: 'Open source', value: 'MIT License' },
   {
     label: 'Stack',
     value:
