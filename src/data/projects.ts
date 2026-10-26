@@ -20,6 +20,14 @@ export const projects: Array<Project> = [
     page: '/projects/spotime',
   },
   {
+    id: 'reflex-rag',
+    name: 'Reflex RAG',
+    href: 'https://github.com/romain-cll/reflex-rag',
+    description:
+      'A retrieval loop judged by a small decision model instead of an LLM. Same quality as Claude Haiku, retrieval about ten times faster and 58% cheaper.',
+    page: '/projects/reflex-rag',
+  },
+  {
     id: 'fraud-engine',
     name: 'Fraud Engine',
     href: 'https://github.com/romain-cll/fraud-engine-event-driven',
