@@ -26,6 +26,7 @@
   --color-accent-border: var(--accent-border);
   --color-chip-top: var(--chip-top);
   --color-chip-bottom: var(--chip-bottom);
+  --color-chip-dashed: var(--chip-dashed);
 }
 
 :root {
@@ -44,6 +45,7 @@
   --chip-top: #ffffff; /* Chip gradient, top → bottom */
   --chip-bottom: #f0f0f1;
   --chip-shadow: inset 0 1px 0 #ffffff, 0 1px 1px rgb(0 0 0 / 0.06);
+  --chip-dashed: #b8b8bd; /* agent Chip border */
 
   /* Typography (--font-sans lives in @theme above) */
   --font-size: 14px; /* everything, titles included */
@@ -96,6 +98,7 @@
   --chip-bottom: #161616;
   --chip-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.06), 0 1px 1px rgb(0 0 0 / 0.5);
+  --chip-dashed: #4d4d4d;
   --accent-surface: #0c1f13;
   --accent-border: #14532d;
   color-scheme: dark;

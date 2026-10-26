@@ -67,17 +67,29 @@ const skills: Array<Item> = [
 
 const agents: Array<Item> = [
   {
-    title: 'rs-tester · Sonnet',
+    title: (
+      <>
+        <Chip variant="agent">@tester</Chip> · Sonnet
+      </>
+    ),
     detail:
       'Writes the failing tests from the acceptance criteria, each at the lowest level that can observe it. Test files only.',
   },
   {
-    title: 'rs-dev · Sonnet',
+    title: (
+      <>
+        <Chip variant="agent">@dev</Chip> · Sonnet
+      </>
+    ),
     detail:
       'Writes the minimal code that makes the tests pass, then refactors while they stay green.',
   },
   {
-    title: 'rs-reviewer · Opus',
+    title: (
+      <>
+        <Chip variant="agent">@reviewer</Chip> · Opus
+      </>
+    ),
     detail:
       'A new one every round. Runs every check itself, blocks only on a closed list, and tags each item for who fixes it: the dev, the tester, or me.',
   },
@@ -283,9 +295,11 @@ function Rstack() {
           Each feature runs in its own worktree, through three skills.{' '}
           <Chip>/rs-plan</Chip> writes the spec and the technical plan with me,
           and nothing is built until I approve it. <Chip>/rs-build</Chip> then
-          runs alone: one agent writes failing tests, another makes them pass
-          without being allowed to touch them, and a fresh reviewer checks the
-          result. Fixes loop without me, three rounds at most. On an OK review,{' '}
+          runs alone: <Chip variant="agent">@tester</Chip> writes failing tests,{' '}
+          <Chip variant="agent">@dev</Chip> makes them pass without being
+          allowed to touch them, and a fresh{' '}
+          <Chip variant="agent">@reviewer</Chip> checks the result. Fixes loop
+          without me, three rounds at most. On an OK review,{' '}
           <Chip>/rs-ship</Chip> runs every check again and opens the pull
           request. Two decisions per feature are left to me: the plan and the
           merge.
