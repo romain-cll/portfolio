@@ -33,9 +33,8 @@ const repository: Detail = {
 }
 
 const information: Array<Detail> = [
-  { label: 'Role', value: 'Author, solo' },
   { label: 'Period', value: '2026 – Now' },
-  { label: 'Status', value: 'Open source · MIT' },
+  { label: 'Open source', value: 'MIT License' },
   {
     label: 'Stack',
     value: 'Claude Code (skills, subagents, hooks), Bash, jq',
