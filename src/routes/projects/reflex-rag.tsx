@@ -39,9 +39,8 @@ const report: Detail = {
 }
 
 const information: Array<Detail> = [
-  { label: 'Role', value: 'Solo' },
   { label: 'Period', value: 'October 2026' },
-  { label: 'Status', value: 'Done · open source' },
+  { label: 'License', value: 'MIT' },
   {
     label: 'Stack',
     value:
