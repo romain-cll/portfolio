@@ -16,6 +16,28 @@ export const Route = createFileRoute('/projects/reflex-rag')({
   component: ReflexRag,
 })
 
+// In Information and again at the bottom of the page
+const code: Detail = {
+  label: 'Code',
+  value: (
+    <TextLink href="https://github.com/romain-cll/reflex-rag" iconRight="↗">
+      github.com/romain-cll/reflex-rag
+    </TextLink>
+  ),
+}
+
+const report: Detail = {
+  label: 'Report',
+  value: (
+    <TextLink
+      href="https://github.com/romain-cll/reflex-rag/blob/main/REPORT.md"
+      iconRight="↗"
+    >
+      REPORT.md
+    </TextLink>
+  ),
+}
+
 const information: Array<Detail> = [
   { label: 'Role', value: 'Solo' },
   { label: 'Period', value: 'October 2026' },
@@ -25,25 +47,8 @@ const information: Array<Detail> = [
     value:
       'Bun, TypeScript, SQLite FTS5, Claude Haiku 5.5, Mistral embeddings, Jev',
   },
-  {
-    label: 'Code',
-    value: (
-      <TextLink href="https://github.com/romain-cll/reflex-rag" iconRight="↗">
-        github.com/romain-cll/reflex-rag
-      </TextLink>
-    ),
-  },
-  {
-    label: 'Report',
-    value: (
-      <TextLink
-        href="https://github.com/romain-cll/reflex-rag/blob/main/REPORT.md"
-        iconRight="↗"
-      >
-        REPORT.md
-      </TextLink>
-    ),
-  },
+  code,
+  report,
 ]
 
 const approach: Array<Item> = [
@@ -376,6 +381,10 @@ function ReflexRag() {
 
       <Section title="Learned">
         <ItemList items={learned} />
+      </Section>
+
+      <Section title="Links">
+        <DetailList items={[code, report]} />
       </Section>
 
       <ProjectNav current="reflex-rag" />
