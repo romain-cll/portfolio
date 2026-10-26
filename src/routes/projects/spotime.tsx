@@ -16,6 +16,16 @@ export const Route = createFileRoute('/projects/spotime')({
   component: Spotime,
 })
 
+// In Information and again in Results, at the bottom of the page
+const website: Detail = {
+  label: 'Website',
+  value: (
+    <TextLink href="https://spotime.fr" iconRight="↗">
+      spotime.fr
+    </TextLink>
+  ),
+}
+
 const information: Array<Detail> = [
   { label: 'Role', value: 'Founder, solo' },
   { label: 'Period', value: '2025 – Now' },
@@ -24,14 +34,7 @@ const information: Array<Detail> = [
     label: 'Stack',
     value: 'TanStack Router, NestJS, PostgreSQL, shadcn/ui, Expo, Electron',
   },
-  {
-    label: 'Website',
-    value: (
-      <TextLink href="https://spotime.fr" iconRight="↗">
-        spotime.fr
-      </TextLink>
-    ),
-  },
+  website,
 ]
 
 const surfaces: Array<Item> = [
@@ -113,8 +116,9 @@ const learned: Array<Item> = [
 ]
 
 const results: Array<Detail> = [
+  website,
   {
-    label: 'Live on',
+    label: 'Stores',
     value: (
       <>
         <TextLink href="https://apps.apple.com/fr/app/spotime/id6758910855">
