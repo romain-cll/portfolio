@@ -42,7 +42,8 @@
   --section-gap: 56px; /* between sections */
   --label-col: 120px; /* left label column (flex: 0 0 120px) */
   --content-col: 360px; /* content column basis (flex: 1 1 360px) */
-  --row-gap: 16px 24px; /* label ↔ content; the first value only applies once wrapped (mobile) */
+  --column-gap: 24px; /* label column ↔ content column */
+  --row-gap: 16px var(--column-gap); /* label ↔ content; the first value only applies once wrapped (mobile) */
 
   /* Lists */
   --gap-experience: 16px;
@@ -50,7 +51,8 @@
   --gap-projects: 20px;
   --gap-writing: 10px;
   --gap-info: 6px; /* Information + Contact rows */
-  --gap-about: 12px; /* between About paragraphs */
+  --gap-paragraph: 12px; /* between paragraphs of text */
+  --gap-block: 24px; /* between blocks of one section: text, list, table */
   --gap-title-desc: 2px; /* project name → description */
   --gap-inline: 16px; /* text ↔ date/value on the right */
   --gap-caption: 8px; /* figure → caption */

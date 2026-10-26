@@ -112,7 +112,7 @@ function Home() {
       <Navbar />
 
       <Section title="About">
-        <div className="flex flex-col gap-(--gap-about)">
+        <div className="flex flex-col gap-(--gap-paragraph)">
           <p>
             Full-stack developer who ships fast. I build products end to end
             with{' '}

@@ -25,11 +25,12 @@ export function Table({ columns, rows, highlightLast, caption }: TableProps) {
         <table className="w-full">
           <thead>
             <tr className="border-b border-divider text-muted">
-              {columns.map(({ header, align }) => (
+              {columns.map(({ header, align }, columnIndex) => (
                 <th
                   key={header}
                   scope="col"
-                  className={`pb-2.5 font-normal ${alignment(align)}`}
+                  // Long headers wrap, sitting on the line like the short ones
+                  className={`pb-2.5 align-bottom font-normal ${cell(columnIndex, align)}`}
                 >
                   {header}
                 </th>
@@ -47,14 +48,15 @@ export function Table({ columns, rows, highlightLast, caption }: TableProps) {
                 >
                   {row.map((value, columnIndex) => {
                     const { align, muted } = columns[columnIndex]
-                    // The first cell heads its row, for screen readers
+                    // The first cell heads its row, for screen readers; numbers
+                    // (right-aligned) never wrap
                     const Cell = columnIndex === 0 ? 'th' : 'td'
 
                     return (
                       <Cell
                         key={columnIndex}
                         scope={columnIndex === 0 ? 'row' : undefined}
-                        className={`py-2.5 [font-weight:inherit] ${alignment(align)} ${muted && !highlighted ? 'text-muted' : ''}`}
+                        className={`py-2.5 [font-weight:inherit] ${cell(columnIndex, align)} ${align === 'right' ? 'whitespace-nowrap' : ''} ${muted && !highlighted ? 'text-muted' : ''}`}
                       >
                         {value}
                       </Cell>
@@ -71,9 +73,7 @@ export function Table({ columns, rows, highlightLast, caption }: TableProps) {
   )
 }
 
-// Right-aligned columns keep a gap from the column before and never wrap
-function alignment(align: Column['align'] = 'left') {
-  return align === 'right'
-    ? 'pl-(--gap-inline) text-right whitespace-nowrap'
-    : 'text-left'
+// Every column but the first keeps a gap from the one before
+function cell(columnIndex: number, align: Column['align'] = 'left') {
+  return `${columnIndex > 0 ? 'pl-(--gap-inline)' : ''} ${align === 'right' ? 'text-right' : 'text-left'}`
 }
