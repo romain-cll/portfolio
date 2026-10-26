@@ -1,12 +1,15 @@
 @import 'tailwindcss';
 @import '@fontsource/geist/400.css';
 @import '@fontsource/geist/500.css';
+@import '@fontsource/geist-mono/400.css';
 
 /* `dark:` follows data-theme, like the tokens below */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
   --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    'Geist Mono', ui-monospace, monospace; /* commands in Chip only */
 }
 
 /* Colors as utilities: text-muted, bg-bg, border-border, … */

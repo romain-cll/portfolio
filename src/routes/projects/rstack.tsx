@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { Chip } from '../../components/chip'
 import { DetailList } from '../../components/detail-list'
 import type { Detail } from '../../components/detail-list'
 import {
@@ -44,22 +45,22 @@ const information: Array<Detail> = [
 
 const skills: Array<Item> = [
   {
-    title: '/rs-plan',
+    title: <Chip>/rs-plan</Chip>,
     detail:
       'Clarifies the need with me, writes the spec (user story, Given/When/Then criteria, out of scope) and the technical plan, then checks it’s ready to build.',
   },
   {
-    title: '/rs-build',
+    title: <Chip>/rs-build</Chip>,
     detail:
       'Runs the agents on the feature’s branch: failing tests, code, rebase, review, fix rounds. Comes back to me only on a stop.',
   },
   {
-    title: '/rs-ship',
+    title: <Chip>/rs-ship</Chip>,
     detail:
       'Rebases, checks the tests are untouched, runs the suite, lint, typecheck and Definition of Done again, then pushes and opens the pull request. Never merges.',
   },
   {
-    title: '/rs-explain',
+    title: <Chip>/rs-explain</Chip>,
     detail: 'Turns an explanation into a diagram when text isn’t enough.',
   },
 ]
@@ -170,14 +171,14 @@ function FeatureFlow() {
         ghosts={['Worktree · feature B', 'Worktree · feature C']}
       >
         <Stack>
-          <Node title="/rs-plan">spec + technical plan</Node>
+          <Node title={<Chip>/rs-plan</Chip>}>spec + technical plan</Node>
           <Node variant="gate" title="You approve the plan" />
           <Group
             id="build"
             className="w-full pb-12"
             label={
               <>
-                <span className="text-text">/rs-build</span> · runs without you
+                <Chip>/rs-build</Chip> · runs without you
               </>
             }
           >
@@ -205,7 +206,7 @@ function FeatureFlow() {
             edge={false}
           >
             <Stack>
-              <Node id="ship" title="/rs-ship">
+              <Node id="ship" title={<Chip>/rs-ship</Chip>}>
                 rebase · checks · DoD · push · PR
               </Node>
               <Node variant="gate" title="You merge" />
@@ -279,14 +280,15 @@ function Rstack() {
 
       <Section title="Solution">
         <p>
-          Each feature runs in its own worktree, through three skills. /rs-plan
-          writes the spec and the technical plan with me, and nothing is built
-          until I approve it. /rs-build then runs alone: one agent writes
-          failing tests, another makes them pass without being allowed to touch
-          them, and a fresh reviewer checks the result. Fixes loop without me,
-          three rounds at most. On an OK review, /rs-ship runs every check again
-          and opens the pull request. Two decisions per feature are left to me:
-          the plan and the merge.
+          Each feature runs in its own worktree, through three skills.{' '}
+          <Chip>/rs-plan</Chip> writes the spec and the technical plan with me,
+          and nothing is built until I approve it. <Chip>/rs-build</Chip> then
+          runs alone: one agent writes failing tests, another makes them pass
+          without being allowed to touch them, and a fresh reviewer checks the
+          result. Fixes loop without me, three rounds at most. On an OK review,{' '}
+          <Chip>/rs-ship</Chip> runs every check again and opens the pull
+          request. Two decisions per feature are left to me: the plan and the
+          merge.
         </p>
       </Section>
 
