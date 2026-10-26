@@ -27,20 +27,6 @@ export const projects: Array<Project> = [
       'A retrieval loop judged by a small decision model instead of an LLM. Same quality as Claude Haiku, retrieval about ten times faster and 58% cheaper.',
     page: '/projects/reflex-rag',
   },
-  {
-    id: 'fraud-engine',
-    name: 'Fraud Engine',
-    href: 'https://github.com/romain-cll/fraud-engine-event-driven',
-    description:
-      'Event-driven fraud detection in Go over Kafka, Redis and ClickHouse. ~220 tx/s across three scorers.',
-  },
-  {
-    id: 'event-hub',
-    name: 'Event Hub',
-    href: 'https://github.com/romain-cll/events-hub',
-    description:
-      'Cookieless analytics joined with Stripe revenue, to see which sources actually drive sales.',
-  },
 ]
 
 /** Next project in the list that has a case study, if any */
