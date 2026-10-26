@@ -27,7 +27,7 @@ const code: Detail = {
 }
 
 const report: Detail = {
-  label: 'Report',
+  label: 'Full report',
   value: (
     <TextLink
       href="https://github.com/romain-cll/reflex-rag/blob/main/REPORT.md"
