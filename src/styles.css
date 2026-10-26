@@ -28,13 +28,13 @@
   --border: #d4d4d4; /* underline color on inline links */
   --accent: #16a34a; /* availability dot only */
   --surface: #f7f7f7; /* figure frame, behind the image or its placeholder */
-  --divider: #e5e5e5; /* figure frame border, separators */
+  --divider: #e5e5e5; /* figure frame border, separators, table rows */
 
   /* Typography (--font-sans lives in @theme above) */
   --font-size: 14px; /* everything, titles included */
   --line-height: 1.6;
   --weight-regular: 400;
-  --weight-medium: 500; /* name in header and sub-page titles only */
+  --weight-medium: 500; /* name in header, sub-page titles, highlighted table row */
 
   /* Layout */
   --container: 600px; /* max-width, centered (margin: 0 auto) */
