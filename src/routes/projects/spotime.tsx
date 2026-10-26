@@ -101,7 +101,10 @@ const learned: Array<Item> = [
     title: 'The obvious market isn’t always the one that buys',
     detail: 'Construction stayed silent, home-care services converted.',
   },
-  { title: 'Cold calls opened more doors than cold emails' },
+  {
+    title: 'Cold calls opened more doors than cold emails',
+    detail: 'In the sectors I target, not as a general rule.',
+  },
 ]
 
 const results: Array<Detail> = [
