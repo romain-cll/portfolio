@@ -17,6 +17,7 @@ import { PageHeader } from '../../components/page-header'
 import { ProjectNav } from '../../components/project-nav'
 import { Section } from '../../components/section'
 import { TextLink } from '../../components/text-link'
+import { Wide } from '../../components/wide'
 
 export const Route = createFileRoute('/projects/rstack')({
   head: () => ({ meta: [{ title: 'rstack — Romain Caillé' }] }),
@@ -288,9 +289,6 @@ function Rstack() {
         <DetailList items={information} />
       </Section>
 
-      {/* Full width, outside the label/content columns */}
-      <FeatureFlow />
-
       <Section title="Problem">
         <p>
           Running several features at once with coding agents should multiply
@@ -303,19 +301,25 @@ function Rstack() {
       </Section>
 
       <Section title="Solution">
-        <p>
-          Each feature runs in its own worktree, through three skills.{' '}
-          <Chip>/rs-plan</Chip> writes the spec and the technical plan with me,
-          and nothing is built until I approve it. <Chip>/rs-build</Chip> then
-          runs alone: <Chip variant="agent">@tester</Chip> writes failing tests,{' '}
-          <Chip variant="agent">@dev</Chip> makes them pass without being
-          allowed to touch them, and a fresh{' '}
-          <Chip variant="agent">@reviewer</Chip> checks the result. Fixes loop
-          without me, three rounds at most. On an OK review,{' '}
-          <Chip>/rs-ship</Chip> runs every check again and opens the pull
-          request. Two decisions per feature are left to me: the plan and the
-          merge.
-        </p>
+        <div className="flex flex-col gap-(--gap-block)">
+          <p>
+            Each feature runs in its own worktree, through three skills.{' '}
+            <Chip>/rs-plan</Chip> writes the spec and the technical plan with
+            me, and nothing is built until I approve it. <Chip>/rs-build</Chip>{' '}
+            then runs alone: <Chip variant="agent">@tester</Chip> writes failing
+            tests, <Chip variant="agent">@dev</Chip> makes them pass without
+            being allowed to touch them, and a fresh{' '}
+            <Chip variant="agent">@reviewer</Chip> checks the result. Fixes loop
+            without me, three rounds at most. On an OK review,{' '}
+            <Chip>/rs-ship</Chip> runs every check again and opens the pull
+            request. Two decisions per feature are left to me: the plan and the
+            merge.
+          </p>
+          {/* The solution, drawn: full page width */}
+          <Wide>
+            <FeatureFlow />
+          </Wide>
+        </div>
       </Section>
 
       <Section title="Skills">
