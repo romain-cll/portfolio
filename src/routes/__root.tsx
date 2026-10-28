@@ -7,7 +7,7 @@ import { themeScript } from '../components/theme-toggle'
 import appCss from '../styles.css?url'
 
 export const Route = createRootRoute({
-  head: () => ({
+  head: ({ matches }) => ({
     meta: [
       {
         charSet: 'utf-8',
@@ -16,8 +16,13 @@ export const Route = createRootRoute({
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
+      // Pages set their own title; a URL that matches no page has only
+      // this root match, and gets the 404 one
       {
-        title: 'Romain Caillé',
+        title:
+          matches.length === 1
+            ? 'Page not found — Romain Caillé'
+            : 'Romain Caillé',
       },
     ],
     links: [
