@@ -107,8 +107,9 @@ const learned: Array<Item> = [
       'I didn’t, and had to rework which hours are counted, how, and which earn a premium.',
   },
   {
-    title: 'The obvious market isn’t always the one that buys',
-    detail: 'Construction stayed silent, home-care services converted.',
+    title: 'The obvious market isn’t always the easiest to reach',
+    detail:
+      'Cold calls got nowhere with construction firms, while home-care services converted. Construction still shows interest in the tool, just not through cold calls.',
   },
   {
     title: 'Cold calls opened more doors than cold emails',
