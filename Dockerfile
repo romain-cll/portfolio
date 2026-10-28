@@ -10,7 +10,7 @@ COPY . .
 ENV NITRO_PRESET=node-server
 RUN bun run build
 
-FROM node:24-slim
+FROM node:24-slim AS production
 WORKDIR /app
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
