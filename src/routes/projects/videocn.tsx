@@ -9,9 +9,10 @@ import { PageHeader } from '../../components/page-header'
 import { ProjectNav } from '../../components/project-nav'
 import { Section } from '../../components/section'
 import { TextLink } from '../../components/text-link'
+import { projectSeo } from '../../data/projects'
 
 export const Route = createFileRoute('/projects/videocn')({
-  head: () => ({ meta: [{ title: 'VideoCn — Romain Caillé' }] }),
+  head: () => projectSeo('videocn'),
   component: VideoCn,
 })
 

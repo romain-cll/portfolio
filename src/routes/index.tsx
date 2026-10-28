@@ -10,8 +10,18 @@ import { StatusDot } from '../components/status-dot'
 import { RouteLink, TextLink } from '../components/text-link'
 import { posts } from '../data/posts'
 import { projects } from '../data/projects'
+import { seo } from '../seo'
 
-export const Route = createFileRoute('/')({ component: Home })
+export const Route = createFileRoute('/')({
+  head: () =>
+    seo({
+      title: 'Romain Caillé — Fullstack developer',
+      description:
+        'Full-stack developer who ships fast. I build products end to end with rstack, the agent loop I designed and open-sourced, and get them in front of paying users.',
+      path: '/',
+    }),
+  component: Home,
+})
 
 const information: Array<Detail> = [
   { label: 'Based in', value: 'Nantes, France' },

@@ -10,9 +10,10 @@ import { Section } from '../../components/section'
 import { Table } from '../../components/table'
 import { TextLink } from '../../components/text-link'
 import { Wide } from '../../components/wide'
+import { projectSeo } from '../../data/projects'
 
 export const Route = createFileRoute('/projects/reflex-rag')({
-  head: () => ({ meta: [{ title: 'Reflex RAG — Romain Caillé' }] }),
+  head: () => projectSeo('reflex-rag'),
   component: ReflexRag,
 })
 

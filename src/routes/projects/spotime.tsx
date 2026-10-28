@@ -10,9 +10,10 @@ import { ProjectNav } from '../../components/project-nav'
 import { Section } from '../../components/section'
 import { StatusDot } from '../../components/status-dot'
 import { TextLink } from '../../components/text-link'
+import { projectSeo } from '../../data/projects'
 
 export const Route = createFileRoute('/projects/spotime')({
-  head: () => ({ meta: [{ title: 'Spotime — Romain Caillé' }] }),
+  head: () => projectSeo('spotime'),
   component: Spotime,
 })
 

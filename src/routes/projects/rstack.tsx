@@ -18,9 +18,10 @@ import { ProjectNav } from '../../components/project-nav'
 import { Section } from '../../components/section'
 import { TextLink } from '../../components/text-link'
 import { Wide } from '../../components/wide'
+import { projectSeo } from '../../data/projects'
 
 export const Route = createFileRoute('/projects/rstack')({
-  head: () => ({ meta: [{ title: 'rstack — Romain Caillé' }] }),
+  head: () => projectSeo('rstack'),
   component: Rstack,
 })
 

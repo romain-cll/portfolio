@@ -1,4 +1,6 @@
 import type { FileRouteTypes } from '../routeTree.gen'
+import { seo } from '../seo'
+import type { ShareImage } from '../seo'
 
 type Project = {
   /** In-page anchor of the project row on the home page */
@@ -8,6 +10,8 @@ type Project = {
   description: string
   /** Case study route, once written */
   page?: FileRouteTypes['to']
+  /** Image for links shared to the case study; the home page's otherwise */
+  image?: ShareImage
 }
 
 export const projects: Array<Project> = [
@@ -49,4 +53,16 @@ export const projects: Array<Project> = [
 export function nextProject(id: string) {
   const index = projects.findIndex((project) => project.id === id)
   return projects.slice(index + 1).find((project) => project.page)
+}
+
+/** Head of a case study: its name, its home description, its image if it has one */
+export function projectSeo(id: string) {
+  const project = projects.find((p) => p.id === id)
+  if (!project?.page) throw new Error(`No case study for ${id}`)
+  return seo({
+    title: `${project.name} — Romain Caillé`,
+    description: project.description,
+    path: project.page,
+    image: project.image,
+  })
 }
