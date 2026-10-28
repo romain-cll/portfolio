@@ -8,6 +8,7 @@ import { Section } from '../components/section'
 import { Separator } from '../components/separator'
 import { StatusDot } from '../components/status-dot'
 import { RouteLink, TextLink } from '../components/text-link'
+import { posts } from '../data/posts'
 import { projects } from '../data/projects'
 
 export const Route = createFileRoute('/')({ component: Home })
@@ -49,25 +50,6 @@ const experience: Array<{ title: ReactNode; detail: string; period: string }> =
     },
   ]
 
-// Placeholders from the mockup, until the posts exist
-const posts = [
-  {
-    title: '[Post title — e.g. Batching Kafka and pipelining Redis in Go]',
-    date: '[Date]',
-    href: '#',
-  },
-  {
-    title: '[Post title — e.g. Four Stripe webhooks, one payment]',
-    date: '[Date]',
-    href: '#',
-  },
-  {
-    title: '[Post title — e.g. Shipping with a team of AI subagents]',
-    date: '[Date]',
-    href: '#',
-  },
-]
-
 const contact: Array<Detail> = [
   {
     label: 'Email',
@@ -97,10 +79,7 @@ const contact: Array<Detail> = [
   {
     label: 'Resume',
     value: (
-      <TextLink
-        href="https://romain-caille.fr/resume-romain-caille.pdf"
-        iconRight="↗"
-      >
+      <TextLink href="/resume-romain-caille.pdf" target="_blank" iconRight="↗">
         PDF
       </TextLink>
     ),
@@ -192,16 +171,21 @@ function Home() {
         </ul>
       </Section>
 
-      <Section title="Writing">
-        <ul className="flex flex-col gap-(--gap-writing)">
-          {posts.map(({ title, date, href }) => (
-            <li key={title} className="flex justify-between gap-(--gap-inline)">
-              <TextLink href={href}>{title}</TextLink>
-              <span className="whitespace-nowrap text-muted">{date}</span>
-            </li>
-          ))}
-        </ul>
-      </Section>
+      {posts.length > 0 && (
+        <Section title="Writing">
+          <ul className="flex flex-col gap-(--gap-writing)">
+            {posts.map(({ title, date, href }) => (
+              <li
+                key={title}
+                className="flex justify-between gap-(--gap-inline)"
+              >
+                <TextLink href={href}>{title}</TextLink>
+                <span className="whitespace-nowrap text-muted">{date}</span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
 
       <Section title="Contact">
         <DetailList items={contact} />

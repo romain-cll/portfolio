@@ -1,7 +1,15 @@
+import { posts } from '../data/posts'
 import { sectionId } from './section'
 import { TextLink } from './text-link'
+import { ThemeToggle } from './theme-toggle'
 
-const sections = ['Experiences', 'Projects', 'Writing', 'Contact']
+// Writing only once there is something to read
+const sections = [
+  'Experiences',
+  'Projects',
+  ...(posts.length > 0 ? ['Writing'] : []),
+  'Contact',
+]
 
 export function Navbar() {
   return (
@@ -19,6 +27,7 @@ export function Navbar() {
             {title}
           </TextLink>
         ))}
+        <ThemeToggle />
       </nav>
     </header>
   )
