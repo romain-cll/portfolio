@@ -1,0 +1,50 @@
+<!doctype html>
+<!-- Favicon and Apple touch icon. ?square: no rounded corners (iOS rounds them itself) -->
+<meta charset="utf-8" />
+<style>
+  @font-face {
+    font-family: Geist;
+    font-weight: 500;
+    src: url('../../node_modules/@fontsource/geist/files/geist-latin-500-normal.woff2');
+  }
+  html,
+  body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+  }
+  .icon {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 22vw;
+    background: #111111;
+    display: grid;
+    place-items: center;
+    font: 500 68vw/1 Geist;
+    color: #ededed;
+  }
+  .square .icon {
+    border-radius: 0;
+  }
+  /* Same green as the availability dot */
+  .dot {
+    position: absolute;
+    right: 14vw;
+    bottom: 16vw;
+    width: 16vw;
+    height: 16vw;
+    border-radius: 50%;
+    background: #16a34a;
+  }
+  .letter {
+    transform: translate(-4vw, -1vw);
+  }
+</style>
+<body>
+  <div class="icon"><span class="letter">R</span><span class="dot"></span></div>
+  <script>
+    if (location.search.includes('square')) document.body.className = 'square'
+  </script>
+</body>
