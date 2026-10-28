@@ -5,7 +5,7 @@ import { DetailList } from '../components/detail-list'
 import type { Detail } from '../components/detail-list'
 import { Navbar } from '../components/navbar'
 import { Section } from '../components/section'
-import { Separator } from '../components/separator'
+import { SiteHeader } from '../components/site-header'
 import { StatusDot } from '../components/status-dot'
 import { RouteLink, TextLink } from '../components/text-link'
 import { posts } from '../data/posts'
@@ -99,11 +99,9 @@ const contact: Array<Detail> = [
 function Home() {
   return (
     <>
-      {/* Like PageHeader: line 24px under the header, section gap after */}
-      <div className="flex flex-col gap-(--gap-separator)">
+      <SiteHeader>
         <Navbar />
-        <Separator />
-      </div>
+      </SiteHeader>
 
       <Section title="About">
         <div className="flex flex-col gap-(--gap-paragraph)">

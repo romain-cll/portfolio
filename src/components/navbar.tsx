@@ -1,7 +1,6 @@
 import { posts } from '../data/posts'
 import { sectionId } from './section'
 import { TextLink } from './text-link'
-import { ThemeToggle } from './theme-toggle'
 
 // Writing only once there is something to read
 const sections = [
@@ -11,9 +10,10 @@ const sections = [
   'Contact',
 ]
 
+/** Name and role, then links to the home page's sections; goes in SiteHeader */
 export function Navbar() {
   return (
-    <header className="flex flex-wrap items-baseline justify-between gap-(--header-gap)">
+    <div className="flex flex-wrap items-baseline justify-between gap-(--header-gap)">
       <div>
         <h1 className="font-(--weight-medium)">Romain Caillé</h1>
         <p className="text-muted">Fullstack developer</p>
@@ -27,8 +27,7 @@ export function Navbar() {
             {title}
           </TextLink>
         ))}
-        <ThemeToggle />
       </nav>
-    </header>
+    </div>
   )
 }
