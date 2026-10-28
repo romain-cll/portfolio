@@ -1,19 +1,15 @@
-import { Link } from '@tanstack/react-router'
-
 import { Section } from './section'
+import { RouteLink } from './text-link'
 
 /** Any URL that matches no page */
 export function NotFound() {
   return (
     <Section title="404">
-      <div className="flex flex-col items-start gap-(--gap-block)">
-        <p>Page not found.</p>
-        <Link
-          to="/"
-          className="rounded-md border border-divider px-3 py-1.5 hover:bg-surface"
-        >
-          ← Back to home
-        </Link>
+      <div className="flex flex-col gap-(--gap-paragraph)">
+        <p>Oops, there’s nothing to see here!</p>
+        <p>
+          <RouteLink to="/">Go back home</RouteLink>
+        </p>
       </div>
     </Section>
   )
