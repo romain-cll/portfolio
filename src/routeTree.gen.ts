@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsReflexRagRouteImport } from './routes/projects/reflex-rag'
 import { Route as ProjectsRstackRouteImport } from './routes/projects/rstack'
 import { Route as ProjectsSpotimeRouteImport } from './routes/projects/spotime'
+import { Route as ProjectsVideocnRouteImport } from './routes/projects/videocn'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const ProjectsSpotimeRoute = ProjectsSpotimeRouteImport.update({
   path: '/projects/spotime',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsVideocnRoute = ProjectsVideocnRouteImport.update({
+  id: '/projects/videocn',
+  path: '/projects/videocn',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/projects/reflex-rag': typeof ProjectsReflexRagRoute
   '/projects/rstack': typeof ProjectsRstackRoute
   '/projects/spotime': typeof ProjectsSpotimeRoute
+  '/projects/videocn': typeof ProjectsVideocnRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/projects/reflex-rag': typeof ProjectsReflexRagRoute
   '/projects/rstack': typeof ProjectsRstackRoute
   '/projects/spotime': typeof ProjectsSpotimeRoute
+  '/projects/videocn': typeof ProjectsVideocnRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,19 +61,30 @@ export interface FileRoutesById {
   '/projects/reflex-rag': typeof ProjectsReflexRagRoute
   '/projects/rstack': typeof ProjectsRstackRoute
   '/projects/spotime': typeof ProjectsSpotimeRoute
+  '/projects/videocn': typeof ProjectsVideocnRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/projects/reflex-rag' | '/projects/rstack' | '/projects/spotime'
+    | '/'
+    | '/projects/reflex-rag'
+    | '/projects/rstack'
+    | '/projects/spotime'
+    | '/projects/videocn'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/projects/reflex-rag' | '/projects/rstack' | '/projects/spotime'
+  to:
+    | '/'
+    | '/projects/reflex-rag'
+    | '/projects/rstack'
+    | '/projects/spotime'
+    | '/projects/videocn'
   id:
     | '__root__'
     | '/'
     | '/projects/reflex-rag'
     | '/projects/rstack'
     | '/projects/spotime'
+    | '/projects/videocn'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -73,6 +92,7 @@ export interface RootRouteChildren {
   ProjectsReflexRagRoute: typeof ProjectsReflexRagRoute
   ProjectsRstackRoute: typeof ProjectsRstackRoute
   ProjectsSpotimeRoute: typeof ProjectsSpotimeRoute
+  ProjectsVideocnRoute: typeof ProjectsVideocnRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -105,6 +125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsSpotimeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/videocn': {
+      id: '/projects/videocn'
+      path: '/projects/videocn'
+      fullPath: '/projects/videocn'
+      preLoaderRoute: typeof ProjectsVideocnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -113,6 +140,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsReflexRagRoute: ProjectsReflexRagRoute,
   ProjectsRstackRoute: ProjectsRstackRoute,
   ProjectsSpotimeRoute: ProjectsSpotimeRoute,
+  ProjectsVideocnRoute: ProjectsVideocnRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

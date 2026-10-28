@@ -35,6 +35,14 @@ export const projects: Array<Project> = [
       'A retrieval loop judged by a small decision model instead of an LLM. Same quality as Claude Haiku, retrieval about ten times faster and 58% cheaper.',
     page: '/projects/reflex-rag',
   },
+  {
+    id: 'videocn',
+    name: 'VideoCn',
+    href: 'https://videocn.dev',
+    description:
+      'A complete video player for React, installed with one shadcn command. Takes the host project’s theme and plays MP4, HLS, DASH and live streams.',
+    page: '/projects/videocn',
+  },
 ]
 
 /** Next project in the list that has a case study, if any */
