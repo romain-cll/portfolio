@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectsEventsHubRouteImport } from './routes/projects/events-hub'
+import { Route as ProjectsFraudEngineRouteImport } from './routes/projects/fraud-engine'
 import { Route as ProjectsReflexRagRouteImport } from './routes/projects/reflex-rag'
 import { Route as ProjectsRstackRouteImport } from './routes/projects/rstack'
 import { Route as ProjectsSpotimeRouteImport } from './routes/projects/spotime'
@@ -18,6 +20,16 @@ import { Route as ProjectsVideocnRouteImport } from './routes/projects/videocn'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsEventsHubRoute = ProjectsEventsHubRouteImport.update({
+  id: '/projects/events-hub',
+  path: '/projects/events-hub',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsFraudEngineRoute = ProjectsFraudEngineRouteImport.update({
+  id: '/projects/fraud-engine',
+  path: '/projects/fraud-engine',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsReflexRagRoute = ProjectsReflexRagRouteImport.update({
@@ -43,6 +55,8 @@ const ProjectsVideocnRoute = ProjectsVideocnRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/projects/events-hub': typeof ProjectsEventsHubRoute
+  '/projects/fraud-engine': typeof ProjectsFraudEngineRoute
   '/projects/reflex-rag': typeof ProjectsReflexRagRoute
   '/projects/rstack': typeof ProjectsRstackRoute
   '/projects/spotime': typeof ProjectsSpotimeRoute
@@ -50,6 +64,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/projects/events-hub': typeof ProjectsEventsHubRoute
+  '/projects/fraud-engine': typeof ProjectsFraudEngineRoute
   '/projects/reflex-rag': typeof ProjectsReflexRagRoute
   '/projects/rstack': typeof ProjectsRstackRoute
   '/projects/spotime': typeof ProjectsSpotimeRoute
@@ -58,6 +74,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/projects/events-hub': typeof ProjectsEventsHubRoute
+  '/projects/fraud-engine': typeof ProjectsFraudEngineRoute
   '/projects/reflex-rag': typeof ProjectsReflexRagRoute
   '/projects/rstack': typeof ProjectsRstackRoute
   '/projects/spotime': typeof ProjectsSpotimeRoute
@@ -67,6 +85,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/projects/events-hub'
+    | '/projects/fraud-engine'
     | '/projects/reflex-rag'
     | '/projects/rstack'
     | '/projects/spotime'
@@ -74,6 +94,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/projects/events-hub'
+    | '/projects/fraud-engine'
     | '/projects/reflex-rag'
     | '/projects/rstack'
     | '/projects/spotime'
@@ -81,6 +103,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/projects/events-hub'
+    | '/projects/fraud-engine'
     | '/projects/reflex-rag'
     | '/projects/rstack'
     | '/projects/spotime'
@@ -89,6 +113,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProjectsEventsHubRoute: typeof ProjectsEventsHubRoute
+  ProjectsFraudEngineRoute: typeof ProjectsFraudEngineRoute
   ProjectsReflexRagRoute: typeof ProjectsReflexRagRoute
   ProjectsRstackRoute: typeof ProjectsRstackRoute
   ProjectsSpotimeRoute: typeof ProjectsSpotimeRoute
@@ -102,6 +128,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects/events-hub': {
+      id: '/projects/events-hub'
+      path: '/projects/events-hub'
+      fullPath: '/projects/events-hub'
+      preLoaderRoute: typeof ProjectsEventsHubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects/fraud-engine': {
+      id: '/projects/fraud-engine'
+      path: '/projects/fraud-engine'
+      fullPath: '/projects/fraud-engine'
+      preLoaderRoute: typeof ProjectsFraudEngineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projects/reflex-rag': {
@@ -137,6 +177,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProjectsEventsHubRoute: ProjectsEventsHubRoute,
+  ProjectsFraudEngineRoute: ProjectsFraudEngineRoute,
   ProjectsReflexRagRoute: ProjectsReflexRagRoute,
   ProjectsRstackRoute: ProjectsRstackRoute,
   ProjectsSpotimeRoute: ProjectsSpotimeRoute,

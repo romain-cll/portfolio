@@ -47,6 +47,22 @@ export const projects: Array<Project> = [
       'A complete video player for React, installed with one shadcn command. Takes the host project’s theme and plays MP4, HLS, DASH and live streams.',
     page: '/projects/videocn',
   },
+  {
+    id: 'events-hub',
+    name: 'events-hub',
+    href: 'https://github.com/romain-cll/events-hub',
+    description:
+      'Joins web analytics and Stripe: each payment traced back to the visit that brought it. Cookieless by default.',
+    page: '/projects/events-hub',
+  },
+  {
+    id: 'fraud-engine',
+    name: 'fraud-engine',
+    href: 'https://github.com/romain-cll/fraud-engine-event-driven',
+    description:
+      'Event-driven fraud scoring in Go on Kafka, Redis and ClickHouse. Scales by starting more scorers, without code changes.',
+    page: '/projects/fraud-engine',
+  },
 ]
 
 /** Next project in the list that has a case study, if any */
