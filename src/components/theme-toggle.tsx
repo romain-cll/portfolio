@@ -2,27 +2,32 @@ const STORAGE_KEY = 'theme'
 
 /**
  * Runs in <head> before the first paint, so the page never flashes the wrong
- * theme: the visitor's choice if they made one, else the system's, which it
- * keeps following until they do.
+ * theme. The system's theme by default; the toggle overrides it, until the
+ * system switches or the visitor toggles back to it.
  */
 export const themeScript = `(() => {
   const root = document.documentElement
   const system = matchMedia('(prefers-color-scheme: dark)')
-  const apply = () => {
-    let stored = null
-    try { stored = localStorage.getItem('${STORAGE_KEY}') } catch {}
-    root.dataset.theme = stored ?? (system.matches ? 'dark' : 'light')
-  }
-  apply()
-  system.addEventListener('change', apply)
+  let stored = null
+  try { stored = localStorage.getItem('${STORAGE_KEY}') } catch {}
+  root.dataset.theme = stored ?? (system.matches ? 'dark' : 'light')
+  system.addEventListener('change', () => {
+    try { localStorage.removeItem('${STORAGE_KEY}') } catch {}
+    root.dataset.theme = system.matches ? 'dark' : 'light'
+  })
 })()`
 
 function toggle() {
   const root = document.documentElement
   const next = root.dataset.theme === 'dark' ? 'light' : 'dark'
+  const system = matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light'
   root.dataset.theme = next
   try {
-    localStorage.setItem(STORAGE_KEY, next)
+    // Back on the system's theme: follow the system again
+    if (next === system) localStorage.removeItem(STORAGE_KEY)
+    else localStorage.setItem(STORAGE_KEY, next)
   } catch {
     // Private mode: the choice lasts until the page reloads
   }
