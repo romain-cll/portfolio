@@ -128,7 +128,7 @@ function Home() {
         <DetailList items={information} />
       </Section>
 
-      <Section title="Experiences">
+      <Section title="Experience">
         <ol className="flex flex-col gap-(--gap-experience)">
           {experience.map(({ title, detail, period }) => (
             <li

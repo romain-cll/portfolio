@@ -4,7 +4,7 @@ import { TextLink } from './text-link'
 
 // Writing only once there is something to read
 const sections = [
-  'Experiences',
+  'Experience',
   'Projects',
   ...(posts.length > 0 ? ['Writing'] : []),
   'Contact',
