@@ -18,7 +18,7 @@ export const Route = createFileRoute('/')({
     seo({
       title: 'Romain Caillé — Fullstack developer',
       description:
-        'Full-stack developer who ships fast. I build products end to end with rstack, the agent loop I designed and open-sourced, and get them in front of paying users.',
+        'Fullstack developer who ships fast. I build products end to end with rstack, the agent loop I designed and open-sourced, and get them in front of paying users.',
       path: '/',
     }),
   component: Home,
@@ -124,8 +124,7 @@ function Home() {
       <Section title="About">
         <div className="flex flex-col gap-(--gap-paragraph)">
           <p>
-            Full-stack developer who ships fast. I build products end to end
-            with{' '}
+            Fullstack developer who ships fast. I build products end to end with{' '}
             <RouteLink to="/projects/rstack" variant="inline">
               rstack
             </RouteLink>
