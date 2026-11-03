@@ -10,7 +10,7 @@ const sections = [
   'Contact',
 ]
 
-/** Name and role, then links to the home page's sections; goes in SiteHeader */
+/** Name and role, then links to the home page's sections and the resume; goes in SiteHeader */
 export function Navbar() {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-(--header-gap)">
@@ -27,6 +27,14 @@ export function Navbar() {
             {title}
           </TextLink>
         ))}
+        {/* Same PDF as Contact's Resume row, one click from the top */}
+        <TextLink
+          href="/resume-romain-caille.pdf"
+          target="_blank"
+          iconRight="↗"
+        >
+          Resume
+        </TextLink>
       </nav>
     </div>
   )
