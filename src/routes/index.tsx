@@ -30,7 +30,7 @@ const information: Array<Detail> = [
   {
     label: 'Education',
     // Non-breaking space keeps "@ EPSI" together when the line wraps
-    value: "Master's, IT & Information Systems @ EPSI, 2025",
+    value: 'Master’s in Computer Science & Information Systems @ EPSI, 2025',
   },
   { label: 'Languages', value: 'French, English (C1)' },
 ]
