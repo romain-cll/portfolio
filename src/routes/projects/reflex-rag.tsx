@@ -113,7 +113,8 @@ const summary: Array<Detail> = [
   },
   {
     label: 'Latency',
-    value: 'Retrieval 0.68 s against 6.45 s (p50), about ten times faster',
+    value:
+      'Retrieval 0.68 s against 6.45 s at the median, about ten times faster; 3.19 s against 11.51 s at p95',
   },
   {
     label: 'Cost',
@@ -221,7 +222,7 @@ function ReflexRag() {
           <p>
             A retrieval layer over a vault of Markdown notes, where a small
             decision model judges the search loop instead of an LLM. Measured
-            against the same loop judged by Claude Haiku: same quality,
+            against the same loop judged by Claude Haiku: same quality, median
             retrieval about ten times faster and 58% cheaper.
           </p>
         </Section>
