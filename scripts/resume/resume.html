@@ -1,0 +1,553 @@
+<!doctype html>
+<!-- Resume, US Letter, in the site's fonts and colors. Printed to public/resume-romain-caille.pdf by render.sh -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Romain Caillé — Resume</title>
+    <style>
+      @font-face {
+        font-family: Geist;
+        font-weight: 400;
+        src: url('../../node_modules/@fontsource/geist/files/geist-latin-400-normal.woff2');
+      }
+      @font-face {
+        font-family: Geist;
+        font-weight: 500;
+        src: url('../../node_modules/@fontsource/geist/files/geist-latin-500-normal.woff2');
+      }
+      @font-face {
+        font-family: 'Geist Mono';
+        font-weight: 400;
+        src: url('../../node_modules/@fontsource/geist-mono/files/geist-mono-latin-400-normal.woff2');
+      }
+      @font-face {
+        font-family: 'Geist Mono';
+        font-weight: 500;
+        src: url('../../node_modules/@fontsource/geist-mono/files/geist-mono-latin-500-normal.woff2');
+      }
+
+      /* Colors of src/styles.css, light theme */
+      :root {
+        --bg: #ffffff;
+        --text: #111111;
+        --muted: #6b6b6b;
+        --border: #d4d4d4;
+        --accent: #16a34a;
+        --divider: #e5e5e5;
+        --edge: #a3a3a3;
+
+        /* One dot per product of mine, as on the former resume */
+        --dot-spotime: #0e9fb5;
+        --dot-reflex: #8b5cf6;
+        --dot-cockpit: #f97316;
+
+        --line-height: 1.45;
+        --size-body: 11.5px;
+        --size-small: 10px; /* mono: dates, stacks, contact, headings */
+      }
+
+      @page {
+        size: letter;
+        margin: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+      }
+
+      body {
+        background: #f0f0f0;
+        color: var(--text);
+        font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+        font-size: var(--size-body);
+        line-height: var(--line-height);
+        -webkit-font-smoothing: antialiased;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .page {
+        width: 8.5in;
+        height: 11in;
+        margin: 24px auto;
+        padding: 0.4in 0.5in;
+        background: var(--bg);
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+        display: flex;
+        flex-direction: column;
+        gap: 11px;
+      }
+
+      @media print {
+        body {
+          background: var(--bg);
+        }
+        .page {
+          margin: 0;
+          box-shadow: none;
+        }
+      }
+
+      h1,
+      h2,
+      h3,
+      p,
+      ul {
+        margin: 0;
+        padding: 0;
+        font-size: inherit;
+        font-weight: inherit;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-color: var(--border);
+        text-underline-offset: 3px;
+        text-decoration-thickness: 1px;
+      }
+
+      .mono {
+        font-family: 'Geist Mono', ui-monospace, monospace;
+        font-size: var(--size-small);
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .nowrap {
+        white-space: nowrap;
+      }
+
+      .medium {
+        font-weight: 500;
+      }
+
+      /* Header */
+      .identity {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--text);
+      }
+
+      h1 {
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+
+      h1 .last {
+        color: var(--muted);
+        font-weight: 400;
+        text-transform: uppercase;
+        margin-left: 0.1em;
+      }
+
+      .tagline {
+        margin-top: 6px;
+        font-size: 15px;
+      }
+
+      .contact {
+        text-align: right;
+        line-height: 1.55;
+        color: var(--muted);
+      }
+
+      .contact a {
+        text-decoration: none;
+      }
+
+      .contact .site {
+        color: var(--text);
+        font-weight: 500;
+        text-decoration: underline;
+        text-decoration-color: currentColor;
+      }
+
+      .meta {
+        display: flex;
+        gap: 24px;
+        padding: 7px 0;
+        border-bottom: 1px solid var(--divider);
+        color: var(--muted);
+      }
+
+      .meta .end {
+        margin-left: auto;
+      }
+
+      .status {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: var(--accent);
+      }
+
+      .status::before,
+      .dot::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .summary {
+        font-size: 12.5px;
+        line-height: 1.5;
+      }
+
+      /* Sections: small mono heading over a rule, full width */
+      section > h2 {
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        padding-bottom: 5px;
+        margin-bottom: 6px;
+        border-bottom: 1px solid var(--divider);
+      }
+
+      .entries {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+      }
+
+      .row > :last-child {
+        white-space: nowrap;
+      }
+
+      h3 {
+        font-size: 14px;
+        line-height: 1.35;
+      }
+
+      h3 .role {
+        color: var(--muted);
+      }
+
+      .dot {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .dot::before {
+        width: 8px;
+        height: 8px;
+      }
+
+      .dot.spotime {
+        color: var(--dot-spotime);
+      }
+      .dot.reflex {
+        color: var(--dot-reflex);
+      }
+      .dot.cockpit {
+        color: var(--dot-cockpit);
+      }
+
+      .dot > span {
+        color: var(--text);
+      }
+
+      .points {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-top: 4px;
+      }
+
+      /* Bullets stay in the flow: a positioned li is printed after the rest
+         of the page, which moves its text to the end of the PDF's text layer */
+      .points li {
+        display: flex;
+        gap: 10px;
+      }
+
+      .points li::before {
+        content: '';
+        flex: 0 0 4px;
+        height: 4px;
+        margin: calc(var(--line-height) * 0.5em - 2px) 0 0 3px;
+        border-radius: 50%;
+        background: var(--edge);
+      }
+
+      .stack {
+        margin-top: 4px;
+        color: var(--muted);
+      }
+
+      .links {
+        color: var(--muted);
+      }
+
+      .education {
+        font-weight: 500;
+        font-size: 11.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <div class="identity">
+          <div>
+            <h1>Romain <span class="last">Caillé</span></h1>
+            <p class="tagline">Fullstack developer</p>
+          </div>
+          <ul class="contact mono">
+            <li>
+              <a class="site" href="https://romain-caille.fr"
+                >romain-caille.fr</a
+              >
+            </li>
+            <li>
+              <a href="mailto:r.caille@icloud.com">r.caille@icloud.com</a>
+            </li>
+            <li>
+              <a href="https://github.com/romain-cll">github.com/romain-cll</a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/in/romain-caill%C3%A9/"
+                >linkedin.com/in/romain-caillé</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="meta mono">
+          <span class="status">Available now</span>
+          <span>Remote or relocation · from Nantes, France</span>
+          <span class="end">English C1 · French native</span>
+        </div>
+      </header>
+
+      <p class="summary">
+        Fullstack TypeScript developer, 4 years in production at Enedis, Système
+        U and on my own SaaS. I ship with
+        <a href="https://github.com/romain-cll/rstack">rstack</a>, the
+        <span class="nowrap">open-source</span> agent loop I designed: spec,
+        failing tests, code, review.
+      </p>
+
+      <section>
+        <h2 class="mono">Experience</h2>
+        <div class="entries">
+          <article>
+            <div class="row">
+              <h3>
+                <span class="dot spotime"
+                  ><span class="medium">Spotime</span></span
+                >
+                <span class="role">· Founder, fullstack developer</span>
+              </h3>
+              <span class="mono muted">May 2025 – Present</span>
+            </div>
+            <p class="muted">
+              Time-tracking SaaS for field crews ·
+              <a href="https://spotime.fr">spotime.fr</a>
+            </p>
+            <ul class="points">
+              <li>
+                3-surface product: web back office (admin/scheduling), employee
+                mobile app (iOS/Android) and Electron desktop app for on-site
+                clock-in (Windows Store). Replaces paper timesheets and
+                month-end re-entry.
+              </li>
+              <li>
+                Cold-called 150 construction companies with no traction, so I
+                switched to personal care services, where prospects come in
+                through the website.
+              </li>
+              <li>
+                Clock-ins are stored local-first and synced as soon as the
+                network returns, with no data loss or duplicates. GPS location
+                is captured only at the moment of clock-in.
+              </li>
+              <li>
+                Development assisted by a team of subagents (PO, architect,
+                tester, developer, reviewer), framed by user stories, a DoR/DoD
+                and TDD.
+              </li>
+            </ul>
+            <p class="stack mono">
+              NestJS · TanStack Router · Expo/React Native · Electron ·
+              TypeScript · PostgreSQL · React · shadcn/ui · Plausible
+            </p>
+          </article>
+
+          <article>
+            <div class="row">
+              <h3>
+                <span class="medium">Enedis</span>
+                <span class="role">· Fullstack developer, Enedis Lab</span>
+              </h3>
+              <span class="mono muted">Sep 2023 – Sep 2025</span>
+            </div>
+            <p class="muted">
+              France’s electricity grid, Europe’s largest smart grid (37M+
+              connected meters) · Enedis Lab builds apps for field agents
+            </p>
+            <ul class="points">
+              <li>
+                Worksite inspection app (Pays de la Loire): ~15 field agents
+                inspect ~3,000 contractor-run worksites a year for safety,
+                schedule and work quality.
+              </li>
+              <li>
+                Mon Orga, Enedis’s company-wide org chart (41,000 employees):
+                Nuxt 3 app and TypeScript REST API (AdonisJS, PostgreSQL), built
+                as the single source of org data for internal apps. Main
+                frontend dev in a team of 4.
+              </li>
+              <li>
+                GitLab CI/CD (80% coverage gate, Checkmarx, Docker, auto deploy,
+                health check); OIDC SSO, role-based access, rate limiting, no
+                personal data stored locally.
+              </li>
+              <li>
+                Quantified the time lost to cross-team CI/CD blockers and got a
+                weekly sync set up with the Cloud and CI/CD teams.
+              </li>
+            </ul>
+            <p class="stack mono">
+              Nuxt 3 · TypeScript · AdonisJS (Node.js) · PostgreSQL (SQL) ·
+              Docker · GitLab CI/CD · Symfony · AWS
+            </p>
+          </article>
+
+          <article>
+            <div class="row">
+              <h3>
+                <span class="medium">U Tech</span>
+                <span class="role">· Fullstack developer, apprentice</span>
+              </h3>
+              <span class="mono muted">Sep 2022 – Aug 2023</span>
+            </div>
+            <p class="muted">
+              Tech subsidiary of Système U · team building the applications for
+              its 28 warehouses
+            </p>
+            <ul class="points">
+              <li>Routing app: moves pallets to the loading dock.</li>
+              <li>Loading app: loading those pallets onto trucks.</li>
+              <li>
+                Visited warehouses to watch operators use the apps and adjust
+                them to how they work.
+              </li>
+            </ul>
+            <p class="stack mono">Vue · JavaScript · Java Spring Boot · PWA</p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="mono">Projects</h2>
+        <div class="entries">
+          <article>
+            <div class="row">
+              <h3>
+                <span class="dot reflex"
+                  ><span class="medium">Reflex RAG</span></span
+                >
+                <span class="role"
+                  >· agentic RAG, Jev model judge vs LLM judge</span
+                >
+              </h3>
+              <span class="mono links"
+                ><a href="https://github.com/romain-cll/reflex-rag"
+                  >github</a
+                ></span
+              >
+            </div>
+            <ul class="points">
+              <li>
+                Agentic retrieval loop: after each result, a judge decides
+                whether to search again.
+              </li>
+              <li>
+                The judge is Jev, a small system-one model, escalating to Claude
+                Haiku 5.5 only when uncertain.
+              </li>
+              <li>
+                Against the same loop judged by Haiku: −73% p95 latency, −90%
+                LLM output tokens, 58% cheaper, at equal accuracy.
+              </li>
+            </ul>
+            <p class="stack mono">
+              Jev · Claude Haiku · Mistral embed · SQLite FTS5 · TypeScript ·
+              Bun
+            </p>
+          </article>
+
+          <article>
+            <div class="row">
+              <h3>
+                <span class="dot cockpit"
+                  ><span class="medium">Cockpit</span></span
+                >
+                <span class="role"
+                  >· personal dev tool to supervise my AI agents, in
+                  progress</span
+                >
+              </h3>
+              <span class="mono links"
+                ><a href="https://github.com/romain-cll/harness-cockpit"
+                  >github</a
+                ></span
+              >
+            </div>
+            <ul class="points">
+              <li>
+                One interface to supervise all my coding agents (Claude Code,
+                Codex, OpenCode).
+              </li>
+              <li>
+                Each agent works in its own git worktree; sessions, worktrees
+                and histories are stored locally.
+              </li>
+              <li>Next step: remote control, to keep working from my phone.</li>
+            </ul>
+            <p class="stack mono">
+              node-pty · xterm.js · Electron · Bun · Turborepo · Playwright ·
+              React · TypeScript
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="mono">Education</h2>
+        <div class="row">
+          <p class="mono education">
+            Master’s in Computer Science &amp; Information Systems · EPSI,
+            France
+          </p>
+          <span class="mono muted">2025</span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
