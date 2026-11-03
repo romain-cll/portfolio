@@ -69,11 +69,11 @@ const experience: Array<Experience> = [
   },
   {
     title: 'Fullstack developer, U Tech',
-    subtitle: 'Système U’s tech subsidiary, apps for its 28 warehouses',
+    subtitle: 'Système U’s tech subsidiary, PWAs for its 28 warehouses',
     period: '2022 – 2023',
     detail: [
-      'A routing app that moves pallets to the loading dock, and a loading app to put them onto trucks.',
-      'Visited warehouses to watch operators use the apps, and adjusted them to how they work.',
+      'A routing PWA that moves pallets to the loading dock, and a loading PWA to put them onto trucks.',
+      'Visited warehouses to watch operators use the PWAs, and adjusted them to how they work.',
     ],
   },
 ]
