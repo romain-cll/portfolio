@@ -20,7 +20,7 @@ export const projects: Array<Project> = [
     name: 'Spotime',
     href: 'https://spotime.fr',
     description:
-      'Replaces paper hour tracking for field crews of 10–30. Web, mobile and Windows desktop app, local-first clock-ins.',
+      'Replaces paper hour tracking for field crews of 10–150. Web, mobile and Windows desktop app, local-first clock-ins.',
     page: '/projects/spotime',
   },
   {
