@@ -71,6 +71,7 @@
   --gap-paragraph: 12px; /* between paragraphs of text */
   --gap-block: 24px; /* between blocks of one section: text, list, table */
   --gap-title-desc: 2px; /* project name → description */
+  --gap-detail: 6px; /* between the short paragraphs of an experience */
   --gap-inline: 16px; /* text ↔ date/value on the right */
   --gap-caption: 8px; /* figure → caption */
   --gap-separator: 24px; /* separator → what follows */
