@@ -114,6 +114,26 @@
     }
   }
 
+  /* ReadMore opens and closes its height; where ::details-content or
+     interpolate-size isn't supported, it simply opens at once */
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  details::details-content {
+    block-size: 0;
+    overflow: hidden;
+  }
+  details[open]::details-content {
+    block-size: auto;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    details::details-content {
+      transition:
+        block-size 200ms ease,
+        content-visibility 200ms allow-discrete;
+    }
+  }
+
   /* No page scroll behind an open lightbox (Figure) */
   html:has(dialog[open]) {
     overflow: hidden;
