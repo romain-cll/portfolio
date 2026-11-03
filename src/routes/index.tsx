@@ -49,13 +49,15 @@ const experience: Array<{ title: ReactNode; detail: string; period: string }> =
       period: '2025 – Now',
     },
     {
-      title: 'Fullstack apprentice, Enedis',
-      detail: 'Enedis Lab',
+      title: 'Fullstack developer, Enedis',
+      detail:
+        'Enedis Lab, apps for field agents. Main frontend developer on Mon Orga, the org chart of 41,000 employees, and on a worksite inspection app for ~3,000 worksites a year.',
       period: '2023 – 2025',
     },
     {
-      title: 'Fullstack apprentice, U Tech',
-      detail: 'Système U',
+      title: 'Fullstack developer, U Tech',
+      detail:
+        'Système U’s tech subsidiary. Warehouse apps to route pallets to the loading dock and load them onto trucks, adjusted on site with the operators.',
       period: '2022 – 2023',
     },
   ]
