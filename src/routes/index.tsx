@@ -16,9 +16,9 @@ import { seo } from '../seo'
 export const Route = createFileRoute('/')({
   head: () =>
     seo({
-      title: 'Romain Caillé — Fullstack developer',
+      title: 'Romain Caillé — Full-stack engineer',
       description:
-        'Fullstack developer who ships fast. I build products end to end with rstack, the agent loop I designed and open-sourced, and get them in front of paying users.',
+        'Full-stack engineer who ships fast. I build products end to end with rstack, the agent loop I designed and open-sourced, and get them in front of paying users.',
       path: '/',
     }),
   component: Home,
@@ -57,7 +57,7 @@ const experience: Array<Experience> = [
     period: '2025 – Now',
   },
   {
-    title: 'Fullstack developer, Enedis',
+    title: 'Full-stack engineer, Enedis',
     subtitle: 'Enedis Lab, apps for the field agents of France’s power grid',
     period: '2023 – 2025',
     detail: [
@@ -68,7 +68,7 @@ const experience: Array<Experience> = [
     ],
   },
   {
-    title: 'Fullstack developer, U Tech',
+    title: 'Full-stack engineer, U Tech',
     subtitle: 'Système U’s tech subsidiary, PWAs for its 28 warehouses',
     period: '2022 – 2023',
     detail: [
@@ -124,7 +124,7 @@ function Home() {
       <Section title="About">
         <div className="flex flex-col gap-(--gap-paragraph)">
           <p>
-            Fullstack developer who ships fast. I build products end to end with{' '}
+            Full-stack engineer who ships fast. I build products end to end with{' '}
             <RouteLink to="/projects/rstack" variant="inline">
               rstack
             </RouteLink>

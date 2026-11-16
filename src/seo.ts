@@ -13,7 +13,7 @@ const defaultImage: ShareImage = {
   src: '/og.png',
   width: 1200,
   height: 630,
-  alt: 'Romain Caillé, Fullstack developer',
+  alt: 'Romain Caillé, Full-stack engineer',
 }
 
 /**
