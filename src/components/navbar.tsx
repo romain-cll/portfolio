@@ -16,7 +16,7 @@ export function Navbar() {
     <div className="flex flex-wrap items-baseline justify-between gap-(--header-gap)">
       <div>
         <h1 className="font-(--weight-medium)">Romain Caillé</h1>
-        <p className="text-muted">Fullstack developer</p>
+        <p className="text-muted">Full-stack engineer</p>
       </div>
       <nav
         aria-label="Sections"

@@ -36,11 +36,6 @@
         --divider: #e5e5e5;
         --edge: #a3a3a3;
 
-        /* One dot per product of mine, as on the former resume */
-        --dot-spotime: #0e9fb5;
-        --dot-reflex: #8b5cf6;
-        --dot-cockpit: #f97316;
-
         --line-height: 1.45;
         --size-body: 11.5px;
         --size-small: 10px; /* mono: dates, stacks, contact, headings */
@@ -79,7 +74,7 @@
         box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
         display: flex;
         flex-direction: column;
-        gap: 11px;
+        gap: 9px;
       }
 
       @media print {
@@ -197,8 +192,7 @@
         color: var(--accent);
       }
 
-      .status::before,
-      .dot::before {
+      .status::before {
         content: '';
         width: 7px;
         height: 7px;
@@ -247,31 +241,6 @@
         color: var(--muted);
       }
 
-      .dot {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .dot::before {
-        width: 8px;
-        height: 8px;
-      }
-
-      .dot.spotime {
-        color: var(--dot-spotime);
-      }
-      .dot.reflex {
-        color: var(--dot-reflex);
-      }
-      .dot.cockpit {
-        color: var(--dot-cockpit);
-      }
-
-      .dot > span {
-        color: var(--text);
-      }
-
       .points {
         display: flex;
         flex-direction: column;
@@ -316,7 +285,7 @@
         <div class="identity">
           <div>
             <h1>Romain <span class="last">Caillé</span></h1>
-            <p class="tagline">Fullstack developer</p>
+            <p class="tagline">Full-stack engineer</p>
           </div>
           <ul class="contact mono">
             <li>
@@ -345,11 +314,12 @@
       </header>
 
       <p class="summary">
-        Fullstack TypeScript developer, 4 years in production at Enedis, Système
-        U and on my own SaaS. I ship with
-        <a href="https://github.com/romain-cll/rstack">rstack</a>, the
-        <span class="nowrap">open-source</span> agent loop I designed: spec,
-        failing tests, code, review.
+        <span class="nowrap">Full-stack</span> TypeScript engineer, 4 years in
+        production at Enedis, Système U and on my own SaaS. I build AI-native:
+        my <span class="nowrap">open-source</span> agent workflow (rstack,
+        <a href="https://github.com/romain-cll/rstack"
+          >github.com/romain-cll/rstack</a
+        >) runs spec → failing tests → code → review.
       </p>
 
       <section>
@@ -358,10 +328,8 @@
           <article>
             <div class="row">
               <h3>
-                <span class="dot spotime"
-                  ><span class="medium">Spotime</span></span
-                >
-                <span class="role">· Founder, fullstack developer</span>
+                <span class="medium">Spotime</span>
+                <span class="role">· Founder, full-stack engineer</span>
               </h3>
               <span class="mono muted">May 2025 – Present</span>
             </div>
@@ -372,24 +340,19 @@
             <ul class="points">
               <li>
                 3-surface product: web back office (admin/scheduling), employee
-                mobile app (iOS/Android) and Electron desktop app for on-site
-                clock-in (Windows Store). Replaces paper timesheets and
-                month-end re-entry.
+                mobile app and desktop app for on-site clock-in. Live on the App
+                Store, Google Play and Microsoft Store. Replaces paper
+                timesheets and month-end re-entry.
               </li>
               <li>
-                Cold-called 150 construction companies with no traction, so I
-                switched to home care, where prospects come in through the
-                website.
+                Ran customer discovery myself: 150 cold calls showed weak demand
+                in construction, so I pivoted to home care. Now 3 paying
+                customers, with inbound leads from the website.
               </li>
               <li>
                 Clock-ins are stored local-first and synced as soon as the
                 network returns, with no data loss or duplicates. GPS location
                 is captured only at the moment of clock-in.
-              </li>
-              <li>
-                Development assisted by a team of subagents (PO, architect,
-                tester, developer, reviewer), framed by user stories, a DoR/DoD
-                and TDD.
               </li>
             </ul>
             <p class="stack mono">
@@ -402,7 +365,9 @@
             <div class="row">
               <h3>
                 <span class="medium">Enedis</span>
-                <span class="role">· Fullstack developer, Enedis Lab</span>
+                <span class="role"
+                  >· Full-stack engineer (work-study), Enedis Lab</span
+                >
               </h3>
               <span class="mono muted">Sep 2023 – Sep 2025</span>
             </div>
@@ -419,8 +384,8 @@
               <li>
                 Mon Orga, Enedis’s company-wide org chart (41,000 employees):
                 Nuxt 3 app and TypeScript REST API (AdonisJS, PostgreSQL), built
-                as the single source of org data for internal apps. Fullstack
-                developer in a team of 4.
+                as the single source of org data for internal apps. Full-stack
+                engineer in a team of 4.
               </li>
               <li>
                 GitLab CI/CD (80% coverage gate, Checkmarx, Docker, auto deploy,
@@ -428,8 +393,11 @@
                 personal data stored locally.
               </li>
               <li>
-                Quantified the time lost to cross-team CI/CD blockers and got a
-                weekly sync set up with the Cloud and CI/CD teams.
+                Measured ~15 hours a week lost to CI/CD blockers: undocumented
+                pipelines, unannounced breaking changes, and no communication
+                between the Cloud and CI/CD teams. Set up a weekly sync between
+                the three teams to flag changes ahead of time and fix blockers
+                live.
               </li>
             </ul>
             <p class="stack mono">
@@ -442,7 +410,7 @@
             <div class="row">
               <h3>
                 <span class="medium">U Tech</span>
-                <span class="role">· Fullstack developer, apprentice</span>
+                <span class="role">· Full-stack engineer (work-study)</span>
               </h3>
               <span class="mono muted">Sep 2022 – Aug 2023</span>
             </div>
@@ -451,8 +419,13 @@
               warehouses
             </p>
             <ul class="points">
-              <li>Routing PWA: moves pallets to the loading dock.</li>
-              <li>Loading PWA: loading those pallets onto trucks.</li>
+              <li>
+                Routing PWA guiding operators to move pallets to loading docks,
+                used across 28 warehouses.
+              </li>
+              <li>
+                Loading PWA guiding the loading of those pallets onto trucks.
+              </li>
               <li>
                 Visited warehouses to watch operators use the PWAs and adjust
                 them to how they work.
@@ -469,11 +442,10 @@
           <article>
             <div class="row">
               <h3>
-                <span class="dot reflex"
-                  ><span class="medium">Reflex RAG</span></span
-                >
+                <span class="medium">Reflex RAG</span>
                 <span class="role"
-                  >· agentic RAG, Jev model judge vs LLM judge</span
+                  >· agentic RAG with a decision-model judge vs an LLM
+                  judge</span
                 >
               </h3>
               <span class="mono links"
@@ -488,8 +460,9 @@
                 whether to search again.
               </li>
               <li>
-                The judge is Jev, a small system-one model, escalating to Claude
-                Haiku 5.5 only when uncertain.
+                The judge is Jev, TypeSafe AI’s decision model (typed answers
+                with confidence scores, no text generation), escalating to
+                Claude Haiku 5.5 only when uncertain.
               </li>
               <li>
                 Against the same loop judged by Haiku: −73% p95 latency, −90%
@@ -505,9 +478,7 @@
           <article>
             <div class="row">
               <h3>
-                <span class="dot cockpit"
-                  ><span class="medium">Cockpit</span></span
-                >
+                <span class="medium">Cockpit</span>
                 <span class="role"
                   >· personal dev tool to supervise my AI agents, in
                   progress</span
@@ -542,10 +513,16 @@
         <h2 class="mono">Education</h2>
         <div class="row">
           <p class="mono education">
-            Master’s in Computer Science &amp; Information Systems · EPSI,
-            France
+            MSc in Computer Science &amp; Information Systems · EPSI, France
+            (work-study)
           </p>
           <span class="mono muted">2025</span>
+        </div>
+        <div class="row">
+          <p class="mono education">
+            BSc in Software Engineering · EPSI, France (work-study)
+          </p>
+          <span class="mono muted">2023</span>
         </div>
       </section>
     </main>
