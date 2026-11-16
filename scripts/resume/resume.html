@@ -74,7 +74,7 @@
         box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
         display: flex;
         flex-direction: column;
-        gap: 9px;
+        gap: 11px;
       }
 
       @media print {
@@ -350,9 +350,8 @@
                 customers, with inbound leads from the website.
               </li>
               <li>
-                Clock-ins are stored local-first and synced as soon as the
-                network returns, with no data loss or duplicates. GPS location
-                is captured only at the moment of clock-in.
+                Local-first clock-ins, synced when the network returns with no
+                data loss or duplicates. GPS captured only at clock-in.
               </li>
             </ul>
             <p class="stack mono">
@@ -379,7 +378,7 @@
               <li>
                 Worksite inspection app (Pays de la Loire): ~15 field agents
                 inspect ~3,000 contractor-run worksites a year for safety,
-                schedule and work quality.
+                schedule and quality.
               </li>
               <li>
                 Mon Orga, Enedis’s company-wide org chart (41,000 employees):
@@ -394,10 +393,9 @@
               </li>
               <li>
                 Measured ~15 hours a week lost to CI/CD blockers: undocumented
-                pipelines, unannounced breaking changes, and no communication
-                between the Cloud and CI/CD teams. Set up a weekly sync between
-                the three teams to flag changes ahead of time and fix blockers
-                live.
+                pipelines, unannounced breaking changes, siloed Cloud and CI/CD
+                teams. Set up a weekly three-team sync to flag changes early and
+                fix blockers live.
               </li>
             </ul>
             <p class="stack mono">
@@ -461,8 +459,8 @@
               </li>
               <li>
                 The judge is Jev, TypeSafe AI’s decision model (typed answers
-                with confidence scores, no text generation), escalating to
-                Claude Haiku 5.5 only when uncertain.
+                with confidence scores), escalating to Claude Haiku 5.5 when
+                unsure.
               </li>
               <li>
                 Against the same loop judged by Haiku: −73% p95 latency, −90%
@@ -499,7 +497,6 @@
                 Each agent works in its own git worktree; sessions, worktrees
                 and histories are stored locally.
               </li>
-              <li>Next step: remote control, to keep working from my phone.</li>
             </ul>
             <p class="stack mono">
               node-pty · xterm.js · Electron · Bun · Turborepo · Playwright ·
